@@ -7,8 +7,6 @@ html, body {
 }
 
 html {
-	color: #fff;
-	background-color: #121258;
 	border: solid .2em #ccc;
 }
 
@@ -23,7 +21,7 @@ ul {
 	padding: .1em;
 }
 
-div.apples {
+div.blue {
 	border: solid .2em #659CEF;
 	background-color: #2956B2;
 }
@@ -32,7 +30,7 @@ a {
 	color: #df5;
 }
 
-div.apple {
+div.green {
 	border: solid .2em #9DDD00;
 	background-color: #5F9D11;
 	color: #000;
