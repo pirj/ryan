@@ -1,6 +1,6 @@
 module Fruits
-  def show()
-    "show fruits"
+  def show(parameters, cookies, method)
+    ["show fruits ", method, " ", parameters.inspect(), " ", cookies.inspect()].join(',')
 
-  def index()
-    "index fruits"
+  def index(parameters, cookies, method)
+    ["index fruits ", method, " ", parameters.inspect(), " ", cookies.inspect()].join(',')

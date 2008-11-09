@@ -1,5 +1,5 @@
 -module(shim).
--export([out/1, run_method/3]).
+-export([out/1, call_action/5]).
 -include("yaws_api.hrl").
 
 out(Arg) ->
@@ -21,9 +21,10 @@ out(Arg) ->
 
 	reia_erl:r2e('Ray':out(reia_erl:e2r(Method), reia_erl:e2r(Path), reia_erl:e2r(Cookie), reia_erl:e2r(Params))).
 	
-run_method([First|Rest] = _Module, Method, Args) ->
-	Mod = unwrap_binary(string:to_upper([First]) ++ Rest),
-	Met = unwrap_binary(Method),
-	reia_erl:e2r(apply(Mod, Met, Args)).
+call_action([First|Rest] = _Controller, Action, Parameters, Cookies, HTTPMethod) ->
+	Module = unwrap_binary(string:to_upper([First]) ++ Rest),
+	Method = unwrap_binary(Action),
+	Args = [reia_erl:e2r(A) || A <- [Parameters, Cookies, HTTPMethod]],
+	reia_erl:e2r(apply(Module, Method, Args)).
 
 unwrap_binary(A) -> list_to_atom(reia_erl:r2e(A)).
