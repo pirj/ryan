@@ -1,11 +1,9 @@
-#  unless path.size() > 2
-#   error("application/controller/action expected")
-
 module Ray
  def out(method, path, cookies, params)
-  path = path.map {|p| p.to_string()}
-  render(shim::run_method(path[1].capitalize(), path[2], []))
-#  render(path.join(','))
+  application = path[0]
+  controller = path[1]
+  action = path[2]
+  render(shim::run_method(controller, action, []))
 
  def index()
   render('index')

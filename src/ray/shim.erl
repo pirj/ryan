@@ -21,9 +21,9 @@ out(Arg) ->
 
 	reia_erl:r2e('Ray':out(reia_erl:e2r(Method), reia_erl:e2r(Path), reia_erl:e2r(Cookie), reia_erl:e2r(Params))).
 	
-run_method(Module, Method, Args) ->
-	Mod = unwrap_binary(Module),
+run_method([First|Rest] = _Module, Method, Args) ->
+	Mod = unwrap_binary(string:to_upper([First]) ++ Rest),
 	Met = unwrap_binary(Method),
 	reia_erl:e2r(apply(Mod, Met, Args)).
-	
-unwrap_binary(A) -> list_to_atom(binary_to_list(reia_erl:r2e(A))).
+
+unwrap_binary(A) -> list_to_atom(reia_erl:r2e(A)).
