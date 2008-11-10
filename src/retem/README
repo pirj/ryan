@@ -1,0 +1,142 @@
+= Templating with retem
+
+Since a web framework should have a templating feature, one should be implemented
+for reia. Why not use existing? Just for fun, first. Just to improve and make it 
+convenient and provide all the features that should be in out of the box:
+
+* flow control (if | unless | for)
+* access to variables
+* filtering (escape | pretty | upper | capital | length | textilize | format | plural)
+* i18n
+
+It should probably look like:
+
+Total {apples|count:~apples}
+{for apple in apples} {apple.color apple.weight|kg}{end}
+
+And this template will be rendered to:
+
+Total 2 apples
+red 0.2kg
+yellow 0.15kg
+
+== Building
+
+== Usage
+
+template = """Total {apples|count:~apples}
+{for apple in apples} {apple.color apple.weight|kg} {end}"""
+
+apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
+Retem.i18n('apps/my_app/i18n.yaml')
+rendered = Retem.render(template, {~apples, apples})
+
+== Flow control
+
+The simplest branching construct available is the if statement, which takes the specified branch if the condition holds true:
+
+{if condition}
+ ... 
+{end}
+
+Condition can consist of multiple conditions:
+
+{if condition1 and condition2}...{end}
+{if condition1 or condition2}...{end}
+
+Condition can be a result of comparsion:
+{if bees_count gt flowers_count}...{end}
+
+The following comparsion operators can be used:
+
+* eq  equal to
+* neq not equal to
+* gt greater than
+* lt less than
+* gteq greater than or equal to
+* lteq less than or equal to
+
+It is possible to use these kind of constructions:
+{if a gt 3 or b lt 10}...{end}
+
+The else keyword specifies an action to be taken if the condition doesn't match:
+
+{if condition}
+  ...
+{else}
+  ...
+{end}
+
+Multiple if statements can be chained with the elseif keyword:
+
+{if condition1}
+  ...
+{elseif condition2}
+  ...
+{end}
+
+This can be used with else, too:
+
+{if condition1}
+  ...
+{elseif condition2}
+  ...
+{else}
+  ...
+{end}
+
+The unless keyword functions like the if keyword, except expression matching is inverted and the branch is taken if the condition does not hold.
+
+{unless condition}
+  ...
+{end}
+
+For loops can iterate lists:
+
+{for x in mylist}
+  {x*2}
+{end}
+
+== Access to variables
+
+Variables passed to retem can be freely used in templates:
+
+{apple}
+
+{apple.color}
+
+{store.address.city}
+
+== Filtering
+
+Filtering allows for value modification, formatting etc.
+The following examples should be self-explaining, taking into account that a is a variable passed:
+a='<aaaa><br>'
+{}
+
+* filtering (escape | pretty | upper | capital | length | textilize | format | plural)
+
+
+== i18n
+
+It is possible to provide custom translations dictionary in the following format (YAML):
+- apple !countable
+  en-US: apple, apples
+  fr-FR: pomme, pommes
+- banana !countable
+  en-US: banana, bananas
+  fr-FR: banane, bananes
+
+To set this as default translation used by retem:
+Retem.i18n('apps/my_app/i18n.yaml')
+
+Then, when calling
+template = '{~apples}{~banana}'
+Retem.render(template, {}, 'fr-FR')
+
+Here we suggest that {apples|count:~apples} will be replaced with (assuming apples size is 3):
+* "3 apples" for english ('en-US')
+* "3 pommes" for french ('fr-FR')
+* etc.
+
+Retem uses 'en-US' as default unless otherwise requested.

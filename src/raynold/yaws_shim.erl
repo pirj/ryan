@@ -1,6 +1,6 @@
 -module(shim).
 -export([out/1, call_action/5]).
--include("yaws_api.hrl").
+-include("../yaws/yaws_api.hrl").
 
 out(Arg) ->
 	Req = Arg#arg.req,
@@ -19,7 +19,7 @@ out(Arg) ->
         _      -> yaws_api:parse_query(Arg)
     end,
 
-	reia_erl:r2e('Ray':out(reia_erl:e2r(Method), reia_erl:e2r(Path), reia_erl:e2r(Cookie), reia_erl:e2r(Params))).
+	reia_erl:r2e('Raynold':out(reia_erl:e2r(Method), reia_erl:e2r(Path), reia_erl:e2r(Cookie), reia_erl:e2r(Params))).
 	
 call_action([First|Rest] = _Controller, Action, Parameters, Cookies, HTTPMethod) ->
 	Module = unwrap_binary(string:to_upper([First]) ++ Rest),
