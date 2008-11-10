@@ -97,6 +97,25 @@ For loops can iterate lists:
   {x*2}
 {end}
 
+Pattern matching can be used when iterating lists of objects.
+When iterating a list of lists:
+mylist = [['aaa', 123], ['qqq', 456]]
+{for [a,b] in mylist}
+  {a} {b}
+{end}
+
+When iterating a list of tuples:
+mylist = [('aaa', 123, ~first), ('qqq', 456, ~second)]
+{for (a,b,c) in mylist}
+  {a} {b} {c}
+{end}
+
+When iterating a list of dicts/objects:
+apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
+{for {color: ~color, weight: ~weight} in apples}
+  Color is {color} and weight is {weight}
+{end}
+
 == Access to variables
 
 Variables passed to retem can be freely used in templates:
@@ -109,13 +128,82 @@ Variables passed to retem can be freely used in templates:
 
 == Filtering
 
-Filtering allows for value modification, formatting etc.
-The following examples should be self-explaining, taking into account that a is a variable passed:
-a='<aaaa><br>'
-{}
+Filtering allows for value modification, formatting etc. Filter signature comes after | sign.
+Filter parameters are passed after : sign. Multiple parameters can be passed using , sign.
+For those parameters that can be treaten erratic, quoting can be used.
 
-* filtering (escape | pretty | upper | capital | length | textilize | format | plural)
+The following examples are self-explaining, taking into account that a is a variable being passed:
 
+a='apPles'
+{a|capital}
+>> ApPles
+{a|lower}
+>> apples
+{a|upper}
+>> APPLES
+
+a='app_les'
+{a|pretty}
+>> App les
+
+a='apple'
+{a|plural}
+>> apples
+
+a='apples'
+{a|singular}
+>> apple
+
+a='apples'
+{a|length}
+>> 6
+
+a='*apple*'
+{a|textile}
+>> <b>apple</b>
+
+a=123
+{a|format:n.3}
+>> 123.000
+
+a=123
+{a|format:n4.3}
+>> 0123.000
+
+a=Time.now
+{a|format:dd-MM-yy/hh:mm:ss}
+>> 11-11-2008/02:31:14
+
+a='<h1>header</h1>'
+{a|escape}
+>> &lt;h1&gt;header&lt;/h1&gt;
+
+a='a long long long string'
+{a|cut:15}
+>> a long long ...
+{a|cut:30}
+>> a long long long string
+
+a=['apple', 'banana', 'coconut']
+{a|count}
+>> 3
+
+a=['humour', 'life', 'friends']
+Tags: {a|join:' '}
+>> Tags: humour life friends
+
+a=['humour', 'life', 'friends']
+{a|wrap:(,)}
+>> (humour)(life)(friends)
+
+Filters can be chained:
+a='appLes'
+{a|lower|capital|singular|cut:10}
+>> Apple
+
+a=['humour', 'life', 'friends']
+{a|wrap:(,)|join:'/'}
+>> (humour)/(life)/(friends)
 
 == i18n
 
