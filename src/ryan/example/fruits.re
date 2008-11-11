@@ -1,6 +1,6 @@
 module Fruits
   def common(parameters, cookies, method, contents)
-    [prefix(), "Action requested:&quot;", contents, "&quot; HTTP method:&quot;", method, "&quot; paremeters:", parameters.inspect(), " cookies:", cookies.inspect(), postfix()].join('')
+    [prefix(), "Action requested:&quot;", contents, "&quot;<br/>HTTP method:&quot;", method, "&quot;<br/>paremeters:", parameters.inspect(), "<br/>cookies:", cookies.inspect(), postfix()].join('')
 
   def show(parameters, cookies, method)
     common(parameters, cookies, method, "show fruits")
