@@ -1,8 +1,35 @@
-= Building web applications with Ryan
+= Web applications with Ryan and Reia
+
+Ryan is an Reia/Erlang BEAM based web framework.
+It allows you to create web applications with clean and short code,
+with use of Reia programming language and Retem templating engine.
+YAWS and Mochiweb can be used as a web server, SQLite3, PostgreSQL,
+MySQL, Mnesia and Mongo as databases.
+
+== Building
+
+Download and install Erlang/OTP, minimum required version is R12B-3
+Download and install YAWS, 1.77 and higher is recommended
+Download and install Ruby and Rake, they are required to build Reia
+Download Reia from source
+cd into reia folder run 'rake'
+Run rake from Ryan source folder to build it
+Edit your yaws.conf file and add a server to it:
+<server localhost>
+        port = 8001
+        listen = 0.0.0.0
+        docroot = {path_to_your_static_files}
+        appmods = <"/", yaws_shim>
+</server>
+
+Run 'yaws --pa path_to_compiled_files_here'
+Surf to: http://localhost:8001/app1/fruits/show/1?param1=123&param2=aba
+Play with parameters, another action implemented in examples is 'app1/fruits/index'
+Enjoy!
 
 == Routing
 
-Following REST idioma, Ryan provides the ability to parse any url and run the
+Following REST idiom, Ryan provides the ability to parse any url and run the
 corresponding controller.
 http://host:post/store/fruits/show/122
 will be passed to 'store' application, 'fruits' controller, 'show' action (method),
@@ -11,7 +38,7 @@ and parsed query data list.
 
 == Controllers
 Controllers are Reia modules. They reside in application_name/controllers/ folder.
-By default each controller method is available to web application user unless overwise defined
+By default each controller method is available to web application user unless otherwise defined
 in routing schema.
 
 == Views
@@ -22,7 +49,7 @@ Views can be Retem templates (retems) and are placed in application_name/views/ 
 
 Models are object definitions that can be stored, retrieved and queried from storage
 systems.
-SQLite3, PostgreSQL, Mnesia and Mongo are to be supported.
+SQLite3, PostgreSQL, MySQL, Mnesia and Mongo are to be supported.
 
 == Authors
 * Philpipp Pirozhkov pirj@mail.ru

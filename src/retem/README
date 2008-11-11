@@ -12,6 +12,13 @@ It provides convenient syntax and a lot if features available out of the box:
 
 == Building
 
+Download and install Erlang/OTP, minimum required version is R12B-3
+Download and install YAWS, 1.77 and higher is recommended
+Download and install Ruby and Rake, they are required to build Reia
+Download Reia from source
+cd into reia folder run 'rake'
+Run rake from Ryan source folder to build it
+
 == Usage
 
 template = """Total {apples|count:~apples}
@@ -19,59 +26,20 @@ template = """Total {apples|count:~apples}
 apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
 renderer = Retem.new('apps/my_app/i18n.yaml')
 renderer.render(template, {~apples: apples})
->> Total 2 apples
+=> Total 2 apples
 .. red 0.2kg
 .. yellow 0.15kg
 
 == Flow control
 
-The simplest branching construct available is the if statement, which takes the specified branch if the condition holds true:
-
-{if condition}
- ... 
-{end}
-
-Condition can consist of multiple conditions:
-
-{if condition1 and condition2}...{end}
-{if condition1 or condition2}...{end}
-
-Condition can be a result of comparsion:
-{if bees_count gt flowers_count}...{end}
-
-The following comparsion operators can be used:
-
-* eq  equal to
-* neq not equal to
-* gt greater than
-* lt less than
-* gteq greater than or equal to
-* lteq less than or equal to
-
-It is possible to use these kind of constructions:
-{if a gt 3 or b lt 10}...{end}
-
-The else keyword specifies an action to be taken if the condition doesn't match:
-
-{if condition}
-  ...
-{else}
-  ...
-{end}
-
-Multiple if statements can be chained with the elseif keyword:
+The simplest branching construct available is the if statement, which takes the specified branch if the condition holds true. The else keyword specifies an action to be taken if the condition doesn't match.
+Multiple if statements can be chained with the elseif keyword. Else and elseif are optional to use.
 
 {if condition1}
   ...
 {elseif condition2}
   ...
-{end}
-
-This can be used with else, too:
-
-{if condition1}
-  ...
-{elseif condition2}
+{elseif condition3}
   ...
 {else}
   ...
@@ -83,11 +51,39 @@ The unless keyword functions like the if keyword, except expression matching is 
   ...
 {end}
 
-For loops can iterate lists:
+Condition can consist of multiple conditions:
 
-{for x in mylist}
-  {x*2}
-{end}
+{if condition1 and condition2}...{end}
+{if condition1 or condition2}...{end}
+
+Condition can be a result of comparsion:
+{if bees_count gt flowers_count}...{end}
+
+The following comparsion operators can be used:
+* eq    equal to
+* neq   not equal to
+* gt    greater than
+* lt    less than
+* gteq  greater than or equal to
+* lteq  less than or equal to
+
+It is possible to use these kind of constructions:
+{if a gt 3 or b lt 10}...{end}
+
+
+For loops can iterate lists, tuples and dicts:
+
+mylist=[1, 2, 3]
+{for x in mylist} {x*2} {end}
+=>  2  4  6 
+
+mytuple=(1, 2, 3, 5)
+{for x in mytuple} {x*2} {end}
+=>  2  4  6  10 
+
+mydict={'a': 3, 'b': 4}
+{for {k:v} in mydict} {k}:{v*2} {end}
+=> a:6  b:8 
 
 Pattern matching can be used when iterating lists of objects.
 When iterating a list of lists:
@@ -124,97 +120,98 @@ Filtering allows for value modification, formatting etc. Filter signature comes 
 Filter parameters are passed after ':' character. Multiple parameters can be passed using ',' character.
 For those parameters that can be treaten erratic, single quoting can be used.
 
-The following examples are self-explaining, taking into account that a is a variable being passed:
+The following examples are self-explaining, taking into account that 'a' is a variable being passed
+to a template in curly braces:
 
 a='apPles'
 {a|capital}
->> ApPles
+=> ApPles
 
 a='apPles AnD BaNaNas'
 {a|capitalphrase}
->> Apples and bananas
+=> Apples and bananas
 
 a='apPles'
 {a|lower}
->> apples
+=> apples
 
 a='apPles'
 {a|upper}
->> APPLES
+=> APPLES
 
 a='app_les'
 {a|pretty}
->> App les
+=> App les
 
 a='apple'
 {a|plural}
->> apples
+=> apples
 
 a='apples'
 {a|singular}
->> apple
+=> apple
 
 a='apples'
 {a|length}
->> 6
+=> 6
 
 a=nil
 {a|default:'none'}
->> none
+=> none
 
 a='*apple*'
 {a|textile}
->> <b>apple</b>
+=> <b>apple</b>
 
 a='/apple/'
 {a|textile}
->> <i>apple</i>
+=> <i>apple</i>
 
 a=123
 {a|float:0,3}
->> 123.000
+=> 123.000
 
 a=123
 {a|float:4,3}
->> 0123.000
+=> 0123.000
 
 a=Time.now
 {a|date:dd-MM-yy/hh:mm:ss}
->> 11-11-2008/02:31:14
+=> 11-11-2008/02:31:14
 
 a=Time.now - 100
 {a|since:1}
->> 2 minutes
+=> 2 minutes
 
 a=Time.now + 100
 {a|until:2}
->> 1 minute, 40 seconds
+=> 1 minute, 40 seconds
 
 a=1300000
 {a|bytes:2}
->> 1,269.53KB
+=> 1,269.53KB
 
 a=88005554567
 {a|format:#-###-###-####}
->> 8-800-555-4567
+=> 8-800-555-4567
 
 a='8800call2me'
 {a|format:#-###-#######}
->> 8-800-call2me
+=> 8-800-call2me
 
 a='<h1>"Theory & practice"</h1>'
 {a|escape}
->> &lt;h1&gt;&quot;Theory &amp; practice&quot;&lt;/h1&gt;
+=> &lt;h1&gt;&quot;Theory &amp; practice&quot;&lt;/h1&gt;
 
 a='<h1>Theory</h1>'
 {a|safe}
->> Theory
+=> Theory
 
 a='a long long long string'
 {a|cut:15}
->> a long long ...
+=> a long long ...
 {a|cut:30}
->> a long long long string
+=> a long long long string
 
 a="""a long
 long
@@ -226,66 +223,66 @@ string"""
 
 a=['apple', 'banana', 'coconut']
 {a|count}
->> 3
+=> 3
 
 a=['humour', 'life', 'friends']
 Tags: {a|join:' '}
->> Tags: humour life friends
+=> Tags: humour life friends
 
 Filters can take several parameters:
 a=['humour', 'life', 'friends']
 {a|wrap:(,)}
->> (humour)(life)(friends)
+=> (humour)(life)(friends)
 
 {a|cut:10,''}
->> a long lon
+=> a long lon
 
 a=[123, 345, 567]
 {a|count:'item','items'}
->> 3 items
+=> 3 items
 
 a=[123, 345, 567]
 - kilo !countable
   en-US: kilogram, kilograms
   fr-FR: kilogramme, kilogrammes
 {a|count:~kilo}
->> 3 kilograms
+=> 3 kilograms
 
 Filters can be chained:
 a='appLes'
 {a|lower|capital|singular|cut:10}
->> Apple
+=> Apple
 
 a=['humour', 'life', 'friends']
 {a|wrap:(,)|join:'/'}
->> (humour)/(life)/(friends)
+=> (humour)/(life)/(friends)
 
 a='hello, world'
 {a|wrap:*|textile}
->> <b>hello, world</b>
+=> <b>hello, world</b>
 
 a='hello, world'
 {a|split:' ',','|capital|join:/}
->> Hello/World
+=> Hello/World
 
 Filters can take variables as parameters:
 a='long long long string'
 max_length=10
 {a|cut:max_length}
->> long lo...
+=> long lo...
 
 Filters can walk through data:
 a=[('apples', 11),('bananas', 32)]
 {a|sum:(_,x)}
->> 43
+=> 43
 
 a=[{~apples: 11},{~bananas: 32}]
 {a|sum:{_,x}}
->> 43
+=> 43
 
 a=[[111, 222], [78, 20]]
 {a|sum:[_,x]}
->> 242
+=> 242
 
 == Extending filters with native code
 
@@ -306,9 +303,9 @@ Retem uses 'en-US' as default unless otherwise requested.
 Dictionary is provided when creating retem instance:
 renderer = Retem.new('apps/my_app/i18n.yaml')
 renderer.render('{apples|count:~apples}', {~apples: 3})
->> 3 apples
+=> 3 apples
 renderer.render('{apples|count:~apples}', {~apples: 3}, 'fr-FR')
->> 3 pommes
+=> 3 pommes
 
 == Nesting
 
