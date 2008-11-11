@@ -1,25 +1,14 @@
 = Templating with retem
 
-Since a web framework should have a templating feature, one should be implemented
-for reia. Why not use existing? Just for fun, first. Just to improve and make it 
-convenient and provide all the features that should be in out of the box:
+Retem is a templating engine which comes with Ryan web framework for Reia programming
+language.
+It provides convenient syntax and a lot if features available out of the box:
 
 * variables
 * flow control
-* filtering
+* filters
 * i18n
-* nesting
-
-It should probably look like:
-
-Total {apples|count:~apples}
-{for apple in apples} {apple.color apple.weight|kg}{end}
-
-And this template will be rendered to:
-
-Total 2 apples
-red 0.2kg
-yellow 0.15kg
+* nesting of templates
 
 == Building
 
@@ -27,10 +16,12 @@ yellow 0.15kg
 
 template = """Total {apples|count:~apples}
 {for apple in apples} {apple.color apple.weight|kg} {end}"""
-
 apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
-Retem.i18n('apps/my_app/i18n.yaml')
-rendered = Retem.render(template, {~apples, apples})
+renderer = Retem.new('apps/my_app/i18n.yaml')
+renderer.render(template, {~apples: apples})
+>> Total 2 apples
+.. red 0.2kg
+.. yellow 0.15kg
 
 == Flow control
 
@@ -296,9 +287,14 @@ a=[[111, 222], [78, 20]]
 {a|sum:[_,x]}
 >> 242
 
+== Extending filters with native code
+
+
+
 == i18n
 
 It is possible to provide custom translations dictionary in the following format (YAML):
+apps/my_app/i18n.yaml:
 - apple !countable
   en-US: apple, apples
   fr-FR: pomme, pommes
@@ -306,19 +302,13 @@ It is possible to provide custom translations dictionary in the following format
   en-US: banana, bananas
   fr-FR: banane, bananes
 
-To set this as default translation used by retem:
-Retem.i18n('apps/my_app/i18n.yaml')
-
-Then, when calling
-template = '{~apples}{~banana}'
-Retem.render(template, {}, 'fr-FR')
-
-Here we suggest that {apples|count:~apples} will be replaced with (assuming apples size is 3):
-* "3 apples" for english ('en-US')
-* "3 pommes" for french ('fr-FR')
-* etc.
-
 Retem uses 'en-US' as default unless otherwise requested.
+Dictionary is provided when creating retem instance:
+renderer = Retem.new('apps/my_app/i18n.yaml')
+renderer.render('{apples|count:~apples}', {~apples: 3})
+>> 3 apples
+renderer.render('{apples|count:~apples}', {~apples: 3}, 'fr-FR')
+>> 3 pommes
 
 == Nesting
 
@@ -335,8 +325,9 @@ My contacts
 In this case the feedback is called, and it is passed the nested atom and all the parameters.
 With this it is possible to nest templates:
 
-Retem.render(template, [{~apples: apples}]) do |nested_template, params| 
-	Retem.render(get_template_by_name(nested_template), params) 
+renderer=Retem.new()
+renderer.render(template, {~apples: apples}) do |nested_template, params| 
+	renderer.render(get_template_by_name(nested_template), params) 
 
 In this case, when retem sees a 'nest' statement, it calls the callback block and inserts
 the result to itself. Of course, nested parts can have nested parts too.
