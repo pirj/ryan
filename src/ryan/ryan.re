@@ -8,4 +8,4 @@ module Ryan
   result = yaws_shim::call_action(controller, action, params, cookies, method)
 #  time_after = calendar::universal_time()
 #  Local.puts([" - request took: ", time::now_diff(time_after, time_before)].join())
-  (~html, result)
+  (~html, result.to_binary())

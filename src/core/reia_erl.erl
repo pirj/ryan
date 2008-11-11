@@ -19,8 +19,6 @@ r2e({tuple, Elements}) ->
   list_to_tuple([r2e(Element) || Element <- tuple_to_list(Elements)]);
 r2e({list, _} = List) ->
   [r2e(Term) || Term <- reia_list:to_erl(List)];
-r2e({string, String}) ->
-  String;
 r2e(Term) -> Term.
 
 % Convert an Erlang term to a Reia term
