@@ -139,6 +139,10 @@ a='apPles'
 {a|capital}
 >> ApPles
 
+a='apPles AnD BaNaNas'
+{a|capitalphrase}
+>> Apples and bananas
+
 a='apPles'
 {a|lower}
 >> apples
@@ -163,6 +167,10 @@ a='apples'
 {a|length}
 >> 6
 
+a=nil
+{a|default:'none'}
+>> none
+
 a='*apple*'
 {a|textile}
 >> <b>apple</b>
@@ -172,26 +180,58 @@ a='/apple/'
 >> <i>apple</i>
 
 a=123
-{a|format:n.3}
+{a|float:0,3}
 >> 123.000
 
 a=123
-{a|format:n4.3}
+{a|float:4,3}
 >> 0123.000
 
 a=Time.now
-{a|format:dd-MM-yy/hh:mm:ss}
+{a|date:dd-MM-yy/hh:mm:ss}
 >> 11-11-2008/02:31:14
 
-a='<h1>header</h1>'
+a=Time.now - 100
+{a|since:1}
+>> 2 minutes
+
+a=Time.now + 100
+{a|until:2}
+>> 1 minute, 40 seconds
+
+a=1300000
+{a|bytes:2}
+>> 1,269.53KB
+
+a=88005554567
+{a|format:#-###-###-####}
+>> 8-800-555-4567
+
+a='8800call2me'
+{a|format:#-###-#######}
+>> 8-800-call2me
+
+a='<h1>"Theory & practice"</h1>'
 {a|escape}
->> &lt;h1&gt;header&lt;/h1&gt;
+>> &lt;h1&gt;&quot;Theory &amp; practice&quot;&lt;/h1&gt;
+
+a='<h1>Theory</h1>'
+{a|safe}
+>> Theory
 
 a='a long long long string'
 {a|cut:15}
 >> a long long ...
 {a|cut:30}
 >> a long long long string
+
+a="""a long
+long
+string"""
+{a|lines:0}
+0 a long
+1 long
+2 string
 
 a=['apple', 'banana', 'coconut']
 {a|count}
@@ -245,15 +285,15 @@ max_length=10
 
 Filters can walk through data:
 a=[('apples', 11),('bananas', 32)]
-{a|sum:(_,x), x}
+{a|sum:(_,x)}
 >> 43
 
 a=[{~apples: 11},{~bananas: 32}]
-{a|sum:{_,x}, x}
+{a|sum:{_,x}}
 >> 43
 
 a=[[111, 222], [78, 20]]
-{a|sum:[_,x], x}
+{a|sum:[_,x]}
 >> 242
 
 == i18n
