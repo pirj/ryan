@@ -4,10 +4,11 @@ Since a web framework should have a templating feature, one should be implemente
 for reia. Why not use existing? Just for fun, first. Just to improve and make it 
 convenient and provide all the features that should be in out of the box:
 
-* flow control (if | unless | for)
-* access to variables
-* filtering (escape | pretty | upper | capital | length | textilize | format | plural)
+* variables
+* flow control
+* filtering
 * i18n
+* nesting
 
 It should probably look like:
 
@@ -128,17 +129,21 @@ Variables passed to retem can be freely used in templates:
 
 == Filtering
 
-Filtering allows for value modification, formatting etc. Filter signature comes after | sign.
-Filter parameters are passed after : sign. Multiple parameters can be passed using , sign.
-For those parameters that can be treaten erratic, quoting can be used.
+Filtering allows for value modification, formatting etc. Filter signature comes after '|' character.
+Filter parameters are passed after ':' character. Multiple parameters can be passed using ',' character.
+For those parameters that can be treaten erratic, single quoting can be used.
 
 The following examples are self-explaining, taking into account that a is a variable being passed:
 
 a='apPles'
 {a|capital}
 >> ApPles
+
+a='apPles'
 {a|lower}
 >> apples
+
+a='apPles'
 {a|upper}
 >> APPLES
 
@@ -161,6 +166,10 @@ a='apples'
 a='*apple*'
 {a|textile}
 >> <b>apple</b>
+
+a='/apple/'
+{a|textile}
+>> <i>apple</i>
 
 a=123
 {a|format:n.3}
@@ -192,9 +201,24 @@ a=['humour', 'life', 'friends']
 Tags: {a|join:' '}
 >> Tags: humour life friends
 
+Filters can take several parameters:
 a=['humour', 'life', 'friends']
 {a|wrap:(,)}
 >> (humour)(life)(friends)
+
+{a|cut:10,''}
+>> a long lon
+
+a=[123, 345, 567]
+{a|count:'item','items'}
+>> 3 items
+
+a=[123, 345, 567]
+- kilo !countable
+  en-US: kilogram, kilograms
+  fr-FR: kilogramme, kilogrammes
+{a|count:~kilo}
+>> 3 kilograms
 
 Filters can be chained:
 a='appLes'
@@ -204,6 +228,33 @@ a='appLes'
 a=['humour', 'life', 'friends']
 {a|wrap:(,)|join:'/'}
 >> (humour)/(life)/(friends)
+
+a='hello, world'
+{a|wrap:*|textile}
+>> <b>hello, world</b>
+
+a='hello, world'
+{a|split:' ',','|capital|join:/}
+>> Hello/World
+
+Filters can take variables as parameters:
+a='long long long string'
+max_length=10
+{a|cut:max_length}
+>> long lo...
+
+Filters can walk through data:
+a=[('apples', 11),('bananas', 32)]
+{a|sum:(_,x), x}
+>> 43
+
+a=[{~apples: 11},{~bananas: 32}]
+{a|sum:{_,x}, x}
+>> 43
+
+a=[[111, 222], [78, 20]]
+{a|sum:[_,x], x}
+>> 242
 
 == i18n
 
@@ -228,3 +279,27 @@ Here we suggest that {apples|count:~apples} will be replaced with (assuming appl
 * etc.
 
 Retem uses 'en-US' as default unless otherwise requested.
+
+== Nesting
+
+It is possible to call external methods to provide nesting support.
+Imagine we have a template 'home_page', and we want it to consist of several parts:
+
+My mail
+{nest ~mail}
+My calendar
+{nest ~calendar}
+My contacts
+{nest ~contacts}
+
+In this case the feedback is called, and it is passed the nested atom and all the parameters.
+With this it is possible to nest templates:
+
+Retem.render(template, [{~apples: apples}]) do |nested_template, params| 
+	Retem.render(get_template_by_name(nested_template), params) 
+
+In this case, when retem sees a 'nest' statement, it calls the callback block and inserts
+the result to itself. Of course, nested parts can have nested parts too.
+
+== Authors
+* Philpipp Pirozhkov pirj@mail.ru
