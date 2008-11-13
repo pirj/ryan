@@ -1,3 +1,0 @@
-#!/bin/sh
-
-erl +K true -pa ebin -pa ../ebin -noshell -noinput -s ire init

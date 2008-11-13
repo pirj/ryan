@@ -11,7 +11,7 @@ out(Arg) ->
 	{abs_path, Abs_Path} = Req#http_request.path,
 	[Full_Path|_] = string:tokens(Abs_Path, [$?]),
 	Path = string:tokens(Full_Path, [$/]),
-
+	
 	Cookie = Headers#headers.cookie,
 
     Params = case Method of
@@ -19,7 +19,7 @@ out(Arg) ->
         _      -> yaws_api:parse_query(Arg)
     end,
 
-	reia_erl:r2e('Ryan':out(reia_erl:e2r(Method), reia_erl:e2r(Path), reia_erl:e2r(Cookie), reia_erl:e2r(Params))).
+	reia_erl:r2e('Ryan':out(reia_erl:e2r(Abs_Path), reia_erl:e2r(Method), reia_erl:e2r(Path), reia_erl:e2r(Cookie), reia_erl:e2r(Params))).
 	
 call_action([First|Rest] = _Controller, Action, Parameters, Cookies, HTTPMethod) ->
 	Module = unwrap_binary(string:to_upper([First]) ++ Rest),

@@ -1,11 +1,12 @@
 module Ryan
- def out(method, path, cookies, params)
-  application = path[0]
+ def out(abspath, method, path, cookies, parameters)
+#  application = path[0]
   controller = path[1]
   action = path[2]
-  Local.puts([" - incoming request: ", path].join())
-#  time_before = calendar::universal_time()
-  result = yaws_shim::call_action(controller, action, params, cookies, method)
-#  time_after = calendar::universal_time()
-#  Local.puts([" - request took: ", time::now_diff(time_after, time_before)].join())
+  (ihr, isec, insec) = erlang::now()
+  parameters = parameters.map {|(k,v)| (k.to_string().to_atom(), v.to_string())}
+  cookies = cookies.map {|(k,v)| (k.to_string(), v.to_string())}
+  result = yaws_shim::call_action(controller, action, parameters, cookies, method)
+  (hr, sec, nsec) = erlang::now()
+  Local.puts([" <- incoming request: ", abspath.to_string(),"\n -> request took ", (sec-isec)*1000 + (nsec-insec)/1000, " ms"].join())
   (~html, result.to_binary())
