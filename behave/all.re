@@ -19,7 +19,7 @@ Behave.context('Templating') do
   context('variable referencing a variable') do
     should('be resolved') do
 	  Retem.render('{a}', {~a: ~b, ~b: 'abc'}) == 'abc'
-	
+
   context('flow control') do
     context('if statement') do
       template = '{if a}yes{end}'
@@ -110,10 +110,38 @@ Behave.context('Templating') do
 	      assert(Retem.render(template, {~a: 'abc', ~b: 'abc'}), '')
 	      assert(Retem.render(template, {~a: 'cba', ~b: 'abc'}), '')
 
+      context('(gteq)') do
+        template = '{if a gteq b}greather or eq{end}'
+        should('be resolved') do
+	      assert(Retem.render(template, {~a: 123, ~b: 321}), '')
+	      assert(Retem.render(template, {~a: 123, ~b: 123}), 'greather or eq')
+	      assert(Retem.render(template, {~a: 123, ~b: 123}), 'greather or eq')
+	      assert(Retem.render(template, {~a: true, ~b: false}), 'greather or eq')
+	      assert(Retem.render(template, {~a: true, ~b: true}), 'greather or eq')
+	      assert(Retem.render(template, {~a: false, ~b: true}), '')
+	      assert(Retem.render(template, {~a: 'abc', ~b: 'cba'}), '')
+	      assert(Retem.render(template, {~a: 'abc', ~b: 'abc'}), 'greather or eq')
+	      assert(Retem.render(template, {~a: 'cba', ~b: 'abc'}), 'greather or eq')
+
+      context('(lteq)') do
+        template = '{if a lteq b}less or eq{end}'
+        should('be resolved') do
+	      assert(Retem.render(template, {~a: 123, ~b: 321}), 'less or eq')
+	      assert(Retem.render(template, {~a: 123, ~b: 123}), 'less or eq')
+	      assert(Retem.render(template, {~a: 123, ~b: 123}), '')
+	      assert(Retem.render(template, {~a: true, ~b: false}), '')
+	      assert(Retem.render(template, {~a: true, ~b: true}), 'less or eq')
+	      assert(Retem.render(template, {~a: false, ~b: true}), 'less or eq')
+	      assert(Retem.render(template, {~a: 'abc', ~b: 'cba'}), 'less or eq')
+	      assert(Retem.render(template, {~a: 'abc', ~b: 'abc'}), 'less or eq')
+	      assert(Retem.render(template, {~a: 'cba', ~b: 'abc'}), '')
+
 # todo flow control:
 # if
-# * gteq  greater than or equal to
-# * lteq  less than or equal to
+# {if a > 123}yes{end}
+# {if a gt 3 or b lt 10}...{end}
+# {if a or b and c}...{end}
+
 
 # todo loops
 
