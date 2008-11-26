@@ -1,4 +1,4 @@
-task :default => [:compile, :test]
+task :default => [:compile, :behave]
 
 def output_file(input_file)
   'ebin/' + File.basename(input_file).sub(/\.\w+$/, '.beam')
@@ -51,7 +51,8 @@ task :compile => (ERL_SRC + REIA_SRC + PARSER_SRC).map { |input_file| output_fil
 #   sh "erlc +debug_info -o ebin artifacts/erl/reia_parse.erl"
 # end
 
-task :test do
+task :behave do
+  sh "reia behave/all.re"
 end
 
 task :clean do
