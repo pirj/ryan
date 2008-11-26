@@ -84,10 +84,34 @@ Behave.context('Templating') do
 	      assert(Retem.render(template, {~a: 'abc', ~b: 'cba'}), 'not equal')
 	      assert(Retem.render(template, {~a: 'abc', ~b: 'abc'}), '')
 
+      context('(gt)') do
+        template = '{if a gt b}greather{end}'
+        should('be resolved') do
+	      assert(Retem.render(template, {~a: 123, ~b: 321}), '')
+	      assert(Retem.render(template, {~a: 123, ~b: 123}), '')
+	      assert(Retem.render(template, {~a: 123, ~b: 123}), 'greather')
+	      assert(Retem.render(template, {~a: true, ~b: false}), 'greather')
+	      assert(Retem.render(template, {~a: true, ~b: true}), '')
+	      assert(Retem.render(template, {~a: false, ~b: true}), '')
+	      assert(Retem.render(template, {~a: 'abc', ~b: 'cba'}), '')
+	      assert(Retem.render(template, {~a: 'abc', ~b: 'abc'}), '')
+	      assert(Retem.render(template, {~a: 'cba', ~b: 'abc'}), 'greather')
+
+      context('(lt)') do
+        template = '{if a lt b}less{end}'
+        should('be resolved') do
+	      assert(Retem.render(template, {~a: 123, ~b: 321}), 'less')
+	      assert(Retem.render(template, {~a: 123, ~b: 123}), '')
+	      assert(Retem.render(template, {~a: 123, ~b: 123}), '')
+	      assert(Retem.render(template, {~a: true, ~b: false}), '')
+	      assert(Retem.render(template, {~a: true, ~b: true}), '')
+	      assert(Retem.render(template, {~a: false, ~b: true}), 'less')
+	      assert(Retem.render(template, {~a: 'abc', ~b: 'cba'}), 'less')
+	      assert(Retem.render(template, {~a: 'abc', ~b: 'abc'}), '')
+	      assert(Retem.render(template, {~a: 'cba', ~b: 'abc'}), '')
+
 # todo flow control:
 # if
-# * gt    greater than
-# * lt    less than
 # * gteq  greater than or equal to
 # * lteq  less than or equal to
 
