@@ -10,15 +10,6 @@ It provides convenient syntax and a lot if features available out of the box:
 * i18n
 * nesting of templates
 
-== Building
-
-Download and install Erlang/OTP, minimum required version is R12B-3
-Download and install YAWS, 1.77 and higher is recommended
-Download and install Ruby and Rake, they are required to build Reia
-Download Reia from source
-cd into reia folder run 'rake'
-Run rake from Ryan source folder to build it
-
 == Usage
 
 template = """Total {apples|count:~apples}
@@ -91,18 +82,21 @@ mylist = [['aaa', 123], ['qqq', 456]]
 {for [a,b] in mylist}
   {a} {b}
 {end}
+=>  aaa 123  qqq 456
 
 When iterating a list of tuples:
-mylist = [('aaa', 123, ~first), ('qqq', 456, ~second)]
+mylist = [('aaa', 123, 'www'), ('qqq', 456, 'zzz')]
 {for (a,b,c) in mylist}
   {a} {b} {c}
 {end}
+=>  aaa 123 www  qqq 456 zzz
 
 When iterating a list of dicts/objects:
 apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
 {for {color: ~color, weight: ~weight} in apples}
   Color is {color} and weight is {weight}
 {end}
+=> Color is red and weight is 0.2  Color is yellow and weight is 0.15
 
 == Access to variables
 
