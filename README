@@ -3,6 +3,7 @@
 Ryan is an Reia/Erlang BEAM based web framework.
 It allows you to create web applications with clean and short code,
 with use of Reia programming language and Retem templating engine.
+Behave is a testing tool.
 YAWS and Mochiweb can be used as a web server, SQLite3, PostgreSQL,
 MySQL, Mnesia and Mongo as databases.
 
