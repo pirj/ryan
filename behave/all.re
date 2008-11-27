@@ -89,7 +89,7 @@ Behave.context('Templating') do
         should('be resolved') do
           assert(Retem.render(template, {~a: 123, ~b: 321}), '')
           assert(Retem.render(template, {~a: 123, ~b: 123}), '')
-          assert(Retem.render(template, {~a: 123, ~b: 123}), 'greather')
+          assert(Retem.render(template, {~a: 321, ~b: 123}), 'greather')
           assert(Retem.render(template, {~a: true, ~b: false}), 'greather')
           assert(Retem.render(template, {~a: true, ~b: true}), '')
           assert(Retem.render(template, {~a: false, ~b: true}), '')
@@ -102,7 +102,7 @@ Behave.context('Templating') do
         should('be resolved') do
           assert(Retem.render(template, {~a: 123, ~b: 321}), 'less')
           assert(Retem.render(template, {~a: 123, ~b: 123}), '')
-          assert(Retem.render(template, {~a: 123, ~b: 123}), '')
+          assert(Retem.render(template, {~a: 321, ~b: 123}), '')
           assert(Retem.render(template, {~a: true, ~b: false}), '')
           assert(Retem.render(template, {~a: true, ~b: true}), '')
           assert(Retem.render(template, {~a: false, ~b: true}), 'less')
@@ -115,7 +115,7 @@ Behave.context('Templating') do
         should('be resolved') do
           assert(Retem.render(template, {~a: 123, ~b: 321}), '')
           assert(Retem.render(template, {~a: 123, ~b: 123}), 'greather or eq')
-          assert(Retem.render(template, {~a: 123, ~b: 123}), 'greather or eq')
+          assert(Retem.render(template, {~a: 321, ~b: 123}), 'greather or eq')
           assert(Retem.render(template, {~a: true, ~b: false}), 'greather or eq')
           assert(Retem.render(template, {~a: true, ~b: true}), 'greather or eq')
           assert(Retem.render(template, {~a: false, ~b: true}), '')
@@ -128,7 +128,7 @@ Behave.context('Templating') do
         should('be resolved') do
           assert(Retem.render(template, {~a: 123, ~b: 321}), 'less or eq')
           assert(Retem.render(template, {~a: 123, ~b: 123}), 'less or eq')
-          assert(Retem.render(template, {~a: 123, ~b: 123}), '')
+          assert(Retem.render(template, {~a: 321, ~b: 123}), '')
           assert(Retem.render(template, {~a: true, ~b: false}), '')
           assert(Retem.render(template, {~a: true, ~b: true}), 'less or eq')
           assert(Retem.render(template, {~a: false, ~b: true}), 'less or eq')
