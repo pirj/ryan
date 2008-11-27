@@ -16,7 +16,7 @@ template = """Total {apples|count:~apples}
 {for apple in apples} {apple.color apple.weight|kg} {end}"""
 apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
 renderer = Retem.new('apps/my_app/i18n.yaml')
-renderer.render(template, {~apples: apples})
+renderer.parse(template).render({~apples: apples})
 => Total 2 apples
 .. red 0.2kg
 .. yellow 0.15kg
@@ -296,9 +296,10 @@ apps/my_app/i18n.yaml:
 Retem uses 'en-US' as default unless otherwise requested.
 Dictionary is provided when creating retem instance:
 renderer = Retem.new('apps/my_app/i18n.yaml')
-renderer.render('{apples|count:~apples}', {~apples: 3})
+template = renderer.parse('{apples|count:~apples}')
+template.render({~apples: 3})
 => 3 apples
-renderer.render('{apples|count:~apples}', {~apples: 3}, 'fr-FR')
+template.render('{apples|count:~apples}', {~apples: 3}, 'fr-FR')
 => 3 pommes
 
 == Nesting
@@ -317,8 +318,9 @@ In this case the feedback is called, and it is passed the nested atom and all th
 With this it is possible to nest templates:
 
 renderer=Retem.new()
-renderer.render(template, {~apples: apples}) do |nested_template, params| 
-	renderer.render(get_template_by_name(nested_template), params) 
+template = renderer.parse('...')
+template.render({~apples: apples}) do |nested_template, params| 
+  get_template_by_name(nested_template).render(params) 
 
 In this case, when retem sees a 'nest' statement, it calls the callback block and inserts
 the result to itself. Of course, nested parts can have nested parts too.
