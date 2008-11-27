@@ -138,9 +138,26 @@ Behave.context('Templating') do
           assert(template.render({~a: 'abc', ~b: 'abc'}), 'less or eq')
           assert(template.render({~a: 'cba', ~b: 'abc'}), '')
 
+    context('mixed non-variable/variable comparsions') do
+      context('numeric') do
+        template = renderer.parse('{if a gt 132}greather{end}')
+        should('be resolved') do
+          assert(template.render({~a: 123}), '')
+          assert(template.render({~a: 321}), 'greather')
+
+      context('boolean') do
+        template = renderer.parse('{if a gt false}greather{end}')
+        should('be resolved') do
+          assert(template.render({~a: true}), 'greather')
+          assert(template.render({~a: false}), '')
+
+      context('string') do
+        template = renderer.parse('{if a gt "abc"}greather{end}')
+        should('be resolved') do
+          assert(template.render({~a: 'abc'}), '')
+          assert(template.render({~a: 'cba'}), 'greather')
+
 # todo flow control:
-# if
-# {if a > 123}yes{end}
 # {if a gt 3 or b lt 10}...{end}
 # {if a or b and c}...{end}
 
