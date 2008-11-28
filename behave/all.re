@@ -157,10 +157,30 @@ Behave.context('Templating') do
           assert(template.render({~a: 'abc'}), '')
           assert(template.render({~a: 'cba'}), 'greather')
 
-# todo flow control:
-# {if a gt 3 or b lt 10}...{end}
-# {if a or b and c}...{end}
-
+    context('composite comparsions') do
+      context('chained') do
+        template = renderer.parse('{if a or b and c}a or b and c{end}')
+        should('be resolved') do
+          assert(template.render({~a: false, ~b: false, ~c: false}), '')
+          assert(template.render({~a: true, ~b: false, ~c: false}), '')
+          assert(template.render({~a: false, ~b: true, ~c: false}), '')
+          assert(template.render({~a: true, ~b: true, ~c: false}), '')
+          assert(template.render({~a: false, ~b: false, ~c: true}), '')
+          assert(template.render({~a: true, ~b: false, ~c: true}), 'a or b and c')
+          assert(template.render({~a: false, ~b: true, ~c: true}), 'a or b and c')
+          assert(template.render({~a: true, ~b: false, ~c: true}), 'a or b and c')
+      context('compound') do
+        template = renderer.parse('{if a gt 3 and b lt 3}a > 3 and b < 3{end}')
+        should('be resolved') do
+          assert(template.render({~a: 1, ~b: 1}), '')
+          assert(template.render({~a: 3, ~b: 1}), '')
+          assert(template.render({~a: 5, ~b: 1}), 'a > 3 and b < 3')
+          assert(template.render({~a: 1, ~b: 3}), '')
+          assert(template.render({~a: 3, ~b: 3}), '')
+          assert(template.render({~a: 5, ~b: 3}), '')
+          assert(template.render({~a: 1, ~b: 5}), '')
+          assert(template.render({~a: 3, ~b: 5}), '')
+          assert(template.render({~a: 5, ~b: 5}), '')
 
 # todo loops
 
