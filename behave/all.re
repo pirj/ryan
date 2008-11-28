@@ -169,6 +169,7 @@ Behave.context('Templating') do
           assert(template.render({~a: true, ~b: false, ~c: true}), 'a or b and c')
           assert(template.render({~a: false, ~b: true, ~c: true}), 'a or b and c')
           assert(template.render({~a: true, ~b: false, ~c: true}), 'a or b and c')
+
       context('compound') do
         template = renderer.parse('{if a gt 3 and b lt 3}a > 3 and b < 3{end}')
         should('be resolved') do
@@ -188,40 +189,35 @@ Behave.context('Templating') do
       should('be resolved') do
         assert(template.render({~many: [1, 2, 3]}), '123')
         assert(template.render({~many: ['a', 'b', 'c']}), 'abc')
+
     context('a tuple') do
       template = renderer.parse('{for x in many}{x}{end}')
       should('be resolved') do
         assert(template.render({~many: (1, 2, 3)}), '123')
         assert(template.render({~many: ('a', 'b', 'c')ght}), 'abc')
+
     context('a dict') do
-      template = renderer.parse('{for {k:v} in mydict}-{k}:{v}{end}')
+      template = renderer.parse('{for {k:v} in many}-{k}:{v}{end}')
       should('be resolved') do
-        assert(template.render({~a: 3, ~b: 4}), '-a:3-b:4')
-        assert(template.render({'a': 3, 'b': 4}), '-a:3-b:4')
-        assert(template.render({'a': 'q', 'b': 'w'}), '-a:q-b:w')
+        assert(template.render({~many:{~a: 3, ~b: 4}}), '-a:3-b:4')
+        assert(template.render({~many:{'a': 3, 'b': 4}}), '-a:3-b:4')
+        assert(template.render({~many:{'a': 'q', 'b': 'w'}}), '-a:q-b:w')
 
-# Pattern matching can be used when iterating lists of objects.
-# When iterating a list of lists:
-# mylist = [['aaa', 123], ['qqq', 456]]
-# {for [a,b] in mylist}
-#   {a} {b}
-# {end}
-# =>  aaa 123  qqq 456
-# 
-# When iterating a list of tuples:
-# mylist = [('aaa', 123, 'www'), ('qqq', 456, 'zzz')]
-# {for (a,b,c) in mylist}
-#   {a} {b} {c}
-# {end}
-# =>  aaa 123 www  qqq 456 zzz
-# 
-# When iterating a list of dicts/objects:
-# apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
-# {for {color: ~color, weight: ~weight} in apples}
-#   Color is {color} and weight is {weight}
-# {end}
-# => Color is red and weight is 0.2  Color is yellow and weight is 0.15
+  context('iterating with pattern matching through') do
+    context('a list') do
+      template = renderer.parse('{for [a,b] in many}-{a}:{b}{end}')
+      should('be resolved') do
+        assert(template.render({~many: [['aaa', 123], ['qqq', 456]]}), '-aaa:123-qqq:456')
 
+    context('a list of tuples') do
+      template = renderer.parse('{for (a,b,c) in many}-{a}:{b}:{c}{end}')
+      should('be resolved') do
+        assert(template.render({~many: [('aaa', 123, 'www'), ('qqq', 456, 'zzz')]}), '-aaa:123:www-qqq:456:zzz')
+
+    context('a list of dicts/objects') do
+      template = renderer.parse('{for {color: ~color, weight: ~weight} in apples}-{color}:{weight}{end}')
+      should('be resolved') do
+        assert(template.render({~apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]}), '-red:0.2-yellow:0.15')
 
 # todo filtering
 
