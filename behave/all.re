@@ -240,27 +240,35 @@ Behave.context('Templating') do
       should('be resolved') do
         assert(template.render({~apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]}), '-red:0.2-yellow:0.15')
 
-# todo filtering
-# a='apPles'
-# {a|capital}
-# => ApPles
-# 
-# a='apPles AnD BaNaNas'
-# {a|capitalphrase}
-# => Apples and bananas
-# 
-# a='apPles'
-# {a|lower}
-# => apples
-# 
-# a='apPles'
-# {a|upper}
-# => APPLES
-# 
-# a='app_les'
-# {a|pretty}
-# => App les
-# 
+  context('filtering') do
+    context('capital') do
+      template = renderer.parse('{a|capital}')
+      should('be resolved') do
+        assert(template.render({~a: 'apPles'}), 'ApPles')
+
+      template = renderer.parse('{a|capitalwords}')
+      should('words') do
+        assert(template.render({~a: 'apPles AnD BaNaNas'}), 'Apples And Bananas')
+
+      template = renderer.parse('{a|capitalphrase}')
+      should('whole phrase') do
+        assert(template.render({~a: 'apPles AnD BaNaNas'}), 'Apples and bananas')
+
+    context('lower case') do
+      template = renderer.parse('{a|lower}')
+      should('be resolved') do
+        assert(template.render({~a: 'apPles'}), 'apples')
+
+    context('upper case') do
+      template = renderer.parse('{a|upper}')
+      should('be resolved') do
+        assert(template.render({~a: 'apPles'}), 'APPLES')
+
+    context('pretty inspection') do
+      template = renderer.parse('{a|pretty}')
+      should('be resolved') do
+        assert(template.render({~a: 'app_les'}), 'App les')
+
 # a='apple'
 # {a|plural}
 # => apples
@@ -403,8 +411,46 @@ Behave.context('Templating') do
 # => 242
 
 
-# todo i18n
+# todo i18n:
+# It is possible to provide custom translations dictionary in the following format (YAML):
+# apps/my_app/i18n.yaml:
+# - apple !countable
+#   en-US: apple, apples
+#   fr-FR: pomme, pommes
+# - banana !countable
+#   en-US: banana, bananas
+#   fr-FR: banane, bananes
+# 
+# Retem uses 'en-US' as default unless otherwise requested.
+# Dictionary is provided when creating retem instance:
+# renderer = Retem.new('apps/my_app/i18n.yaml')
+# template = renderer.parse('{apples|count:~apples}')
+# template.render({~apples: 3})
+# => 3 apples
+# template.render('{apples|count:~apples}', {~apples: 3}, 'fr-FR')
+# => 3 pommes
 
-# todo nesting
+# todo nesting:
+# It is possible to call external methods to provide nesting support.
+# Imagine we have a template 'home_page', and we want it to consist of several parts:
+# 
+# My mail
+# {nest ~mail}
+# My calendar
+# {nest ~calendar}
+# My contacts
+# {nest ~contacts}
+# 
+# In this case the feedback is called, and it is passed the nested atom and all the parameters.
+# With this it is possible to nest templates:
+# 
+# renderer=Retem.new()
+# template = renderer.parse('...')
+# template.render({~apples: apples}) do |nested_template, params| 
+#   get_template_by_name(nested_template).render(params) 
+# 
+# In this case, when retem sees a 'nest' statement, it calls the callback block and inserts
+# the result to itself. Of course, nested parts can have nested parts too.
+
 
 # todo extending filters
