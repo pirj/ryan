@@ -1,3 +1,13 @@
+class Store
+  def set_address(address)
+    @address = address
+  def set_name(name)
+    @name = name
+
+class Address
+  def set_street(street)
+    @street = street
+
 Behave.context('Templating') do
   renderer = Retem.new()
 
@@ -21,6 +31,17 @@ Behave.context('Templating') do
   context('variable referencing a variable') do
     should('be resolved') do
       Retem.render('{a}', {~a: ~b, ~b: 'abc'}) == 'abc'
+
+  context('variable properties') do
+    address = Address.start()
+    address.set_street('main st.')
+    store = Store.start()
+    store.set_address(address)
+    store.set_name('store name')
+    should('be resolved') do
+      Retem.render('{s.name}', {~s: store}) == 'store name'
+    should('be deep resolved') do
+      Retem.render('{s.address.street}', {~s: store}) == 'main st.'
 
   context('flow control') do
     context('if statement') do
@@ -220,6 +241,167 @@ Behave.context('Templating') do
         assert(template.render({~apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]}), '-red:0.2-yellow:0.15')
 
 # todo filtering
+# a='apPles'
+# {a|capital}
+# => ApPles
+# 
+# a='apPles AnD BaNaNas'
+# {a|capitalphrase}
+# => Apples and bananas
+# 
+# a='apPles'
+# {a|lower}
+# => apples
+# 
+# a='apPles'
+# {a|upper}
+# => APPLES
+# 
+# a='app_les'
+# {a|pretty}
+# => App les
+# 
+# a='apple'
+# {a|plural}
+# => apples
+# 
+# a='apples'
+# {a|singular}
+# => apple
+# 
+# a='apples'
+# {a|length}
+# => 6
+# 
+# a=nil
+# {a|default:'none'}
+# => none
+# 
+# a='*apple*'
+# {a|textile}
+# => <b>apple</b>
+# 
+# a='/apple/'
+# {a|textile}
+# => <i>apple</i>
+# 
+# a=123
+# {a|float:0,3}
+# => 123.000
+# 
+# a=123
+# {a|float:4,3}
+# => 0123.000
+# 
+# a=Time.now
+# {a|date:dd-MM-yy/hh:mm:ss}
+# => 11-11-2008/02:31:14
+# 
+# a=Time.now - 100
+# {a|since:1}
+# => 2 minutes
+# 
+# a=Time.now + 100
+# {a|until:2}
+# => 1 minute, 40 seconds
+# 
+# a=1300000
+# {a|bytes:2}
+# => 1,269.53KB
+# 
+# a=88005554567
+# {a|format:#-###-###-####}
+# => 8-800-555-4567
+# 
+# a='8800call2me'
+# {a|format:#-###-#######}
+# => 8-800-call2me
+# 
+# a='<h1>"Theory & practice"</h1>'
+# {a|escape}
+# => &lt;h1&gt;&quot;Theory &amp; practice&quot;&lt;/h1&gt;
+# 
+# a='<h1>Theory</h1>'
+# {a|safe}
+# => Theory
+# 
+# a='a long long long string'
+# {a|cut:15}
+# => a long long ...
+# {a|cut:30}
+# => a long long long string
+# 
+# a="""a long
+# long
+# string"""
+# {a|lines:0}
+# 0 a long
+# 1 long
+# 2 string
+# 
+# a=['apple', 'banana', 'coconut']
+# {a|count}
+# => 3
+# 
+# a=['humour', 'life', 'friends']
+# Tags: {a|join:' '}
+# => Tags: humour life friends
+# 
+# Filters can take several parameters:
+# a=['humour', 'life', 'friends']
+# {a|wrap:(,)}
+# => (humour)(life)(friends)
+# 
+# {a|cut:10,''}
+# => a long lon
+# 
+# a=[123, 345, 567]
+# {a|count:'item','items'}
+# => 3 items
+# 
+# a=[123, 345, 567]
+# - kilo !countable
+#   en-US: kilogram, kilograms
+#   fr-FR: kilogramme, kilogrammes
+# {a|count:~kilo}
+# => 3 kilograms
+# 
+# Filters can be chained:
+# a='appLes'
+# {a|lower|capital|singular|cut:10}
+# => Apple
+# 
+# a=['humour', 'life', 'friends']
+# {a|wrap:(,)|join:'/'}
+# => (humour)/(life)/(friends)
+# 
+# a='hello, world'
+# {a|wrap:*|textile}
+# => <b>hello, world</b>
+# 
+# a='hello, world'
+# {a|split:' ',','|capital|join:/}
+# => Hello/World
+# 
+# Filters can take variables as parameters:
+# a='long long long string'
+# max_length=10
+# {a|cut:max_length}
+# => long lo...
+# 
+# Filters can walk through data:
+# a=[('apples', 11),('bananas', 32)]
+# {a|sum:(_,x)}
+# => 43
+# 
+# a=[{~apples: 11},{~bananas: 32}]
+# {a|sum:{_,x}}
+# => 43
+# 
+# a=[[111, 222], [78, 20]]
+# {a|sum:[_,x]}
+# => 242
+
 
 # todo i18n
 
