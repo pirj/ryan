@@ -280,7 +280,18 @@ a=[[111, 222], [78, 20]]
 
 == Extending filters with native code
 
+It is possible to implement additional filters:
 
+src/behave/child_filter.re:
+module ChildFilter
+  def filter(string)
+     if string == 'shit'
+       '****'
+
+renderer = Retem.new()
+renderer.add_filter(ChildFilter)
+template = renderer.parse('{a|child_filter}')
+template.render({~a: 'holy shit}) # holy ****
 
 == i18n
 
