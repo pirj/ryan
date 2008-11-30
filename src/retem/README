@@ -336,5 +336,17 @@ template.render({~apples: apples}) do |nested_template, params|
 In this case, when retem sees a 'nest' statement, it calls the callback block and inserts
 the result to itself. Of course, nested parts can have nested parts too.
 
+== Preprocessing
+
+To skip rendering of the code pieces, that are render-to-render static, preprocessing
+can be used.
+
+renderer=Retem.new()
+template = renderer.parse("Server's ip address is {{server_ip}}, user's ip address is {user_ip}", {~server_ip: '55.55.55.55'})
+template.render({~user_ip: '111.111.111.111'})
+=> Server's ip address is '55.55.55.55', user's ip address is 111.111.111.111
+
+During render, only user_ip is evaluated.
+
 == Authors
 * Philpipp Pirozhkov pirj@mail.ru
