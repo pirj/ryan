@@ -264,11 +264,11 @@ Behave.context('Templating') do
       should('be resolved') do
         assert(template.render({~a: 'apPles'}), 'APPLES')
 
-    context('pretty inspection') do
+    context('pretty filter') do
       template = renderer.parse('{a|pretty}')
       should('be resolved') do
         assert(template.render({~a: 'app_les'}), 'App les')
-    
+
     context('inflection') do
       context('singularize') do
         template = renderer.parse('{a|singular}')
@@ -284,12 +284,20 @@ Behave.context('Templating') do
         should('be resolved') do
           assert(template.render({~a: 'apples'}), 'apples')
 
-    context('list length') do
-      template = renderer.parse('{a|length}')
-      should('be resolved') do
-        assert(template.render({~a: [1,2,1,5,4,3]}), '6')
-      should('be resolved') do
-        assert(template.render({~a: {~q: 1, ~w: 2, ~e: 3}}), '3')
+    context('list/dict length') do
+      context('without units')
+        template = renderer.parse('{a|length}')
+        should('be resolved') do
+          assert(template.render({~a: [1,2,1,5,4,3]}), '6')
+        should('be resolved') do
+          assert(template.render({~a: {~q: 1, ~w: 2, ~e: 3}}), '3')
+
+      context('with units')
+        template = renderer.parse("{a|length:item}")
+        should('be resolved') do
+          assert(template.render({~a: [1,2,1,5,4,3], ~item: {~enUS: 'item'}}), '6 items')
+        should('be resolved') do
+          assert(template.render({~a: [1], ~item: {~enUS: 'item'}}), '1 item')
 
     context('default value') do
       template = renderer.parse("{a|default:'none'}")
@@ -298,60 +306,154 @@ Behave.context('Templating') do
       should('be resolved') do
         assert(template.render({~a: nil}), 'none')
 
-# a='*apple*'
-# {a|textile}
-# => <b>apple</b>
+    context('simple textile') do
+      template = renderer.parse('{a|textile}')
+      should('render as emphasied')
+        assert(template.render({~a: '_apple_'}), '<p><em>apple</em></p>')
+      should('render as italics')
+        assert(template.render({~a: '__apple__'}), '<p><i>apple</i></p>')
+      should('render as strong')
+        assert(template.render({~a: '*apple*'}), '<p><strong>apple</strong></p>')
+      should('render as bold')
+        assert(template.render({~a: '**apple**'}), '<p><b>apple</b></p>')
+      should('render as deleted')
+        assert(template.render({~a: '-apple-'}), '<p><del>apple</del></p>')
+      should('render as inserted')
+        assert(template.render({~a: '+apple+'}), '<p><ins>apple</ins></p>')
+      should('render as code')
+        assert(template.render({~a: '@puts("hello")@'}), '<code>puts("hello")</code>')
+      should('render in span')
+        assert(template.render({~a: '%apple%'}), '<p><span>apple</span></p>')
+      should('render superscripted')
+        assert(template.render({~a: '^apple^'}), '<p><sup>apple</sup></p>')
+      should('render subscripted')
+        assert(template.render({~a: '~apple~'}), '<p><sub>apple</sub></p>')
+      should('render citated')
+        assert(template.render({~a: '??apple??'}), '<p><cit>apple</cit></p>')
+
+# todo: extend textile filter behave
+# Block modifiers:
+# hn. heading
+# bq. Blockquote
+# fnn. Footnote
+# p. Paragraph
+# bc. Block code
+# pre. Pre-formatted
+# # Numeric list
+# * Bulleted list
+# Links:
+# "linktext":http://…
+# Punctuation:
+# "quotes" → “quotes”
+# 'quotes' → ‘quotes’
+# it's → it’s
+# em -- dash → em — dash
+# en - dash → en – dash
+# 2 x 4 → 2 × 4
+# foo(tm) → foo™
+# foo(r) → foo®
+# foo(c) → foo©
+# Attributes:
+# (class)
+# (#id)
+# {style}
+# [language]
+# Alignment:
+# > right
+# < left
+# = center
+# <> justify
+# Tables:
+# |_. a|_. table|_. header|
+# |a|table|row|
+# |a|table|row|
+# Images:
+# !imageurl!
+# !imageurl!:http://…
+# Acronyms:
+# ABC(Always Be Closing)
+# Footnotes:
+# See foo[1].
 # 
-# a='/apple/'
-# {a|textile}
-# => <i>apple</i>
+# fn1. Foo.
+# Raw HTML:
+# ==no <b>textile</b>==
 # 
-# a=123
-# {a|float:0,3}
-# => 123.000
-# 
-# a=123
-# {a|float:4,3}
-# => 0123.000
-# 
-# a=Time.now
-# {a|date:dd-MM-yy/hh:mm:ss}
-# => 11-11-2008/02:31:14
-# 
-# a=Time.now - 100
-# {a|since:1}
-# => 2 minutes
-# 
-# a=Time.now + 100
-# {a|until:2}
-# => 1 minute, 40 seconds
-# 
-# a=1300000
-# {a|bytes:2}
-# => 1,269.53KB
-# 
-# a=88005554567
-# {a|format:#-###-###-####}
-# => 8-800-555-4567
-# 
-# a='8800call2me'
-# {a|format:#-###-#######}
-# => 8-800-call2me
-# 
-# a='<h1>"Theory & practice"</h1>'
-# {a|escape}
-# => &lt;h1&gt;&quot;Theory &amp; practice&quot;&lt;/h1&gt;
-# 
-# a='<h1>Theory</h1>'
-# {a|safe}
-# => Theory
-# 
-# a='a long long long string'
-# {a|cut:15}
-# => a long long ...
-# {a|cut:30}
-# => a long long long string
-# 
+# notextile. no <b>textile
+# here</b>
+# Extended blocks:
+# bq.. quote
+#  
+# continued quote
+#  
+# p. paragraph
+
+    context('formatting a float number') do
+      template = renderer.parse('{a|float:,3}')
+      should('be resolved') do
+        template.render({~a: 123.4567}) == '123.456'
+      should('be resolved') do
+        template.render({~a: 0.4567}) == '0.456'
+      should('be resolved') do
+        template.render({~a: 0.4}) == '0.4'
+
+      template = renderer.parse('{a|float:4,3}')
+      should('be resolved') do
+        template.render({~a: 123.4567}) == '0123.456'
+
+    context('formatting a date') do
+      template = renderer.parse('{a|date:dd-MM-yy/hh:mm:ss}')
+      should('be resolved') do
+        template.render({~a: ((2008,12,2),(21,26,48))}) == '02-12-2008/21:26:48'
+
+    context('formatting a relative date/time') do
+      should('be resolved') do
+        template = renderer.parse('{a|since:now,1}')
+        template.render({~a: ((2008,12,2),(21,26,48)), ~now: ((2008,12,2),(21,30,48))}) == '5 minutes ago'
+      should('be resolved') do
+        template = renderer.parse('{a|until:now,2}')
+        template.render({~a: ((2008,12,2),(21,26,48)), ~now: ((2008,12,2),(21,22,13))}) == 'in 4 minutes 35 seconds'
+
+    context('formatting a size in bytes') do
+      should('be resolved') do
+        template = renderer.parse('{a|since:bytes,2}')
+        template.render({~a: 1269.534}) == '1,269.53KB'
+      should('be resolved') do
+        template = renderer.parse('{a|since:bytes,2}')
+        template.render({~a: 1269.554}) == '1,269.56KB'
+
+    context('formatting a decimal in free form') do
+      template = renderer.parse('{a|format:#-###-#######}')
+      should('be resolved') do
+        template.render({~a: 88005554567}) == '8-800-555-4567'
+
+    context('formatting a string in free form') do
+      template = renderer.parse('{a|format:#-###-#######}')
+      should('be resolved') do
+        template.render({~a: '8800call2me'}) == '8-800-call2me'
+
+    context('html escaping') do
+      template = renderer.parse('{a|escape}')
+      should() do
+        template.render({~a: '<h1>"Theory & practice"</h1>'}) == '&lt;h1&gt;&quot;Theory &amp; practice&quot;&lt;/h1&gt;'
+
+    context('html safe') do
+      template = renderer.parse('{a|safe}')
+      should() do
+        template.render({~a: '<h1>Theory</h1>'}) == 'Theory'
+
+    context('text limitation') do
+      should() do
+        template = renderer.parse('{a|cut:15}')
+        template.render({~a: 'a long long long string'}) == 'a long long ...'
+      should() do
+        template = renderer.parse('{a|cut:30}')
+        template.render({~a: 'a long long long string'}) == 'a long long long string'
+      should() do
+        template = renderer.parse("{a|cut:10,''}")
+        template.render({~a: 'a long long long string'}) == 'a long lon'
+
+# postpone this until multiline strings doesn't work
 # a="""a long
 # long
 # string"""
@@ -359,26 +461,17 @@ Behave.context('Templating') do
 # 0 a long
 # 1 long
 # 2 string
-# 
-# a=['apple', 'banana', 'coconut']
-# {a|count}
-# => 3
-# 
-# a=['humour', 'life', 'friends']
-# Tags: {a|join:' '}
-# => Tags: humour life friends
-# 
-# Filters can take several parameters:
-# a=['humour', 'life', 'friends']
-# {a|wrap:(,)}
-# => (humour)(life)(friends)
-# 
-# {a|cut:10,''}
-# => a long lon
-# 
-# a=[123, 345, 567]
-# {a|count:'item','items'}
-# => 3 items
+
+    context('list join') do
+      template = renderer.parse('Tags: {a|join:' '}')
+      should() do
+        template.render({~a: ['humour', 'life', 'friends']}) == 'Tags: humour life friends'
+
+    context('list wrap') do
+      template = renderer.parse('{a|wrap:(,)}')
+      should() do
+        template.render({~a: ['humour', 'life', 'friends']}) == '(humour)(life)(friends)'
+
 # 
 # a=[123, 345, 567]
 # - kilo !countable
@@ -425,24 +518,34 @@ Behave.context('Templating') do
 
 
 # todo i18n:
-# It is possible to provide custom translations dictionary in the following format (YAML):
-# apps/my_app/i18n.yaml:
-# - apple !countable
-#   en-US: apple, apples
-#   fr-FR: pomme, pommes
-# - banana !countable
-#   en-US: banana, bananas
-#   fr-FR: banane, bananes
+# == i18n
+# It is possible to provide custom translations dictionary in the following format:
+# apps/my_app/i18n.re:
+# i18n = {
+#   ~apple: {
+#     ~enUS: 'apple',
+#     ~frFr: 'pomme'
+#   },
+#   ~banana: {
+#     ~enUS: 'banana',
+#     ~frFr: 'banane'
+#   },
+#   ~price: {
+#     ~enUS: fun(cost, currency) {"Price: #{value} #{cur}" }
+#     ~frFr: fun(cost, currency) {"Prix: #{value} #{cur}" }
+#   } 
 # 
 # Retem uses 'en-US' as default unless otherwise requested.
-# Dictionary is provided when creating retem instance:
-# renderer = Retem.new('apps/my_app/i18n.yaml')
+# Dictionary is added to renderer instance:
+# 
+# renderer = Retem.new()
+# 
 # template = renderer.parse('{apples|count:~apples}')
 # template.render({~apples: 3})
 # => 3 apples
 # template.render('{apples|count:~apples}', {~apples: 3}, 'fr-FR')
 # => 3 pommes
-
+# 
 # todo nesting:
 # It is possible to call external methods to provide nesting support.
 # Imagine we have a template 'home_page', and we want it to consist of several parts:
@@ -467,3 +570,4 @@ Behave.context('Templating') do
 
 
 # todo extending filters
+# todo preprocessing
