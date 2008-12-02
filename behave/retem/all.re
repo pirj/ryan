@@ -16,11 +16,11 @@ Behave.context('Templating') do
     template = renderer.parse(string)
     should('be resolved with no changes') do
       template.render({~a: 100}) == string
-    
+
   context('empty braces') do
     should('be resolved to an empty string') do
-      assert(renderer.parse('{}').render(), '')
-      assert(renderer.parse('{ }').render(), '')
+      assert(renderer.parse('{}').render() == '')
+      assert(renderer.parse('{ }').render() == '')
 
   context('variable') do
     should('be resolved (numeric)') do
@@ -47,241 +47,239 @@ Behave.context('Templating') do
     context('if statement') do
       template = renderer.parse('{if a}yes{end}')
       should() do
-        assert(template.render({~a: true}), 'yes')
-        assert(template.render({~a: false}), '')
-    
+        assert(template.render({~a: true}) == 'yes')
+        assert(template.render({~a: false}) == '')
+
     context('if/else statement') do
       template = renderer.parse('{if a}yes{else}no{end}')
       should() do
-        assert(template.render({~a: true}), 'yes')
-        assert(template.render({~a: false}), 'no')
+        assert(template.render({~a: true}) == 'yes')
+        assert(template.render({~a: false}) == 'no')
 
     context('if/else/elseif statement') do
       template = renderer.parse('{if a}yes, a{elseif b}yes, b{else}no{end}')
       should() do
-        assert(template.render({~a: true, ~b: true}), 'yes, a')
-        assert(template.render({~a: false, ~b: true}), 'yes, b')
-        assert(template.render({~a: false, ~b: false}), 'no')
+        assert(template.render({~a: true, ~b: true}) == 'yes, a')
+        assert(template.render({~a: false, ~b: true}) == 'yes, b')
+        assert(template.render({~a: false, ~b: false}) == 'no')
 
     context('unless statement') do
       template = renderer.parse('{unless a}no{end}')
       should() do
-        assert(template.render({~a: true}), '')
-        assert(template.render({~a: false}), 'no')
+        assert(template.render({~a: true}) == '')
+        assert(template.render({~a: false}) == 'no')
 
     context('logical operators') do
       context('(and)') do
         template = renderer.parse('{if a and b}both{end}')
         should() do
-          assert(template.render({~a: true, ~b: true}), 'both')
-          assert(template.render({~a: true, ~b: false}), '')
-          assert(template.render({~a: false, ~b: true}), '')
-          assert(template.render({~a: false, ~b: false}), '')
+          assert(template.render({~a: true, ~b: true}) == 'both')
+          assert(template.render({~a: true, ~b: false}) == '')
+          assert(template.render({~a: false, ~b: true}) == '')
+          assert(template.render({~a: false, ~b: false}) == '')
 
       context('(or)') do
         template = renderer.parse('{if a or b}yes{end}')
         should() do
-          assert(template.render({~a: true, ~b: true}), 'yes')
-          assert(template.render({~a: true, ~b: false}), 'yes')
-          assert(template.render({~a: false, ~b: true}), 'yes')
-          assert(template.render({~a: false, ~b: false}), '')
+          assert(template.render({~a: true, ~b: true}) == 'yes')
+          assert(template.render({~a: true, ~b: false}) == 'yes')
+          assert(template.render({~a: false, ~b: true}) == 'yes')
+          assert(template.render({~a: false, ~b: false}) == '')
 
     context('comparsion operators') do
       context('(eq)') do
         template = renderer.parse('{if a eq b}equal{end}')
         should() do
-          assert(template.render({~a: 123, ~b: 321}), '')
-          assert(template.render({~a: 123, ~b: 123}), 'equal')
-          assert(template.render({~a: true, ~b: false}), '')
-          assert(template.render({~a: true, ~b: true}), 'equal')
-          assert(template.render({~a: 'abc', ~b: 'cba'}), '')
-          assert(template.render({~a: 'abc', ~b: 'abc'}), 'equal')
+          assert(template.render({~a: 123, ~b: 321}) == '')
+          assert(template.render({~a: 123, ~b: 123}) == 'equal')
+          assert(template.render({~a: true, ~b: false}) == '')
+          assert(template.render({~a: true, ~b: true}) == 'equal')
+          assert(template.render({~a: 'abc', ~b: 'cba'}) == '')
+          assert(template.render({~a: 'abc', ~b: 'abc'}) == 'equal')
 
       context('(neq)') do
         template = renderer.parse('{if a neq b}not equal{end}')
         should() do
-          assert(template.render({~a: 123, ~b: 321}), 'not equal')
-          assert(template.render({~a: 123, ~b: 123}), '')
-          assert(template.render({~a: true, ~b: false}), 'not equal')
-          assert(template.render({~a: true, ~b: true}), '')
-          assert(template.render({~a: 'abc', ~b: 'cba'}), 'not equal')
-          assert(template.render({~a: 'abc', ~b: 'abc'}), '')
+          assert(template.render({~a: 123, ~b: 321}) == 'not equal')
+          assert(template.render({~a: 123, ~b: 123}) == '')
+          assert(template.render({~a: true, ~b: false}) == 'not equal')
+          assert(template.render({~a: true, ~b: true}) == '')
+          assert(template.render({~a: 'abc', ~b: 'cba'}) == 'not equal')
+          assert(template.render({~a: 'abc', ~b: 'abc'}) == '')
 
       context('(gt)') do
         template = renderer.parse('{if a gt b}greather{end}')
         should() do
-          assert(template.render({~a: 123, ~b: 321}), '')
-          assert(template.render({~a: 123, ~b: 123}), '')
-          assert(template.render({~a: 321, ~b: 123}), 'greather')
-          assert(template.render({~a: true, ~b: false}), 'greather')
-          assert(template.render({~a: true, ~b: true}), '')
-          assert(template.render({~a: false, ~b: true}), '')
-          assert(template.render({~a: 'abc', ~b: 'cba'}), '')
-          assert(template.render({~a: 'abc', ~b: 'abc'}), '')
-          assert(template.render({~a: 'cba', ~b: 'abc'}), 'greather')
+          assert(template.render({~a: 123, ~b: 321}) == '')
+          assert(template.render({~a: 123, ~b: 123}) == '')
+          assert(template.render({~a: 321, ~b: 123}) == 'greather')
+          assert(template.render({~a: true, ~b: false}) == 'greather')
+          assert(template.render({~a: true, ~b: true}) == '')
+          assert(template.render({~a: false, ~b: true}) == '')
+          assert(template.render({~a: 'abc', ~b: 'cba'}) == '')
+          assert(template.render({~a: 'abc', ~b: 'abc'}) == '')
+          assert(template.render({~a: 'cba', ~b: 'abc'}) == 'greather')
 
       context('(lt)') do
         template = renderer.parse('{if a lt b}less{end}')
         should() do
-          assert(template.render({~a: 123, ~b: 321}), 'less')
-          assert(template.render({~a: 123, ~b: 123}), '')
-          assert(template.render({~a: 321, ~b: 123}), '')
-          assert(template.render({~a: true, ~b: false}), '')
-          assert(template.render({~a: true, ~b: true}), '')
-          assert(template.render({~a: false, ~b: true}), 'less')
-          assert(template.render({~a: 'abc', ~b: 'cba'}), 'less')
-          assert(template.render({~a: 'abc', ~b: 'abc'}), '')
-          assert(template.render({~a: 'cba', ~b: 'abc'}), '')
+          assert(template.render({~a: 123, ~b: 321}) == 'less')
+          assert(template.render({~a: 123, ~b: 123}) == '')
+          assert(template.render({~a: 321, ~b: 123}) == '')
+          assert(template.render({~a: true, ~b: false}) == '')
+          assert(template.render({~a: true, ~b: true}) == '')
+          assert(template.render({~a: false, ~b: true}) == 'less')
+          assert(template.render({~a: 'abc', ~b: 'cba'}) == 'less')
+          assert(template.render({~a: 'abc', ~b: 'abc'}) == '')
+          assert(template.render({~a: 'cba', ~b: 'abc'}) == '')
 
       context('(gteq)') do
         template = renderer.parse('{if a gteq b}greather or eq{end}')
         should() do
-          assert(template.render({~a: 123, ~b: 321}), '')
-          assert(template.render({~a: 123, ~b: 123}), 'greather or eq')
-          assert(template.render({~a: 321, ~b: 123}), 'greather or eq')
-          assert(template.render({~a: true, ~b: false}), 'greather or eq')
-          assert(template.render({~a: true, ~b: true}), 'greather or eq')
-          assert(template.render({~a: false, ~b: true}), '')
-          assert(template.render({~a: 'abc', ~b: 'cba'}), '')
-          assert(template.render({~a: 'abc', ~b: 'abc'}), 'greather or eq')
-          assert(template.render({~a: 'cba', ~b: 'abc'}), 'greather or eq')
+          assert(template.render({~a: 123, ~b: 321}) == '')
+          assert(template.render({~a: 123, ~b: 123}) == 'greather or eq')
+          assert(template.render({~a: 321, ~b: 123}) == 'greather or eq')
+          assert(template.render({~a: true, ~b: false}) == 'greather or eq')
+          assert(template.render({~a: true, ~b: true}) == 'greather or eq')
+          assert(template.render({~a: false, ~b: true}) == '')
+          assert(template.render({~a: 'abc', ~b: 'cba'}) == '')
+          assert(template.render({~a: 'abc', ~b: 'abc'}) == 'greather or eq')
+          assert(template.render({~a: 'cba', ~b: 'abc'}) == 'greather or eq')
 
       context('(lteq)') do
         template = renderer.parse('{if a lteq b}less or eq{end}')
         should() do
-          assert(template.render({~a: 123, ~b: 321}), 'less or eq')
-          assert(template.render({~a: 123, ~b: 123}), 'less or eq')
-          assert(template.render({~a: 321, ~b: 123}), '')
-          assert(template.render({~a: true, ~b: false}), '')
-          assert(template.render({~a: true, ~b: true}), 'less or eq')
-          assert(template.render({~a: false, ~b: true}), 'less or eq')
-          assert(template.render({~a: 'abc', ~b: 'cba'}), 'less or eq')
-          assert(template.render({~a: 'abc', ~b: 'abc'}), 'less or eq')
-          assert(template.render({~a: 'cba', ~b: 'abc'}), '')
+          assert(template.render({~a: 123, ~b: 321}) == 'less or eq')
+          assert(template.render({~a: 123, ~b: 123}) == 'less or eq')
+          assert(template.render({~a: 321, ~b: 123}) == '')
+          assert(template.render({~a: true, ~b: false}) == '')
+          assert(template.render({~a: true, ~b: true}) == 'less or eq')
+          assert(template.render({~a: false, ~b: true}) == 'less or eq')
+          assert(template.render({~a: 'abc', ~b: 'cba'}) == 'less or eq')
+          assert(template.render({~a: 'abc', ~b: 'abc'}) == 'less or eq')
+          assert(template.render({~a: 'cba', ~b: 'abc'}) == '')
 
     context('mixed non-variable/variable comparsions') do
       context('numeric') do
         template = renderer.parse('{if a gt 132}greather{end}')
         should() do
-          assert(template.render({~a: 123}), '')
-          assert(template.render({~a: 321}), 'greather')
+          assert(template.render({~a: 123}) == '')
+          assert(template.render({~a: 321}) == 'greather')
 
       context('boolean') do
         template = renderer.parse('{if a gt false}greather{end}')
         should() do
-          assert(template.render({~a: true}), 'greather')
-          assert(template.render({~a: false}), '')
+          assert(template.render({~a: true}) == 'greather')
+          assert(template.render({~a: false}) == '')
 
       context('string') do
         template = renderer.parse('{if a gt "abc"}greather{end}')
         should() do
-          assert(template.render({~a: 'abc'}), '')
-          assert(template.render({~a: 'cba'}), 'greather')
+          assert(template.render({~a: 'abc'}) == '')
+          assert(template.render({~a: 'cba'}) == 'greather')
 
     context('composite comparsions') do
       context('chained') do
         template = renderer.parse('{if a or b and c}a or b and c{end}')
         should() do
-          assert(template.render({~a: false, ~b: false, ~c: false}), '')
-          assert(template.render({~a: true, ~b: false, ~c: false}), '')
-          assert(template.render({~a: false, ~b: true, ~c: false}), '')
-          assert(template.render({~a: true, ~b: true, ~c: false}), '')
-          assert(template.render({~a: false, ~b: false, ~c: true}), '')
-          assert(template.render({~a: true, ~b: false, ~c: true}), 'a or b and c')
-          assert(template.render({~a: false, ~b: true, ~c: true}), 'a or b and c')
-          assert(template.render({~a: true, ~b: false, ~c: true}), 'a or b and c')
+          assert(template.render({~a: false, ~b: false, ~c: false}) == '')
+          assert(template.render({~a: true, ~b: false, ~c: false}) == '')
+          assert(template.render({~a: false, ~b: true, ~c: false}) == '')
+          assert(template.render({~a: true, ~b: true, ~c: false}) == '')
+          assert(template.render({~a: false, ~b: false, ~c: true}) == '')
+          assert(template.render({~a: true, ~b: false, ~c: true}) == 'a or b and c')
+          assert(template.render({~a: false, ~b: true, ~c: true}) == 'a or b and c')
+          assert(template.render({~a: true, ~b: false, ~c: true}) == 'a or b and c')
 
       context('compound') do
         template = renderer.parse('{if a gt 3 and b lt 3}a > 3 and b < 3{end}')
         should() do
-          assert(template.render({~a: 1, ~b: 1}), '')
-          assert(template.render({~a: 3, ~b: 1}), '')
-          assert(template.render({~a: 5, ~b: 1}), 'a > 3 and b < 3')
-          assert(template.render({~a: 1, ~b: 3}), '')
-          assert(template.render({~a: 3, ~b: 3}), '')
-          assert(template.render({~a: 5, ~b: 3}), '')
-          assert(template.render({~a: 1, ~b: 5}), '')
-          assert(template.render({~a: 3, ~b: 5}), '')
-          assert(template.render({~a: 5, ~b: 5}), '')
+          assert(template.render({~a: 1, ~b: 1}) == '')
+          assert(template.render({~a: 3, ~b: 1}) == '')
+          assert(template.render({~a: 5, ~b: 1}) == 'a > 3 and b < 3')
+          assert(template.render({~a: 1, ~b: 3}) == '')
+          assert(template.render({~a: 3, ~b: 3}) == '')
+          assert(template.render({~a: 5, ~b: 3}) == '')
+          assert(template.render({~a: 1, ~b: 5}) == '')
+          assert(template.render({~a: 3, ~b: 5}) == '')
+          assert(template.render({~a: 5, ~b: 5}) == '')
 
   context('iterating through') do
     context('a list') do
       template = renderer.parse('{for x in many}{x}{end}')
       should() do
-        assert(template.render({~many: [1, 2, 3]}), '123')
-        assert(template.render({~many: ['a', 'b', 'c']}), 'abc')
+        assert(template.render({~many: [1, 2, 3]}) == '123')
+        assert(template.render({~many: ['a', 'b', 'c']}) == 'abc')
 
     context('a tuple') do
       template = renderer.parse('{for x in many}{x}{end}')
       should() do
-        assert(template.render({~many: (1, 2, 3)}), '123')
-        assert(template.render({~many: ('a', 'b', 'c')ght}), 'abc')
+        assert(template.render({~many: (1, 2, 3)}) == '123')
+        assert(template.render({~many: ('a', 'b', 'c')ght}) == 'abc')
 
     context('a dict') do
       template = renderer.parse('{for {k:v} in many}-{k}:{v}{end}')
       should() do
-        assert(template.render({~many:{~a: 3, ~b: 4}}), '-a:3-b:4')
-        assert(template.render({~many:{'a': 3, 'b': 4}}), '-a:3-b:4')
-        assert(template.render({~many:{'a': 'q', 'b': 'w'}}), '-a:q-b:w')
+        assert(template.render({~many:{~a: 3, ~b: 4}}) == '-a:3-b:4')
+        assert(template.render({~many:{'a': 3, 'b': 4}}) == '-a:3-b:4')
+        assert(template.render({~many:{'a': 'q', 'b': 'w'}}) == '-a:q-b:w')
 
   context('iterating with pattern matching through') do
     context('a list') do
       template = renderer.parse('{for [a,b] in many}-{a}:{b}{end}')
       should() do
-        assert(template.render({~many: [['aaa', 123], ['qqq', 456]]}), '-aaa:123-qqq:456')
+        template.render({~many: [['aaa', 123], ['qqq', 456]]}) == '-aaa:123-qqq:456'
 
     context('a list of tuples') do
       template = renderer.parse('{for (a,b,c) in many}-{a}:{b}:{c}{end}')
       should() do
-        assert(template.render({~many: [('aaa', 123, 'www'), ('qqq', 456, 'zzz')]}), '-aaa:123:www-qqq:456:zzz')
+        template.render({~many: [('aaa', 123, 'www'), ('qqq', 456, 'zzz')]}) == '-aaa:123:www-qqq:456:zzz'
 
     context('a list of dicts/objects') do
       template = renderer.parse('{for {color: ~color, weight: ~weight} in apples}-{color}:{weight}{end}')
       should() do
-        assert(template.render({~apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]}), '-red:0.2-yellow:0.15')
+        template.render({~apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]}) == '-red:0.2-yellow:0.15'
 
   context('filtering') do
     context('capital') do
       template = renderer.parse('{a|capital}')
       should('be resolved (first letter only)') do
-        assert(template.render({~a: 'apPles'}), 'ApPles')
+        template.render({~a: 'apPles'}) == 'ApPles'
 
       template = renderer.parse('{a|capitalwords}')
       should('words') do
-        assert(template.render({~a: 'apPles AnD BaNaNas'}), 'Apples And Bananas')
+        template.render({~a: 'apPles AnD BaNaNas'}) == 'Apples And Bananas'
 
       template = renderer.parse('{a|capitalphrase}')
       should('whole phrase') do
-        assert(template.render({~a: 'apPles AnD BaNaNas'}), 'Apples and bananas')
+        template.render({~a: 'apPles AnD BaNaNas'}) == 'Apples and bananas'
 
     context('lower case') do
       template = renderer.parse('{a|lower}')
       should() do
-        assert(template.render({~a: 'apPles'}), 'apples')
+        template.render({~a: 'apPles'}) == 'apples'
 
     context('upper case') do
       template = renderer.parse('{a|upper}')
       should() do
-        assert(template.render({~a: 'apPles'}), 'APPLES')
+        template.render({~a: 'apPles'}) == 'APPLES'
 
     context('pretty filter') do
       template = renderer.parse('{a|pretty}')
       should() do
-        assert(template.render({~a: 'app_les'}), 'App les')
+        template.render({~a: 'app_les'}) == 'App les'
 
     context('inflection') do
       context('singularize') do
         template = renderer.parse('{a|singular}')
         should() do
           assert(template.render({~a: 'apple'}), 'apple')
-        should() do
           assert(template.render({~a: 'apples'}), 'apple')
 
       context('pluralize') do
         template = renderer.parse('{a|plural}')
         should() do
           assert(template.render({~a: 'apple'}), 'apples')
-        should() do
           assert(template.render({~a: 'apples'}), 'apples')
 
     context('list/dict length') do
@@ -289,47 +287,44 @@ Behave.context('Templating') do
         template = renderer.parse('{a|length}')
         should() do
           assert(template.render({~a: [1,2,1,5,4,3]}), '6')
-        should() do
           assert(template.render({~a: {~q: 1, ~w: 2, ~e: 3}}), '3')
 
       context('with units')
         template = renderer.parse("{a|length:item}")
         should() do
-          assert(template.render({~a: [1,2,1,5,4,3], ~item: {~enUS: 'item'}}), '6 items')
-        should() do
-          assert(template.render({~a: [1], ~item: {~enUS: 'item'}}), '1 item')
+          assert(template.render({~a: [1,2,1,5,4,3], ~item: {~enUS: 'item'}}) == '6 items')
+          assert(template.render({~a: [1], ~item: {~enUS: 'item'}}) == '1 item')
 
     context('default value') do
       template = renderer.parse("{a|default:'none'}")
       should() do
         assert(template.render({~a: 'aa'}), 'aa')
-      should() do
         assert(template.render({~a: nil}), 'none')
 
     context('simple textile') do
       template = renderer.parse('{a|textile}')
-      should('render as emphasied')
-        assert(template.render({~a: '_apple_'}), '<p><em>apple</em></p>')
-      should('render as italics')
-        assert(template.render({~a: '__apple__'}), '<p><i>apple</i></p>')
-      should('render as strong')
-        assert(template.render({~a: '*apple*'}), '<p><strong>apple</strong></p>')
-      should('render as bold')
-        assert(template.render({~a: '**apple**'}), '<p><b>apple</b></p>')
-      should('render as deleted')
-        assert(template.render({~a: '-apple-'}), '<p><del>apple</del></p>')
-      should('render as inserted')
-        assert(template.render({~a: '+apple+'}), '<p><ins>apple</ins></p>')
-      should('render as code')
-        assert(template.render({~a: '@puts("hello")@'}), '<code>puts("hello")</code>')
-      should('render in span')
-        assert(template.render({~a: '%apple%'}), '<p><span>apple</span></p>')
-      should('render superscripted')
-        assert(template.render({~a: '^apple^'}), '<p><sup>apple</sup></p>')
-      should('render subscripted')
-        assert(template.render({~a: '~apple~'}), '<p><sub>apple</sub></p>')
-      should('render citated')
-        assert(template.render({~a: '??apple??'}), '<p><cit>apple</cit></p>')
+      should('render as emphasied') do
+        template.render({~a: '_apple_'}) == '<p><em>apple</em></p>'
+      should('render as italics') do
+        template.render({~a: '__apple__'}) == '<p><i>apple</i></p>'
+      should('render as strong') do
+        template.render({~a: '*apple*'}) == '<p><strong>apple</strong></p>'
+      should('render as bold') do
+        template.render({~a: '**apple**'}) == '<p><b>apple</b></p>'
+      should('render as deleted') do
+        template.render({~a: '-apple-'}) == '<p><del>apple</del></p>'
+      should('render as inserted') do
+        template.render({~a: '+apple+'}) == '<p><ins>apple</ins></p>'
+      should('render as code') do
+        template.render({~a: '@puts("hello")@'}) == '<code>puts("hello")</code>'
+      should('render in span') do
+        template.render({~a: '%apple%'}) == '<p><span>apple</span></p>'
+      should('render superscripted') do
+        template.render({~a: '^apple^'}) == '<p><sup>apple</sup></p>'
+      should('render subscripted') do
+        template.render({~a: '~apple~'}) == '<p><sub>apple</sub></p>'
+      should('render citated') do
+        template.render({~a: '??apple??'}) == '<p><cit>apple</cit></p>'
 
 # todo: extend textile filter behave
 # Block modifiers:
@@ -391,11 +386,9 @@ Behave.context('Templating') do
     context('formatting a float number') do
       template = renderer.parse('{a|float:,3}')
       should() do
-        template.render({~a: 123.4567}) == '123.456'
-      should() do
-        template.render({~a: 0.4567}) == '0.456'
-      should() do
-        template.render({~a: 0.4}) == '0.4'
+        assert(template.render({~a: 123.4567}) == '123.456')
+        assert(template.render({~a: 0.4567}) == '0.456')
+        assert(template.render({~a: 0.4}) == '0.4')
 
       template = renderer.parse('{a|float:4,3}')
       should() do
@@ -504,35 +497,29 @@ Behave.context('Templating') do
         should() do
           template.render({~a: [[111, 222], [78, 20]]}) == '242'
 
-# todo i18n:
-# == i18n
-# It is possible to provide custom translations dictionary in the following format:
-# apps/my_app/i18n.re:
-# i18n = {
-#   ~apple: {
-#     ~enUS: 'apple',
-#     ~frFr: 'pomme'
-#   },
-#   ~banana: {
-#     ~enUS: 'banana',
-#     ~frFr: 'banane'
-#   },
-#   ~price: {
-#     ~enUS: fun(cost, currency) {"Price: #{value} #{cur}" }
-#     ~frFr: fun(cost, currency) {"Prix: #{value} #{cur}" }
-#   } 
-# 
-# Retem uses 'en-US' as default unless otherwise requested.
-# Dictionary is added to renderer instance:
-# 
-# renderer = Retem.new()
-# 
-# template = renderer.parse('{apples|count:~apples}')
-# template.render({~apples: 3})
-# => 3 apples
-# template.render('{apples|count:~apples}', {~apples: 3}, 'fr-FR')
-# => 3 pommes
-# 
+  context('i18n') do
+    i18n = {
+      ~apple: {
+        ~enUS: 'apple',
+        ~frFr: 'pomme'
+      },
+      ~banana: {
+        ~enUS: 'banana',
+        ~frFr: 'banane'
+      },
+      ~price: {
+        ~enUS: fun(cost, currency) {'Price: {value} {cur}' }
+        ~frFr: fun(cost, currency) {'Prix: {value} {cur}' }
+      } 
+    template = renderer.parse('{apples|count:~apple}')
+    should('default language') do
+      template.render({~apples: 3}) == '3 apples'
+    should('selected language') do
+      template.render({~apples: 3}, 'fr-FR') == '3 pommes'
+    template = renderer.parse('{apples|~price}')
+    should('lambda based templates') do
+      template.render({~value: 5, ~cur: 'euro'}, 'en-US') == 'Price: 5 euro'
+    
 # todo nesting:
 # It is possible to call external methods to provide nesting support.
 # Imagine we have a template 'home_page', and we want it to consist of several parts:
