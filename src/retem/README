@@ -13,9 +13,9 @@ It provides convenient syntax and a lot if features available out of the box:
 == Usage
 
 template = """Total {apples|count:~apples}
-{for apple in apples} {apple.color apple.weight|kg} {end}"""
+{for apple in apples} {apple.color} {apple.weight}kg {end}"""
 apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
-renderer = Retem.new('apps/my_app/i18n.yaml')
+renderer = Retem.new()
 renderer.parse(template).render({~apples: apples})
 => Total 2 apples
 .. red 0.2kg
@@ -294,19 +294,27 @@ template = renderer.parse('{a|child_filter}')
 template.render({~a: 'holy shit}) # holy ****
 
 == i18n
-
-It is possible to provide custom translations dictionary in the following format (YAML):
-apps/my_app/i18n.yaml:
-- apple !countable
-  en-US: apple, apples
-  fr-FR: pomme, pommes
-- banana !countable
-  en-US: banana, bananas
-  fr-FR: banane, bananes
+It is possible to provide custom translations dictionary in the following format:
+apps/my_app/i18n.re:
+i18n = {
+  ~apple: {
+    ~enUS: 'apple',
+    ~frFr: 'pomme'
+  },
+  ~banana: {
+    ~enUS: 'banana',
+    ~frFr: 'banane'
+  },
+  ~price: {
+    ~enUS: fun(cost, currency) {"Price: #{value} #{cur}" }
+    ~frFr: fun(cost, currency) {"Prix: #{value} #{cur}" }
+  } 
 
 Retem uses 'en-US' as default unless otherwise requested.
-Dictionary is provided when creating retem instance:
-renderer = Retem.new('apps/my_app/i18n.yaml')
+Dictionary is added to renderer instance:
+
+renderer = Retem.new()
+
 template = renderer.parse('{apples|count:~apples}')
 template.render({~apples: 3})
 => 3 apples
