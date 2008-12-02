@@ -29,7 +29,7 @@ Behave.context('Templating') do
       Retem.render('{a}', {~a: 'abc'}) == 'abc'
 
   context('variable referencing a variable') do
-    should('be resolved') do
+    should() do
       Retem.render('{a}', {~a: ~b, ~b: 'abc'}) == 'abc'
 
   context('variable properties') do
@@ -38,7 +38,7 @@ Behave.context('Templating') do
     store = Store.start()
     store.set_address(address)
     store.set_name('store name')
-    should('be resolved') do
+    should() do
       Retem.render('{s.name}', {~s: store}) == 'store name'
     should('be deep resolved') do
       Retem.render('{s.address.street}', {~s: store}) == 'main st.'
@@ -46,33 +46,33 @@ Behave.context('Templating') do
   context('flow control') do
     context('if statement') do
       template = renderer.parse('{if a}yes{end}')
-      should('be resolved') do
+      should() do
         assert(template.render({~a: true}), 'yes')
         assert(template.render({~a: false}), '')
     
     context('if/else statement') do
       template = renderer.parse('{if a}yes{else}no{end}')
-      should('be resolved') do
+      should() do
         assert(template.render({~a: true}), 'yes')
         assert(template.render({~a: false}), 'no')
 
     context('if/else/elseif statement') do
       template = renderer.parse('{if a}yes, a{elseif b}yes, b{else}no{end}')
-      should('be resolved') do
+      should() do
         assert(template.render({~a: true, ~b: true}), 'yes, a')
         assert(template.render({~a: false, ~b: true}), 'yes, b')
         assert(template.render({~a: false, ~b: false}), 'no')
 
     context('unless statement') do
       template = renderer.parse('{unless a}no{end}')
-      should('be resolved') do
+      should() do
         assert(template.render({~a: true}), '')
         assert(template.render({~a: false}), 'no')
 
     context('logical operators') do
       context('(and)') do
         template = renderer.parse('{if a and b}both{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: true, ~b: true}), 'both')
           assert(template.render({~a: true, ~b: false}), '')
           assert(template.render({~a: false, ~b: true}), '')
@@ -80,7 +80,7 @@ Behave.context('Templating') do
 
       context('(or)') do
         template = renderer.parse('{if a or b}yes{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: true, ~b: true}), 'yes')
           assert(template.render({~a: true, ~b: false}), 'yes')
           assert(template.render({~a: false, ~b: true}), 'yes')
@@ -89,7 +89,7 @@ Behave.context('Templating') do
     context('comparsion operators') do
       context('(eq)') do
         template = renderer.parse('{if a eq b}equal{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 123, ~b: 321}), '')
           assert(template.render({~a: 123, ~b: 123}), 'equal')
           assert(template.render({~a: true, ~b: false}), '')
@@ -99,7 +99,7 @@ Behave.context('Templating') do
 
       context('(neq)') do
         template = renderer.parse('{if a neq b}not equal{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 123, ~b: 321}), 'not equal')
           assert(template.render({~a: 123, ~b: 123}), '')
           assert(template.render({~a: true, ~b: false}), 'not equal')
@@ -109,7 +109,7 @@ Behave.context('Templating') do
 
       context('(gt)') do
         template = renderer.parse('{if a gt b}greather{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 123, ~b: 321}), '')
           assert(template.render({~a: 123, ~b: 123}), '')
           assert(template.render({~a: 321, ~b: 123}), 'greather')
@@ -122,7 +122,7 @@ Behave.context('Templating') do
 
       context('(lt)') do
         template = renderer.parse('{if a lt b}less{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 123, ~b: 321}), 'less')
           assert(template.render({~a: 123, ~b: 123}), '')
           assert(template.render({~a: 321, ~b: 123}), '')
@@ -135,7 +135,7 @@ Behave.context('Templating') do
 
       context('(gteq)') do
         template = renderer.parse('{if a gteq b}greather or eq{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 123, ~b: 321}), '')
           assert(template.render({~a: 123, ~b: 123}), 'greather or eq')
           assert(template.render({~a: 321, ~b: 123}), 'greather or eq')
@@ -148,7 +148,7 @@ Behave.context('Templating') do
 
       context('(lteq)') do
         template = renderer.parse('{if a lteq b}less or eq{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 123, ~b: 321}), 'less or eq')
           assert(template.render({~a: 123, ~b: 123}), 'less or eq')
           assert(template.render({~a: 321, ~b: 123}), '')
@@ -162,26 +162,26 @@ Behave.context('Templating') do
     context('mixed non-variable/variable comparsions') do
       context('numeric') do
         template = renderer.parse('{if a gt 132}greather{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 123}), '')
           assert(template.render({~a: 321}), 'greather')
 
       context('boolean') do
         template = renderer.parse('{if a gt false}greather{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: true}), 'greather')
           assert(template.render({~a: false}), '')
 
       context('string') do
         template = renderer.parse('{if a gt "abc"}greather{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 'abc'}), '')
           assert(template.render({~a: 'cba'}), 'greather')
 
     context('composite comparsions') do
       context('chained') do
         template = renderer.parse('{if a or b and c}a or b and c{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: false, ~b: false, ~c: false}), '')
           assert(template.render({~a: true, ~b: false, ~c: false}), '')
           assert(template.render({~a: false, ~b: true, ~c: false}), '')
@@ -193,7 +193,7 @@ Behave.context('Templating') do
 
       context('compound') do
         template = renderer.parse('{if a gt 3 and b lt 3}a > 3 and b < 3{end}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 1, ~b: 1}), '')
           assert(template.render({~a: 3, ~b: 1}), '')
           assert(template.render({~a: 5, ~b: 1}), 'a > 3 and b < 3')
@@ -207,19 +207,19 @@ Behave.context('Templating') do
   context('iterating through') do
     context('a list') do
       template = renderer.parse('{for x in many}{x}{end}')
-      should('be resolved') do
+      should() do
         assert(template.render({~many: [1, 2, 3]}), '123')
         assert(template.render({~many: ['a', 'b', 'c']}), 'abc')
 
     context('a tuple') do
       template = renderer.parse('{for x in many}{x}{end}')
-      should('be resolved') do
+      should() do
         assert(template.render({~many: (1, 2, 3)}), '123')
         assert(template.render({~many: ('a', 'b', 'c')ght}), 'abc')
 
     context('a dict') do
       template = renderer.parse('{for {k:v} in many}-{k}:{v}{end}')
-      should('be resolved') do
+      should() do
         assert(template.render({~many:{~a: 3, ~b: 4}}), '-a:3-b:4')
         assert(template.render({~many:{'a': 3, 'b': 4}}), '-a:3-b:4')
         assert(template.render({~many:{'a': 'q', 'b': 'w'}}), '-a:q-b:w')
@@ -227,17 +227,17 @@ Behave.context('Templating') do
   context('iterating with pattern matching through') do
     context('a list') do
       template = renderer.parse('{for [a,b] in many}-{a}:{b}{end}')
-      should('be resolved') do
+      should() do
         assert(template.render({~many: [['aaa', 123], ['qqq', 456]]}), '-aaa:123-qqq:456')
 
     context('a list of tuples') do
       template = renderer.parse('{for (a,b,c) in many}-{a}:{b}:{c}{end}')
-      should('be resolved') do
+      should() do
         assert(template.render({~many: [('aaa', 123, 'www'), ('qqq', 456, 'zzz')]}), '-aaa:123:www-qqq:456:zzz')
 
     context('a list of dicts/objects') do
       template = renderer.parse('{for {color: ~color, weight: ~weight} in apples}-{color}:{weight}{end}')
-      should('be resolved') do
+      should() do
         assert(template.render({~apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]}), '-red:0.2-yellow:0.15')
 
   context('filtering') do
@@ -256,54 +256,54 @@ Behave.context('Templating') do
 
     context('lower case') do
       template = renderer.parse('{a|lower}')
-      should('be resolved') do
+      should() do
         assert(template.render({~a: 'apPles'}), 'apples')
 
     context('upper case') do
       template = renderer.parse('{a|upper}')
-      should('be resolved') do
+      should() do
         assert(template.render({~a: 'apPles'}), 'APPLES')
 
     context('pretty filter') do
       template = renderer.parse('{a|pretty}')
-      should('be resolved') do
+      should() do
         assert(template.render({~a: 'app_les'}), 'App les')
 
     context('inflection') do
       context('singularize') do
         template = renderer.parse('{a|singular}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 'apple'}), 'apple')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 'apples'}), 'apple')
 
       context('pluralize') do
         template = renderer.parse('{a|plural}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 'apple'}), 'apples')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: 'apples'}), 'apples')
 
     context('list/dict length') do
       context('without units')
         template = renderer.parse('{a|length}')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: [1,2,1,5,4,3]}), '6')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: {~q: 1, ~w: 2, ~e: 3}}), '3')
 
       context('with units')
         template = renderer.parse("{a|length:item}")
-        should('be resolved') do
+        should() do
           assert(template.render({~a: [1,2,1,5,4,3], ~item: {~enUS: 'item'}}), '6 items')
-        should('be resolved') do
+        should() do
           assert(template.render({~a: [1], ~item: {~enUS: 'item'}}), '1 item')
 
     context('default value') do
       template = renderer.parse("{a|default:'none'}")
-      should('be resolved') do
+      should() do
         assert(template.render({~a: 'aa'}), 'aa')
-      should('be resolved') do
+      should() do
         assert(template.render({~a: nil}), 'none')
 
     context('simple textile') do
@@ -390,46 +390,46 @@ Behave.context('Templating') do
 
     context('formatting a float number') do
       template = renderer.parse('{a|float:,3}')
-      should('be resolved') do
+      should() do
         template.render({~a: 123.4567}) == '123.456'
-      should('be resolved') do
+      should() do
         template.render({~a: 0.4567}) == '0.456'
-      should('be resolved') do
+      should() do
         template.render({~a: 0.4}) == '0.4'
 
       template = renderer.parse('{a|float:4,3}')
-      should('be resolved') do
+      should() do
         template.render({~a: 123.4567}) == '0123.456'
 
     context('formatting a date') do
       template = renderer.parse('{a|date:dd-MM-yy/hh:mm:ss}')
-      should('be resolved') do
+      should() do
         template.render({~a: ((2008,12,2),(21,26,48))}) == '02-12-2008/21:26:48'
 
     context('formatting a relative date/time') do
-      should('be resolved') do
+      should() do
         template = renderer.parse('{a|since:now,1}')
         template.render({~a: ((2008,12,2),(21,26,48)), ~now: ((2008,12,2),(21,30,48))}) == '5 minutes ago'
-      should('be resolved') do
+      should() do
         template = renderer.parse('{a|until:now,2}')
         template.render({~a: ((2008,12,2),(21,26,48)), ~now: ((2008,12,2),(21,22,13))}) == 'in 4 minutes 35 seconds'
 
     context('formatting a size in bytes') do
-      should('be resolved') do
+      should() do
         template = renderer.parse('{a|since:bytes,2}')
         template.render({~a: 1269.534}) == '1,269.53KB'
-      should('be resolved') do
+      should() do
         template = renderer.parse('{a|since:bytes,2}')
         template.render({~a: 1269.554}) == '1,269.56KB'
 
     context('formatting a decimal in free form') do
       template = renderer.parse('{a|format:#-###-#######}')
-      should('be resolved') do
+      should() do
         template.render({~a: 88005554567}) == '8-800-555-4567'
 
     context('formatting a string in free form') do
       template = renderer.parse('{a|format:#-###-#######}')
-      should('be resolved') do
+      should() do
         template.render({~a: '8800call2me'}) == '8-800-call2me'
 
     context('html escaping') do
@@ -472,50 +472,37 @@ Behave.context('Templating') do
       should() do
         template.render({~a: ['humour', 'life', 'friends']}) == '(humour)(life)(friends)'
 
-# 
-# a=[123, 345, 567]
-# - kilo !countable
-#   en-US: kilogram, kilograms
-#   fr-FR: kilogramme, kilogrammes
-# {a|count:~kilo}
-# => 3 kilograms
-# 
-# Filters can be chained:
-# a='appLes'
-# {a|lower|capital|singular|cut:10}
-# => Apple
-# 
-# a=['humour', 'life', 'friends']
-# {a|wrap:(,)|join:'/'}
-# => (humour)/(life)/(friends)
-# 
-# a='hello, world'
-# {a|wrap:*|textile}
-# => <b>hello, world</b>
-# 
-# a='hello, world'
-# {a|split:' ',','|capital|join:/}
-# => Hello/World
-# 
-# Filters can take variables as parameters:
-# a='long long long string'
-# max_length=10
-# {a|cut:max_length}
-# => long lo...
-# 
-# Filters can walk through data:
-# a=[('apples', 11),('bananas', 32)]
-# {a|sum:(_,x)}
-# => 43
-# 
-# a=[{~apples: 11},{~bananas: 32}]
-# {a|sum:{_,x}}
-# => 43
-# 
-# a=[[111, 222], [78, 20]]
-# {a|sum:[_,x]}
-# => 242
+    context('chaining') do
+      context('simple') do
+        template = renderer.parse('{a|lower|capital|singular|cut:10}')
+        should() do
+          template.render({~a: 'appLes'}) == 'Apple'
+      context('with parameters') do
+        should() do
+        template = renderer.parse('{a|wrap:(,)|join:'/'}')
+          template.render({~a: ['humour', 'life', 'friends']}) == '(humour)/(life)/(friends)'
+        should() do
+        template = renderer.parse('{a|split:' ',','|capital|join:/}')
+          template.render({~a: 'hello, world'}) == 'Hello/World'
 
+    context('can take variables as parameters') do
+      template = renderer.parse('{a|cut:max_length}')
+      should() do
+        template.render({~a: 'long long long string', ~max_length: 10}) == 'long lo...'
+
+    context('can walk through data') do
+      context('tuples') do
+        template = renderer.parse('{a|sum:(_,x)}')
+        should() do
+          template.render({~a: [('apples', 11),('bananas', 32)]}) == '43'
+      context('dicts') do
+        template = renderer.parse('{a|sum:{_,x}}')
+        should() do
+          template.render({~a: {~apples: 11, ~bananas: 32}}) == '43'
+      context('lists') do
+        template = renderer.parse('{a|sum:[_,x]}')
+        should() do
+          template.render({~a: [[111, 222], [78, 20]]}) == '242'
 
 # todo i18n:
 # == i18n
