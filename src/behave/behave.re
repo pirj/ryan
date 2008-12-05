@@ -31,7 +31,6 @@ class Context
     Local.puts('init')
 
   def context(title, l)
-    x('qqq')
     @title = title
     Local.puts(['entering context', title].join(' '))
     Local.puts(l)
@@ -50,6 +49,3 @@ class Context
       Local.puts(['ok', title].join(' '))
     else
       Local.puts(['failed', title].join(' '))
-  
-  def x(t)
-     Local.puts(t)
