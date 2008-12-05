@@ -21,6 +21,7 @@ REIA_SRC.each do |input|
   file output => input do
     puts "compiling #{input}"
     sh "reiac #{input}"
+    sh 'mv *.beam ebin'
   end
 end
 
