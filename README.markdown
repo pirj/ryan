@@ -11,18 +11,18 @@ Ryan consists of:
  - SQLite3, PostgreSQL, MySQL, Mnesia and Mongo database adapters
 
 ### Useful links
-http://ryan_reia.lighthouseapp.com/
-http://github.com/pirj/ryan/
-http://reia-lang.org
-http://devaddict.jot.ly/
+[Ryan@lighthouse](http://ryan_reia.lighthouseapp.com/)
+[Ryan@github](http://github.com/pirj/ryan/)
+[Reia language](http://reia-lang.org)
+[Dev blog](http://devaddict.jot.ly/)
 
 ### Prerequisites
 
-Erlang/OTP R12B-3 or higher http://www.erlang.org/download.html
-Leex 0.2 http://github.com/rvirding/leex/
-YAWS 1.77 or higher http://yaws.hyber.org/
-Rake 0.8 or higher http://github.com/jimweirich/rake
-Reia http://github.com/tarcieri/reia/
+[Erlang/OTP R12B-3 or higher](http://www.erlang.org/download.html)
+[Leex 0.2](http://github.com/rvirding/leex/)
+[YAWS 1.77 or higher](http://yaws.hyber.org/)
+[Rake 0.8 or higher](http://github.com/jimweirich/rake)
+[Reia language](http://github.com/tarcieri/reia/)
 
 ## Building
 
@@ -40,6 +40,7 @@ Run yaws --pa <path_to_ryan_ebin>
 
 Surf to: http://localhost:8001/app1/fruits/show/1?param1=123&param2=aba
 Play with different parameter values.
+
 Another Fruits controller action implemented is 'app1/fruits/index'
 Implement yours in fruits.re! (do not forrget to run rake to rebuild)
 Enjoy!
@@ -48,6 +49,7 @@ Enjoy!
 
 Following REST idiom, Ryan provides the ability to parse any url and run the
 corresponding controller.
+
 http://host:post/store/fruits/show/122
 will be passed to 'store' application, 'fruits' controller, 'show' action (method),
 providing it with cookie data, http request method (~GET, ~PUT, ~POST, ~DELETE, ~UPDATE etc.),
