@@ -1,4 +1,4 @@
-= Web applications with Ryan and Reia
+# Web applications with Ryan and Reia
 
 Ryan is a Reia/Erlang BEAM based web framework.
 It allows you to create web applications with clean and short code.
@@ -10,13 +10,13 @@ Ryan consists of:
  - YAWS, Mochiweb and Inets HTTP server adapters
  - SQLite3, PostgreSQL, MySQL, Mnesia and Mongo database adapters
 
-== Useful links
+### Useful links
 http://ryan_reia.lighthouseapp.com/
 http://github.com/pirj/ryan/
 http://reia-lang.org
 http://devaddict.jot.ly/
 
-== Prerequisites
+### Prerequisites
 
 Erlang/OTP R12B-3 or higher http://www.erlang.org/download.html
 Leex 0.2 http://github.com/rvirding/leex/
@@ -24,9 +24,10 @@ YAWS 1.77 or higher http://yaws.hyber.org/
 Rake 0.8 or higher http://github.com/jimweirich/rake
 Reia http://github.com/tarcieri/reia/
 
-== Building
+## Building
 
 Run rake from Ryan source folder to build it
+
 Edit your yaws.conf file and add a server to it:
 <server localhost>
         port = 8001
@@ -35,14 +36,15 @@ Edit your yaws.conf file and add a server to it:
         appmods = <"/", yaws_shim>
 </server>
 
-Run 'yaws --pa path_to_ryan_ebin'
+Run yaws --pa <path_to_ryan_ebin>
+
 Surf to: http://localhost:8001/app1/fruits/show/1?param1=123&param2=aba
 Play with different parameter values.
 Another Fruits controller action implemented is 'app1/fruits/index'
-Implement yours in fruits.re!
+Implement yours in fruits.re! (do not forrget to run rake to rebuild)
 Enjoy!
 
-== Routing
+## Routing
 
 Following REST idiom, Ryan provides the ability to parse any url and run the
 corresponding controller.
@@ -51,20 +53,20 @@ will be passed to 'store' application, 'fruits' controller, 'show' action (metho
 providing it with cookie data, http request method (~GET, ~PUT, ~POST, ~DELETE, ~UPDATE etc.),
 and parsed query data list.
 
-== Controllers
+## Controllers
 Controllers are Reia modules. They reside in application_name/controllers/ folder.
 By default each controller method is available to web application user unless otherwise defined
 in routing schema.
 
-== Views
+## Views
 
 Views can be Retem templates (retems) and are placed in application_name/views/ folder.
 
-== Models
+## Models
 
 Models are object definitions that can be stored, retrieved and queried from storage
 systems.
 SQLite3, PostgreSQL, MySQL, Mnesia and Mongo are to be supported.
 
-== Authors
+### Authors
 * Philpipp Pirozhkov pirj@mail.ru
