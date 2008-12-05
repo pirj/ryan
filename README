@@ -1,19 +1,31 @@
 = Web applications with Ryan and Reia
 
-Ryan is an Reia/Erlang BEAM based web framework.
-It allows you to create web applications with clean and short code,
-with use of Reia programming language and Retem templating engine.
-Behave is a testing tool.
-YAWS and Mochiweb can be used as a web server, SQLite3, PostgreSQL,
-MySQL, Mnesia and Mongo as databases.
+Ryan is a Reia/Erlang BEAM based web framework.
+It allows you to create web applications with clean and short code.
+
+Ryan consists of:
+ - router module
+ - Retem (templating engine)
+ - Behave (RSpec-like testing tool)
+ - YAWS, Mochiweb and Inets HTTP server adapters
+ - SQLite3, PostgreSQL, MySQL, Mnesia and Mongo database adapters
+
+== Useful links
+http://ryan_reia.lighthouseapp.com/
+http://github.com/pirj/ryan/
+http://reia-lang.org
+http://devaddict.jot.ly/
+
+== Prerequisites
+
+Erlang/OTP R12B-3 or higher http://www.erlang.org/download.html
+Leex 0.2 http://github.com/rvirding/leex/
+YAWS 1.77 or higher http://yaws.hyber.org/
+Rake 0.8 or higher http://github.com/jimweirich/rake
+Reia http://github.com/tarcieri/reia/
 
 == Building
 
-Download and install Erlang/OTP, minimum required version is R12B-3
-Download and install YAWS, 1.77 and higher is recommended
-Download and install Ruby and Rake, they are required to build Reia
-Download Reia from source
-cd into reia folder run 'rake'
 Run rake from Ryan source folder to build it
 Edit your yaws.conf file and add a server to it:
 <server localhost>
@@ -23,9 +35,11 @@ Edit your yaws.conf file and add a server to it:
         appmods = <"/", yaws_shim>
 </server>
 
-Run 'yaws --pa path_to_compiled_files_here'
+Run 'yaws --pa path_to_ryan_ebin'
 Surf to: http://localhost:8001/app1/fruits/show/1?param1=123&param2=aba
-Play with parameters, another action implemented in examples is 'app1/fruits/index'
+Play with different parameter values.
+Another Fruits controller action implemented is 'app1/fruits/index'
+Implement yours in fruits.re!
 Enjoy!
 
 == Routing
