@@ -11,18 +11,21 @@ Ryan consists of:
  - SQLite3, PostgreSQL, MySQL, Mnesia and Mongo database adapters
 
 ### Useful links
+
 [Ryan@lighthouse](http://ryan_reia.lighthouseapp.com/)
+
 [Ryan@github](http://github.com/pirj/ryan/)
+
 [Reia language](http://reia-lang.org)
+
 [Dev blog](http://devaddict.jot.ly/)
 
 ### Prerequisites
 
-[Erlang/OTP R12B-3 or higher](http://www.erlang.org/download.html)
-[Leex 0.2](http://github.com/rvirding/leex/)
-[YAWS 1.77 or higher](http://yaws.hyber.org/)
+[Erlang/OTP R12B-3 or higher](http://www.erlang.org/download.html),
+[Reia language](http://github.com/tarcieri/reia/),
+[YAWS 1.77 or higher](http://yaws.hyber.org/),
 [Rake 0.8 or higher](http://github.com/jimweirich/rake)
-[Reia language](http://github.com/tarcieri/reia/)
 
 ## Building
 
