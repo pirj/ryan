@@ -4,11 +4,14 @@
 # renderer = Retem.new()
 # renderer.parse(template).render({~apples: apples})
 
-module Retem
+# T = dict:store(abc,33,dict:new()).
+# T2 = dict:store(bcd,22,T).# 'Retemplate':render("{abc+bcd}",T2). => 55
+# 'Retemplate':render("{abc+bcd}",T2). => 55
+
+module Retemplate
   def render(template, vars)
     tokens = retem::parse(template)
-# {~arithmetic,{~identifier,aaa},{~arithmetic,{~identifier,bbb},{~identifier,ccc}}}
-    retem::match(tokens, vars)
+    retem::match(vars, tokens)
   
   # def parse({~identifier, atom})
   #   atom

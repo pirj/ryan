@@ -15,10 +15,10 @@ AR  = (\+|-|\*|/)
 Rules.
 \{    : {token,{'{',TokenLine}}.
 \}    : {token,{'}',TokenLine}}.
-{ID}  : {token,{identifier,TokenLine,TokenChars}}.
-{AR}  : {token,{arithmetic,TokenLine,TokenChars}}.
-%% {CO}  : {token,{comparator,TokenLine,TokenChars}}.
-%% {LO}  : {token,{logical,TokenLine,TokenChars}}.
+{ID}  : {token,{identifier,TokenChars}}.
+{AR}  : {token,{arithmetic,TokenChars}}.
+%% {CO}  : {token,{comparator,TokenChars}}.
+%% {LO}  : {token,{logical,TokenChars}}.
 {WS}+ : skip_token.
 
 Erlang code.
