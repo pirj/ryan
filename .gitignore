@@ -1,0 +1,6 @@
+ebin/**/*
+erl_crash.dump
+*.patch
+*.beam
+.DS_Store
+experiments
