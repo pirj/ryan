@@ -1,5 +1,6 @@
 Definitions.
 
+TXT = \}[^\{]*
 D	= [0-9]
 U	= [A-Z]
 L	= [a-z]
@@ -9,16 +10,19 @@ A	= ({U}|{L}|{D}|_)
 WS	= [\000-\s]
 ID  = {UL}{A}*
 AR  = (\+|-|\*|/)
-%% CO  = (eq|neq|gt|lt|gteq|lteq)
-%% LO  = (and|or|not)
+CO  = (eq|neq|gt|lt|gteq|lteq)
+LO  = (and|or)
+NOT = (not)
 
 Rules.
-\{    : {token,{'{',TokenLine}}.
-\}    : {token,{'}',TokenLine}}.
-{ID}  : {token,{identifier,TokenChars}}.
+{     : {token,{'{'}}.
+}     : {token,{'}'}}.
+{TXT} : {token,{text,TokenChars}}.
+{LO}  : {token,{logical,list_to_atom(TokenChars)}}.
+%% {NOT} : {token,{not, list_to_atom(TokenChars)}}.
+{CO}  : {token,{comparator,list_to_atom(TokenChars)}}.
 {AR}  : {token,{arithmetic, arithmetic_to_atom(TokenChars)}}.
-%% {CO}  : {token,{comparator,TokenChars}}.
-%% {LO}  : {token,{logical,TokenChars}}.
+{ID}  : {token,{identifier,TokenChars}}.
 {WS}+ : skip_token.
 
 Erlang code.
@@ -27,3 +31,4 @@ arithmetic_to_atom("+") -> plus;
 arithmetic_to_atom("-") -> minus;
 arithmetic_to_atom("/") -> divide;
 arithmetic_to_atom("*") -> multiply.
+

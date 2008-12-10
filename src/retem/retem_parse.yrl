@@ -1,15 +1,20 @@
 Nonterminals 
-embraced expressions.
+template embraced expressions.
 
 Terminals
- '{' '}' identifier arithmetic. %% comparator logical.
+ '{' '}' identifier arithmetic comparator logical text.
 
-Rootsymbol embraced.
+Rootsymbol template.
 
-embraced -> '{' expressions '}' : '$2'.
+template    -> embraced.
+template    -> text embraced.
+template    -> embraced text.
+template    -> text.
+embraced    -> '{' expressions '}' : '$2'.
+expressions -> expressions logical expressions : {logical, unwrap_operator('$2'), '$1', '$3'}.
+expressions -> expressions comparator expressions : {comparator, unwrap_operator('$2'), '$1', '$3'}.
 expressions -> expressions arithmetic expressions : {arithmetic, unwrap_operator('$2'), '$1', '$3'}.
-%% expressions -> expressions comparator expressions : {comparator, '$1', '$3'}.
-%% expressions -> expressions logical expressions : {logical, '$1', '$3'}.
+%% expressions -> not expressions : {not, not, '$2'}.
 expressions -> identifier : identifier_atom('$1').
 
 Erlang code.
