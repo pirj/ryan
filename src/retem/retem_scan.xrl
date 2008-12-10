@@ -16,10 +16,14 @@ Rules.
 \{    : {token,{'{',TokenLine}}.
 \}    : {token,{'}',TokenLine}}.
 {ID}  : {token,{identifier,TokenChars}}.
-{AR}  : {token,{arithmetic,TokenChars}}.
+{AR}  : {token,{arithmetic, arithmetic_to_atom(TokenChars)}}.
 %% {CO}  : {token,{comparator,TokenChars}}.
 %% {LO}  : {token,{logical,TokenChars}}.
 {WS}+ : skip_token.
 
 Erlang code.
 
+arithmetic_to_atom("+") -> plus;
+arithmetic_to_atom("-") -> minus;
+arithmetic_to_atom("/") -> divide;
+arithmetic_to_atom("*") -> multiply.
