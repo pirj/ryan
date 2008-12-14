@@ -1,5 +1,7 @@
 Definitions.
 
+%% TXT = (?<=^|\})[^\}\{]+?(?=\{|$)
+%% TXT = (^|\})[^\{]*
 TXT = \}[^\{]*
 D	= [0-9]
 U	= [A-Z]
@@ -17,9 +19,9 @@ NOT = (not)
 Rules.
 {     : {token,{'{'}}.
 }     : {token,{'}'}}.
-{TXT} : {token,{text,TokenChars}}.
+{TXT} : [{token,{'}'}}, {token,{text,TokenChars}}].
 {LO}  : {token,{logical,list_to_atom(TokenChars)}}.
-%% {NOT} : {token,{not, list_to_atom(TokenChars)}}.
+{NOT} : {token,{logical,list_to_atom(TokenChars)}}.
 {CO}  : {token,{comparator,list_to_atom(TokenChars)}}.
 {AR}  : {token,{arithmetic, arithmetic_to_atom(TokenChars)}}.
 {ID}  : {token,{identifier,TokenChars}}.

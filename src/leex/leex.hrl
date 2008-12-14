@@ -38,6 +38,11 @@ string(Ics0, L0, Tcs, Ts) ->
 %% string_cont(RestChars, Line, Token, Tokens)
 %%  Test for and remove the end token wrapper.
 
+string_cont(Rest, Line, [{token, H}|T], Ts) ->
+    string_cont(Rest, Line, T, [H|Ts]);
+string_cont(Rest, Line, [], Ts) ->
+    string(Rest, Line, Rest, Ts);
+
 string_cont(Rest, Line, {token,T}, Ts) ->
     string(Rest, Line, Rest, [T|Ts]);
 string_cont(Rest, Line, {end_token,T}, Ts) ->
