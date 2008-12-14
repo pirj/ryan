@@ -49,6 +49,5 @@ task :behave do
 end
 
 task :clean do
-  rm_rf 'ebin'
-  mkdir 'ebin'
+  sh 'rm ebin/*'
 end

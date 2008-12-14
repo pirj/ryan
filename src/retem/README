@@ -1,16 +1,16 @@
-= Templating with retem
+# Templating with retem
 
 Retem is a templating engine which comes with Ryan web framework for Reia programming
 language.
 It provides convenient syntax and a lot if features available out of the box:
 
-* variables
-* flow control
-* filters
-* i18n
-* nesting of templates
+ - variables
+ - flow control
+ - filters
+ - i18n
+ - nesting of templates
 
-== Usage
+## Usage
 
 template = """Total {apples|count:~apples}
 {for apple in apples} {apple.color} {apple.weight}kg {end}"""
@@ -21,7 +21,7 @@ renderer.parse(template).render({~apples: apples})
 .. red 0.2kg
 .. yellow 0.15kg
 
-== Flow control
+## Flow control
 
 The simplest branching construct available is the if statement, which takes the specified branch if the condition holds true. The else keyword specifies an action to be taken if the condition doesn't match.
 Multiple if statements can be chained with the elseif keyword. Else and elseif are optional to use.
@@ -51,12 +51,12 @@ Condition can be a result of comparsion:
 {if bees_count gt flowers_count}...{end}
 
 The following comparsion operators can be used:
-* eq    equal to
-* neq   not equal to
-* gt    greater than
-* lt    less than
-* gteq  greater than or equal to
-* lteq  less than or equal to
+ - eq    equal to
+ - neq   not equal to
+ - gt    greater than
+ - lt    less than
+ - gteq  greater than or equal to
+ - lteq  less than or equal to
 
 It is possible to use these kind of constructions:
 {if a gt 3 or b lt 10}...{end}
@@ -98,7 +98,7 @@ apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
 {end}
 => Color is red and weight is 0.2  Color is yellow and weight is 0.15
 
-== Access to variables
+## Access to variables
 
 Variables passed to retem can be freely used in templates:
 
@@ -108,7 +108,7 @@ Variables passed to retem can be freely used in templates:
 
 {store.address.city}
 
-== Filtering
+## Filtering
 
 Filtering allows for value modification, formatting etc. Filter signature comes after '|' character.
 Filter parameters are passed after ':' character. Multiple parameters can be passed using ',' character.
@@ -278,7 +278,7 @@ a=[[111, 222], [78, 20]]
 {a|sum:[_,x]}
 => 242
 
-== Extending filters with native code
+## Extending filters with native code
 
 It is possible to implement additional filters:
 
@@ -293,7 +293,7 @@ renderer.add_filter(ChildFilter)
 template = renderer.parse('{a|child_filter}')
 template.render({~a: 'holy shit}) # holy ****
 
-== i18n
+## i18n
 It is possible to provide custom translations dictionary in the following format:
 apps/my_app/i18n.re:
 i18n = {
@@ -321,7 +321,7 @@ template.render({~apples: 3})
 template.render('{apples|count:~apples}', {~apples: 3}, 'fr-FR')
 => 3 pommes
 
-== Nesting
+## Nesting
 
 It is possible to call external methods to provide nesting support.
 Imagine we have a template 'home_page', and we want it to consist of several parts:
@@ -344,7 +344,7 @@ template.render({~apples: apples}) do |nested_template, params|
 In this case, when retem sees a 'nest' statement, it calls the callback block and inserts
 the result to itself. Of course, nested parts can have nested parts too.
 
-== Preprocessing
+## Preprocessing
 
 To skip rendering of the code pieces, that are render-to-render static, preprocessing
 can be used.
@@ -356,5 +356,5 @@ template.render({~user_ip: '111.111.111.111'})
 
 During render, only user_ip is evaluated.
 
-== Authors
+### Authors
 * Philpipp Pirozhkov pirj@mail.ru
