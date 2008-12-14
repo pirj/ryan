@@ -51,3 +51,18 @@ end
 task :clean do
   sh 'rm ebin/*'
 end
+
+task :install do
+  lib_dir = `erl -noshell -eval "io:format(code:lib_dir())" -s init stop`
+  ryan_dir = File.join(lib_dir, 'ryan', '')
+  
+  rm_r ryan_dir if File.exist?(ryan_dir)
+  mkdir ryan_dir
+  
+  %w[LICENSE README.markdown ebin].each { |f| cp_r f, ryan_dir }
+  
+  mkdir "/usr/local/bin" unless File.exist?("/usr/local/bin")
+  cp 'bin/ryan', '/usr/local/bin'
+  
+  File.chmod 0755, "/usr/local/bin/ryan"
+end
