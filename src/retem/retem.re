@@ -7,9 +7,6 @@
 
 # Current syntax:
 # 
-# template = Retem.parse("{abc}")
-# Retem.render(template, {~abc:'AyBeeCee'}) => "AyBeeCee"
-# 
 # template = Retem.parse("{abc+bcd} apples")
 # Retem.render(template, {~abc:22, ~bcd:33}) => 55 apples
 # Retem.render(template, {~abc:192, ~bcd:976}) => 1168 apples
@@ -20,7 +17,7 @@ module Retem
 
 # plain text
   def render((~text, text), vars)
-    text
+    text.to_string()
 
 # get variable value from provided vars dict
   def render((~identifier, atom), vars)
@@ -70,4 +67,4 @@ module Retem
 
 # list of blocks
   def render(list, vars)
-    list.map { |block| render(block, vars)}
+    list.map { |block| render(block, vars).to_s()}.join()
