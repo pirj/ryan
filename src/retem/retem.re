@@ -7,16 +7,20 @@
 
 # Current syntax:
 # 
-# template = Retem.parse("{abc}")            
+# template = Retem.parse("{abc}")
 # Retem.render(template, {~abc:'AyBeeCee'}) => "AyBeeCee"
 # 
-# template = Retem.parse("{abc+bcd}")
-# Retem.render(template, {~abc:22, ~bcd:33}) => 55
-# Retem.render(template, {~abc:192, ~bcd:976}) => 1168
+# template = Retem.parse("{abc+bcd} apples")
+# Retem.render(template, {~abc:22, ~bcd:33}) => 55 apples
+# Retem.render(template, {~abc:192, ~bcd:976}) => 1168 apples
 
 module Retem
   def parse(template)
     retemplate::parse(template)
+
+# plain text
+  def render((~text, text), vars)
+    text
 
 # get variable value from provided vars dict
   def render((~identifier, atom), vars)
@@ -64,3 +68,6 @@ module Retem
   def render((~logical, ~not, expression), vars)
     not render(expression, vars)
 
+# list of blocks
+  def render(list, vars)
+    list.map { |block| render(block, vars)}
