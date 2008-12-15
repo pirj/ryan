@@ -1,4 +1,5 @@
 task :default => [:leex, :yecc, :compile]
+task :install => [:default, :install_only]
 
 def output_file(input_file)
   'ebin/' + File.basename(input_file).sub(/\.\w+$/, '.beam')
@@ -52,7 +53,7 @@ task :clean do
   sh 'rm ebin/*'
 end
 
-task :install do
+task :install_only do
   lib_dir = `erl -noshell -eval "io:format(code:lib_dir())" -s init stop`
   ryan_dir = File.join(lib_dir, 'ryan', '')
   
@@ -62,6 +63,7 @@ task :install do
   %w[LICENSE README.markdown ebin].each { |f| cp_r f, ryan_dir }
   
   mkdir "/usr/local/bin" unless File.exist?("/usr/local/bin")
+  rm '/usr/local/bin/ryan'
   cp 'bin/ryan', '/usr/local/bin'
   
   File.chmod 0755, "/usr/local/bin/ryan"
