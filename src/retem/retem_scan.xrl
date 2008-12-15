@@ -18,7 +18,7 @@ NOT = (not)
 Rules.
 {     : {token,{'{'}}.
 }     : {token,{'}'},['}']}.
-{TXT} : {token,{text, remove_leading_bracet(TokenChars, TokenLen)}}.
+{TXT} : {token,{text, remove_leading_brace(TokenChars, TokenLen)}}.
 {LO}  : {token,{logical,list_to_atom(TokenChars)}}.
 {NOT} : {token,{logical,list_to_atom(TokenChars)}}.
 {CO}  : {token,{comparator,list_to_atom(TokenChars)}}.
@@ -33,4 +33,4 @@ arithmetic_to_atom("-") -> minus;
 arithmetic_to_atom("/") -> divide;
 arithmetic_to_atom("*") -> multiply.
 
-remove_leading_bracet(Chars, Len) -> lists:sublist(Chars, 2, Len - 1).
+remove_leading_brace(Chars, Len) -> lists:sublist(Chars, 2, Len - 1).
