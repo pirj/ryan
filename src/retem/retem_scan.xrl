@@ -17,8 +17,8 @@ NOT = (not)
 
 Rules.
 {     : {token,{'{'}}.
-}     : {token,{'}'}}.
-{TXT} : [{token,{'}'}}, {token,{text, remove_leading_bracet(TokenChars, TokenLen)}}].
+}     : {token,{'}'},['}']}.
+{TXT} : {token,{text, remove_leading_bracet(TokenChars, TokenLen)}}.
 {LO}  : {token,{logical,list_to_atom(TokenChars)}}.
 {NOT} : {token,{logical,list_to_atom(TokenChars)}}.
 {CO}  : {token,{comparator,list_to_atom(TokenChars)}}.
