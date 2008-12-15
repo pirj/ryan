@@ -1,1 +1,3 @@
+#!/usr/bin/env reia
+
 yaws_shim::init_yaws()
