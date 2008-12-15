@@ -4,3 +4,5 @@ erl_crash.dump
 *.beam
 .DS_Store
 experiments
+example_application/*.log
+example_application/*.access
