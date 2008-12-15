@@ -1,7 +1,10 @@
 -module(yaws_shim).
--export([out/1, call_action/5, init_yaws/0]).
+-export([out/1, out/0, call_action/5, init_yaws/0]).
 -include("../yaws/yaws_api.hrl").
 -include("../yaws/yaws.hrl").
+
+out() ->
+	'hellow'.
 
 out(Arg) ->
 	Req = Arg#arg.req,
@@ -20,8 +23,13 @@ out(Arg) ->
 		_      -> yaws_api:parse_query(Arg)
 	end,
 
-	reia_erl:r2e('Ryan':out(reia_erl:e2r(Abs_Path), reia_erl:e2r(Method), reia_erl:e2r(Path),
-		reia_erl:e2r(Cookie), reia_erl:e2r(Params))).
+	Result = 'Ryan':out(
+		reia_erl:e2r(Abs_Path), 
+		reia_erl:e2r(Method), 
+		reia_erl:e2r(Path),
+		reia_erl:e2r(Cookie), 
+		reia_erl:e2r(Params)),
+	reia_erl:r2e(Result).
 	
 call_action([First|Rest] = _Controller, Action, Parameters, Cookies, HTTPMethod) ->
 	Module = unwrap_binary(string:to_upper([First]) ++ Rest),
@@ -42,7 +50,7 @@ init_yaws() ->
 		{servername, "localhost"},
 		{port, 8001},
 		{listen, {0,0,0,0}},
-		{appmods, [{"/", "yaws_shim"}]}
+		{appmods, [{"/", yaws_shim}]}
 		]),
 	loop().
 
