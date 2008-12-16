@@ -43,7 +43,7 @@ init_yaws() ->
 		{servername, "localhost"},
 		{port, 8001},
 		{listen, {0,0,0,0}},
-		{appmods, [{"/", yaws_shim}]}
+		{appmods, [{"/app/", yaws_shim}]}
 		]),
 	loop().
 
