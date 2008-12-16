@@ -33,16 +33,19 @@ Run the following from Ryan source folder to build it:
 
 sudo rake install
 
-That will install ryan libraries into Erlang lib folder
+That will install ryan libraries into Erlang lib folder and
+ryan executable file into /usr/local/bin
 
 ## Running an example application
 
+Run:
 cd example_application
 ryan
 
 Surf to:
-http://localhost:8001/app/fruits/show/1?param1=123&param2=aba
+http://localhost:8001/app/fruits/show?param1=123&param2=aba
 http://localhost:8001/app/fruits/index?param1=apple&param2=banana
+
 Play with different parameter values.
 
 Modify Fruits controller, implement or change actions
