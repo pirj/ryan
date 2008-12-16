@@ -20,7 +20,9 @@ out(Arg) ->
 		_      -> yaws_api:parse_query(Arg)
 	end,
 
-	Result = 'Ryan':out(Abs_Path, Method, Application, Controller, Action, Cookie, Params),
+	Result = 'Ryan':out(Abs_Path, Method, Application, Controller, Action, 
+		reia_erl:e2r(Cookie), 
+		reia_erl:e2r(Params)),
 	reia_erl:r2e(Result).
 	
 call_action([First|Rest] = _Controller, Action, Parameters, Cookies, HTTPMethod) ->
