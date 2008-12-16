@@ -1,0 +1,23 @@
+* {
+	overflow: hidden;
+}
+
+a {
+	color: #00c;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:visited {
+	color: #00c;
+}
+
+html, body {
+	font-family: Arial, Tahoma, Verdana;
+	font-size: 12px;
+	height: 100%;
+	width: 100%;
+}
