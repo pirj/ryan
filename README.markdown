@@ -29,23 +29,24 @@ Ryan consists of:
 
 ## Building
 
-Run rake from Ryan source folder to build it
+Run the following from Ryan source folder to build it:
 
-Edit your yaws.conf file and add a server to it:
-<server localhost>
-        port = 8001
-        listen = 0.0.0.0
-        docroot = {path_to_your_static_files}
-        appmods = <"/", yaws_shim>
-</server>
+sudo rake install
 
-Run yaws --pa <path_to_ryan_ebin>
+That will install ryan libraries into Erlang lib folder
 
-Surf to: http://localhost:8001/app1/fruits/show/1?param1=123&param2=aba
+## Running an example application
+
+cd example_application
+ryan
+
+Surf to:
+http://localhost:8001/app/fruits/show/1?param1=123&param2=aba
+http://localhost:8001/app/fruits/index?param1=apple&param2=banana
 Play with different parameter values.
 
-Another Fruits controller action implemented is 'app1/fruits/index'
-Implement yours in fruits.re! (do not forrget to run rake to rebuild)
+Modify Fruits controller, implement or change actions
+Create you own controllers and see the results immediately
 Enjoy!
 
 ## Routing
