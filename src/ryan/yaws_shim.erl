@@ -1,10 +1,7 @@
 -module(yaws_shim).
--export([out/1, out/0, call_action/5, init_yaws/0]).
+-export([out/1, call_action/5, init_yaws/0]).
 -include("../yaws/yaws_api.hrl").
 -include("../yaws/yaws.hrl").
-
-out() ->
-	'hellow'.
 
 out(Arg) ->
 	Req = Arg#arg.req,
@@ -14,7 +11,8 @@ out(Arg) ->
 
 	{abs_path, Abs_Path} = Req#http_request.path,
 	[Full_Path|_] = string:tokens(Abs_Path, [$?]),
-	Path = string:tokens(Full_Path, [$/]),
+	[Application, Controller, Action] = string:tokens(Full_Path, [$/]),
+	io:fwrite("~s~n~s~n~s~n", [Application, Controller, Action]),
 	
 	Cookie = Headers#headers.cookie,
 
@@ -23,12 +21,7 @@ out(Arg) ->
 		_      -> yaws_api:parse_query(Arg)
 	end,
 
-	Result = 'Ryan':out(
-		reia_erl:e2r(Abs_Path), 
-		reia_erl:e2r(Method), 
-		reia_erl:e2r(Path),
-		reia_erl:e2r(Cookie), 
-		reia_erl:e2r(Params)),
+	Result = 'Ryan':out(Abs_Path, Method, Application, Controller, Action, Cookie, Params),
 	reia_erl:r2e(Result).
 	
 call_action([First|Rest] = _Controller, Action, Parameters, Cookies, HTTPMethod) ->
