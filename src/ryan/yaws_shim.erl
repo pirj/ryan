@@ -12,7 +12,6 @@ out(Arg) ->
 	{abs_path, Abs_Path} = Req#http_request.path,
 	[Full_Path|_] = string:tokens(Abs_Path, [$?]),
 	[Application, Controller, Action] = string:tokens(Full_Path, [$/]),
-	io:fwrite("~s~n~s~n~s~n", [Application, Controller, Action]),
 	
 	Cookie = Headers#headers.cookie,
 
