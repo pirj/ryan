@@ -1,0 +1,3 @@
+[submodule "behave"]
+	path = behave
+	url = git://github.com/pirj/behave.git
