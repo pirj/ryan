@@ -13,6 +13,8 @@ AR  = (\+|-|\*|/)
 CO  = (eq|neq|gt|lt|gteq|lteq)
 LO  = (and|or)
 NOT = (not)
+FLT = -?{D}+\.{D}+
+INT = -?{D}+
  
 Rules.
 {     : {token,{'{'}}.
@@ -23,6 +25,8 @@ Rules.
 {CO}  : {token,{comparator,list_to_atom(TokenChars)}}.
 {AR}  : {token,{arithmetic, arithmetic_to_atom(TokenChars)}}.
 {ID}  : {token,{identifier,list_to_atom(TokenChars)}}.
+{FLT} : {token, {value, string_to_float(TokenChars)}}.
+{INT} : {token, {value, string_to_integer(TokenChars)}}.
 {WS}+ : skip_token.
  
 Erlang code.
@@ -33,3 +37,10 @@ arithmetic_to_atom("/") -> divide;
 arithmetic_to_atom("*") -> multiply.
  
 remove_leading_brace(Chars, Len) -> lists:sublist(Chars, 2, Len - 1).
+
+string_to_float([$-|Chars]) -> -list_to_float(Chars);
+string_to_float(Chars) -> list_to_float(Chars).
+  
+string_to_integer([$-|Chars]) -> -list_to_integer(Chars);
+string_to_integer(Chars) -> list_to_integer(Chars).
+

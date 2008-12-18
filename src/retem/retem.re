@@ -26,6 +26,10 @@ module Retem
   def render((~identifier, atom), vars)
     vars[atom]
     
+# get value
+  def render((~value, value), _vars)
+    value
+    
 # arithmetic operators
   def render((~arithmetic, ~plus, expression1, expression2), vars)
     render(expression1, vars) + render(expression2, vars)
