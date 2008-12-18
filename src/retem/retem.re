@@ -6,12 +6,15 @@
 # renderer.parse(template).render({~apples: apples})
 
 # Current syntax:
-# 
+#
 # template = Retem.parse("{abc+bcd} apples")
 # Retem.render(template, {~abc:22, ~bcd:33}) => 55 apples
 # Retem.render(template, {~abc:192, ~bcd:976}) => 1168 apples
 
 module Retem
+  def scan(template)
+    retemplate::scan(template)
+
   def parse(template)
     retemplate::parse(template)
 

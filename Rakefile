@@ -1,10 +1,10 @@
 task :default => [:leex, :yecc, :compile]
 task :install => [:default, :install_only]
-
+ 
 def output_file(input_file)
   'ebin/' + File.basename(input_file).sub(/\.\w+$/, '.beam')
 end
-
+ 
 # Reia
 ERL_SRC = FileList.new('src/**/*.erl')
 ERL_SRC.each do |input|
@@ -13,7 +13,7 @@ ERL_SRC.each do |input|
     sh "erlc +debug_info -o ebin #{input}"
   end
 end
-
+ 
 REIA_SRC = FileList.new('src/example/*.re') + FileList.new('src/ryan/*.re') + FileList.new('src/retem/*.re')
 REIA_SRC.each do |input|
   output = output_file(input)
@@ -23,7 +23,7 @@ REIA_SRC.each do |input|
     sh 'mv *.beam ebin'
   end
 end
-
+ 
 task :compile => (ERL_SRC + REIA_SRC).map { |input_file| output_file(input_file) }
 
 # Retem Leex
@@ -56,15 +56,15 @@ end
 task :install_only do
   lib_dir = `erl -noshell -eval "io:format(code:lib_dir())" -s init stop`
   ryan_dir = File.join(lib_dir, 'ryan', '')
-  
+
   rm_r ryan_dir if File.exist?(ryan_dir)
   mkdir ryan_dir
-  
+
   %w[LICENSE README.markdown ebin].each { |f| cp_r f, ryan_dir }
-  
+
   mkdir "/usr/local/bin" unless File.exist?("/usr/local/bin")
   rm '/usr/local/bin/ryan'
   cp 'bin/ryan', '/usr/local/bin'
-  
+
   File.chmod 0755, "/usr/local/bin/ryan"
 end

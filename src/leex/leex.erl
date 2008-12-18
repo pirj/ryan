@@ -623,8 +623,7 @@ out_file(St0, DFA, DF, Actions, Code) ->
     end.
 
 open_inc_file(#leex{ifile=[]}) ->		%Use default
-    Incdir = filename:join(code:lib_dir(leex),"include"),
-    file:path_open([".",Incdir], ?LEEXINC, [read]);
+	file:path_open(["./src/leex"], ?LEEXINC, [read]);
 open_inc_file(St) ->				%Use specified file
     case file:open(St#leex.ifile, [read]) of
 	{ok,F} -> {ok,F,St#leex.ifile};		%Return same format
