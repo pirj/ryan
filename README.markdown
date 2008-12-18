@@ -6,25 +6,15 @@ It allows you to create web applications with clean and short code.
 Ryan consists of:
  - router module
  - Retem (templating engine)
- - Behave (RSpec-like testing tool)
+ - [Behave (RSpec-like testing tool)](http://github.com/pirj/behave)
  - YAWS, Mochiweb and Inets HTTP server adapters
  - SQLite3, PostgreSQL, MySQL, Mnesia and Mongo database adapters
-
-### Useful links
-
-[Ryan@lighthouse](http://ryan_reia.lighthouseapp.com/)
-
-[Ryan@github](http://github.com/pirj/ryan/)
-
-[Reia language](http://reia-lang.org)
-
-[Dev blog](http://devaddict.jot.ly/)
 
 ### Prerequisites
 
 [Erlang/OTP R12B-3 or higher](http://www.erlang.org/download.html),
-[Reia language](http://github.com/tarcieri/reia/),
-[YAWS 1.77 or higher](http://yaws.hyber.org/),
+[Reia language](http://github.com/tarcieri/reia),
+[YAWS 1.77 or higher](http://yaws.hyber.org),
 [Rake 0.8 or higher](http://github.com/jimweirich/rake)
 
 ## Building
@@ -39,7 +29,7 @@ ryan executable file into /usr/local/bin
 ## Running an example application
 
 Run:
-cd example_application
+cd application_example
 ryan
 
 Surf to:
@@ -76,6 +66,15 @@ Views can be Retem templates (retems) and are placed in application_name/views/ 
 Models are object definitions that can be stored, retrieved and queried from storage
 systems.
 SQLite3, PostgreSQL, MySQL, Mnesia and Mongo are to be supported.
+
+### Useful links
+
+[Behave@lighthouse](http://ryan_reia.lighthouseapp.com/projects/20723-behave)
+[Behave@github](http://github.com/pirj/behave)
+[Ryan@lighthouse](http://ryan_reia.lighthouseapp.com/projects/19645-ryan)
+[Ryan@github](http://github.com/pirj/ryan)
+[Reia language home](http://reia-lang.org)
+[Dev blog](http://devaddict.jot.ly)
 
 ### Authors
 * Philpipp Pirozhkov pirj@mail.ru
