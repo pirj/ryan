@@ -15,9 +15,9 @@ LO  = (and|or)
 NOT = (not)
  
 Rules.
-{     : {token, {ob, '{'}}.
-}     : {token, {cb, '}'}}.
-{TXT} : [{token, {cb, '}'}} , {token,{text, remove_leading_brace(TokenChars, TokenLen)}}].
+{     : {token,{'{'}}.
+}     : {token,{'}'}}.
+{TXT} : [{token,{'}'}} , {token,{text, remove_leading_brace(TokenChars, TokenLen)}}].
 {LO}  : {token,{logical,list_to_atom(TokenChars)}}.
 {NOT} : {token,{logical,list_to_atom(TokenChars)}}.
 {CO}  : {token,{comparator,list_to_atom(TokenChars)}}.

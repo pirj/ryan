@@ -2,7 +2,7 @@ Nonterminals
 blocks embraced expressions.
 
 Terminals
- ob cb identifier arithmetic comparator logical text. %% not 
+ '{' '}' identifier arithmetic comparator logical not text.
 
 Rootsymbol blocks.
 
@@ -11,7 +11,7 @@ blocks -> embraced blocks : ['$1'|'$2'].
 blocks -> text : ['$1'].
 blocks -> text blocks : ['$1'|'$2'].
 
-embraced    -> ob expressions cb : '$2'.
+embraced    -> '{' expressions '}' : '$2'.
 expressions -> expressions logical expressions : {logical, unwrap_operator('$2'), '$1', '$3'}.
 expressions -> expressions comparator expressions : {comparator, unwrap_operator('$2'), '$1', '$3'}.
 expressions -> expressions arithmetic expressions : {arithmetic, unwrap_operator('$2'), '$1', '$3'}.
