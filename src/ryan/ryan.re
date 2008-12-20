@@ -11,3 +11,10 @@ module Ryan
     (_hr, sec, nsec) = erlang::now()
     Local.puts([" <- incoming request: ", abspath.to_string(),"\n -> request took ", (sec-isec)*1000 + (nsec-insec)/1000, " ms"].join())
     result
+
+  def render(file, bindings)
+    file = yaws_shim::read_file(file)
+    template = Retem.parse(file.to_string())
+    rendered = Retem.render(template, bindings)
+    Local.puts(rendered)
+    rendered.to_s()
