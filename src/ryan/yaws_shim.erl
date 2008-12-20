@@ -1,5 +1,5 @@
 -module(yaws_shim).
--export([out/1, init_yaws/0]).
+-export([out/1, init_yaws/0, read_file/1]).
 -include("../yaws/yaws_api.hrl").
 -include("../yaws/yaws.hrl").
 
@@ -25,6 +25,18 @@ out(Arg) ->
 		reia_erl:e2r(Params)),
 	{html, Result}.
 	
+read_file({string, Filename}) ->
+	Absname = filename:absname(binary_to_list(Filename)),
+	Data = file:read_file(Absname),
+	case Data of
+		{ok, Contents} -> Contents;
+		{error, enoent} -> "The file does not exist.";
+		{error, eacces} -> "Missing permission for reading the file, or for searching one of the parent directories.";
+		{error, eisdir} -> "The named file is a directory.";
+		{error, enotdir} -> "A component of the file name is not a directory. On some platforms, enoent is returned instead.";
+		{error, enomem} -> "There is not enough memory for the contents of the file."
+	end.
+
 init_yaws() ->
 	YawsHome = "/usr/local/lib/yaws/",
 	YawsLib = filename:join(YawsHome, "ebin"),

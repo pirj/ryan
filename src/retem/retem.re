@@ -18,6 +18,10 @@ module Retem
   def parse(template)
     retemplate::parse(template)
 
+# empty braces
+  def render((~''), vars)
+    ''
+
 # plain text
   def render((~text, text), vars)
     text.to_string()
