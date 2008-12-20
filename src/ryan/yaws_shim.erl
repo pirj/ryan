@@ -1,5 +1,5 @@
 -module(yaws_shim).
--export([out/1, call_action/5, init_yaws/0]).
+-export([out/1, init_yaws/0]).
 -include("../yaws/yaws_api.hrl").
 -include("../yaws/yaws.hrl").
 
@@ -20,19 +20,11 @@ out(Arg) ->
 		_      -> yaws_api:parse_query(Arg)
 	end,
 
-	Result = 'Ryan':out(Abs_Path, Method, Application, Controller, Action, 
+	{string, Result} = 'Ryan':out(Abs_Path, Method, Application, Controller, Action, 
 		reia_erl:e2r(Cookie), 
 		reia_erl:e2r(Params)),
-	reia_erl:r2e(Result).
+	{html, Result}.
 	
-call_action([First|Rest] = _Controller, Action, Parameters, Cookies, HTTPMethod) ->
-	Module = unwrap_binary(string:to_upper([First]) ++ Rest),
-	Method = unwrap_binary(Action),
-	Args = [reia_erl:e2r(A) || A <- [Parameters, Cookies, HTTPMethod]],
-	reia_erl:e2r(apply(Module, Method, Args)).
-
-unwrap_binary(A) -> list_to_atom(reia_erl:r2e(A)).
-
 init_yaws() ->
 	YawsHome = "/usr/local/lib/yaws/",
 	YawsLib = filename:join(YawsHome, "ebin"),
