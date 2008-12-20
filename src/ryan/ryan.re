@@ -16,5 +16,4 @@ module Ryan
     file = yaws_shim::read_file(file)
     template = Retem.parse(file.to_string())
     rendered = Retem.render(template, bindings)
-    Local.puts(rendered)
     rendered.to_s()
