@@ -105,12 +105,13 @@ module Retem
       
 # nesting
   def render((~nest, sub), vars)
-    subbindings = vars[sub]
-    page = subbindings[~page]
-    if page == nil
-      ''
-    else
-      Ryan.page(page.to_s(), subbindings)
+    sub_render(vars[sub])
+
+  def sub_render(nil)
+    ''
+
+  def sub_render((page, subbindings))
+    Ryan.page(page.to_s(), subbindings)
 
 # list of blocks
   def render(list, vars)
