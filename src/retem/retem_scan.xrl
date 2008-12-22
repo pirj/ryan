@@ -10,32 +10,36 @@ A  = ({U}|{L}|{D}|_)
 WS  = [\000-\s]
 ID  = {UL}{A}*
 AR  = (\+|-|\*|/)
+RES = (true|false|nil)
 CO  = (eq|neq|gt|lt|gteq|lteq)
 LO  = (and|or)
-NOT = (not)
+NOT = not
+COO = (if|unless)
+COE = (else|elseif|elsif)
+END = end
 FLT = -?{D}+\.{D}+
 INT = -?{D}+
  
 Rules.
-{     : {token,{'{'}}.
-}     : {token,{'}'}}.
-{TXT} : [{token,{'}'}} , {token,{text, remove_leading_brace(TokenChars, TokenLen)}}].
-{LO}  : {token,{logical,list_to_atom(TokenChars)}}.
-{NOT} : {token,{logical,list_to_atom(TokenChars)}}.
-{CO}  : {token,{comparator,list_to_atom(TokenChars)}}.
-{AR}  : {token,{arithmetic, arithmetic_to_atom(TokenChars)}}.
-{ID}  : {token,{identifier,list_to_atom(TokenChars)}}.
+{     : {token, {'{'}}.
+}     : {token, {'}'}}.
+{TXT} : [{token, {'}'}} , {token, {text, remove_leading_brace(TokenChars, TokenLen)}}].
+
+{RES} : {token, {reserved, list_to_atom(TokenChars)}}.
+{LO}  : {token, {logical, list_to_atom(TokenChars)}}.
+{NOT} : {token, {logical, not_op}}.
+{CO}  : {token, {comparator, list_to_atom(TokenChars)}}.
+{AR}  : {token, {arithmetic, list_to_atom(TokenChars)}}.
+{COO} : {token, {conditional_op, list_to_atom(TokenChars)}}.
+{COE} : {token, {conditional_else, list_to_atom(TokenChars)}}.
+{END} : {token, {end_op}}.
+{ID}  : {token, {identifier, list_to_atom(TokenChars)}}.
 {FLT} : {token, {value, string_to_float(TokenChars)}}.
 {INT} : {token, {value, string_to_integer(TokenChars)}}.
 {WS}+ : skip_token.
  
 Erlang code.
- 
-arithmetic_to_atom("+") -> plus;
-arithmetic_to_atom("-") -> minus;
-arithmetic_to_atom("/") -> divide;
-arithmetic_to_atom("*") -> multiply.
- 
+
 remove_leading_brace(Chars, Len) -> lists:sublist(Chars, 2, Len - 1).
 
 string_to_float([$-|Chars]) -> -list_to_float(Chars);

@@ -22,6 +22,16 @@ module Retem
   def render((~''), vars)
     ''
 
+# reserved values
+  def render((~true), vars)
+    true
+
+  def render((~false), vars)
+    false
+
+  def render((~nil), vars)
+    nil
+
 # plain text
   def render((~text, text), vars)
     text.to_string()
@@ -29,22 +39,22 @@ module Retem
 # get variable value from provided vars dict
   def render((~identifier, atom), vars)
     vars[atom]
-    
+
 # get value
   def render((~value, value), _vars)
     value
-    
+
 # arithmetic operators
-  def render((~arithmetic, ~plus, expression1, expression2), vars)
+  def render((~arithmetic, ~'+', expression1, expression2), vars)
     render(expression1, vars) + render(expression2, vars)
-    
-  def render((~arithmetic, ~minus, expression1, expression2), vars)
+
+  def render((~arithmetic, ~'-', expression1, expression2), vars)
     render(expression1, vars) - render(expression2, vars)
-    
-  def render((~arithmetic, ~divide, expression1, expression2), vars)
+
+  def render((~arithmetic, ~'/', expression1, expression2), vars)
     render(expression1, vars) / render(expression2, vars)
 
-  def render((~arithmetic, ~multiply, expression1, expression2), vars)
+  def render((~arithmetic, ~'*', expression1, expression2), vars)
     render(expression1, vars) * render(expression2, vars)
 
 # comparators
@@ -76,6 +86,19 @@ module Retem
   def render((~logical, ~not, expression), vars)
     not render(expression, vars)
 
+# conditionals 
+  def render((~condition, ~'if', condition, statement), vars)
+    if(render(condition, vars))
+      render(statement, vars)
+    else
+      ''
+
+  def render((~condition, ~'unless', condition, statement), vars)
+    if(!render(condition, vars))
+      render(statement, vars)
+    else
+      ''
+
 # list of blocks
   def render(list, vars)
-    list.map { |block| render(block, vars).to_s()}.join()
+    [render(block, vars).to_s() | block in list].join()

@@ -1,25 +1,29 @@
 Nonterminals 
-blocks embraced expressions.
+blocks embraced expressions conditional_block.
 
 Terminals
- '{' '}' identifier arithmetic comparator logical not text value.
+ '{' '}' identifier arithmetic comparator logical not_op text value conditional_op end_op reserved.
 
 Rootsymbol blocks.
 
+blocks -> conditional_block : ['$1'].
 blocks -> embraced : ['$1'].
 blocks -> embraced blocks : ['$1'|'$2'].
 blocks -> text : ['$1'].
 blocks -> text blocks : ['$1'|'$2'].
 
+conditional_block -> '{' conditional_op expressions '}' text '{' end_op '}': {condition, unwrap_operator('$2'), '$3', '$5'}.
+
 embraced    -> '{' expressions '}' : '$2'.
 embraced    -> '{' '}' : ''.
+
 expressions -> expressions logical expressions : {logical, unwrap_operator('$2'), '$1', '$3'}.
 expressions -> expressions comparator expressions : {comparator, unwrap_operator('$2'), '$1', '$3'}.
 expressions -> expressions arithmetic expressions : {arithmetic, unwrap_operator('$2'), '$1', '$3'}.
-%% expressions -> not expressions : {not, unwrap_operator('$1'), '$2', '$2'}.
+expressions -> not_op expressions : {not_op, unwrap_operator('$1'), '$2', '$2'}.
 expressions -> identifier : '$1'.
 expressions -> value : '$1'.
-
+expressions -> reserved : '$1'.
 
 Erlang code.
 
