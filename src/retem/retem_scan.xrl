@@ -17,6 +17,7 @@ NOT = not
 COO = (if|unless)
 COE = (else|elseif|elsif)
 END = end
+NST = nest
 FLT = -?{D}+\.{D}+
 INT = -?{D}+
  
@@ -32,6 +33,7 @@ Rules.
 {AR}  : {token, {arithmetic, list_to_atom(TokenChars)}}.
 {COO} : {token, {conditional_op, list_to_atom(TokenChars)}}.
 {COE} : {token, {conditional_else, list_to_atom(TokenChars)}}.
+{NST} : {token, {nest}}.
 {END} : {token, {end_op}}.
 {ID}  : {token, {identifier, list_to_atom(TokenChars)}}.
 {FLT} : {token, {value, string_to_float(TokenChars)}}.

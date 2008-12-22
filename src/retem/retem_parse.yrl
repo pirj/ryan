@@ -2,7 +2,7 @@ Nonterminals
 blocks embraced expressions conditional_block.
 
 Terminals
- '{' '}' identifier arithmetic comparator logical not_op text value conditional_op end_op reserved.
+ '{' '}' identifier arithmetic comparator logical not_op text value conditional_op end_op reserved nest.
 
 Rootsymbol blocks.
 
@@ -24,7 +24,9 @@ expressions -> not_op expressions : {not_op, unwrap_operator('$1'), '$2', '$2'}.
 expressions -> identifier : '$1'.
 expressions -> value : '$1'.
 expressions -> reserved : '$1'.
+expressions -> nest identifier: {nest, remove_id('$2')}.
 
 Erlang code.
 
 unwrap_operator({_Category, Operator}) -> Operator.
+remove_id({identifier, Id}) -> Id.

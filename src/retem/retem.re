@@ -38,7 +38,11 @@ module Retem
 
 # get variable value from provided vars dict
   def render((~identifier, atom), vars)
-    vars[atom]
+    value = vars[atom]
+    if value == nil
+      ''
+    else
+      value
 
 # get value
   def render((~value, value), _vars)
@@ -98,6 +102,15 @@ module Retem
       render(statement, vars)
     else
       ''
+      
+# nesting
+  def render((~nest, sub), vars)
+    subbindings = vars[sub]
+    page = subbindings[~page]
+    if page == nil
+      ''
+    else
+      Ryan.page(page.to_s(), subbindings)
 
 # list of blocks
   def render(list, vars)
