@@ -38,12 +38,13 @@ Rules.
 {COE} : {token, {conditional_else, list_to_atom(TokenChars)}}.
 {NST} : {token, {nest}}.
 {END} : {token, {end_op}}.
-{ID}  : {token, {identifier, list_to_atom(TokenChars)}}.
-{FLT} : {token, {value, string_to_float(TokenChars)}}.
-{INT} : {token, {value, string_to_integer(TokenChars)}}.
 {FOR} : {token, {for_op}}.
 {IN}  : {token, {in_op}}.
 {DOT} : {token, {dot}}.
+
+{ID}  : {token, {identifier, list_to_atom(TokenChars)}}.
+{FLT} : {token, {value, string_to_float(TokenChars)}}.
+{INT} : {token, {value, string_to_integer(TokenChars)}}.
 {WS}+ : skip_token.
  
 Erlang code.

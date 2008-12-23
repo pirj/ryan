@@ -1,5 +1,5 @@
 Nonterminals 
-blocks embraced expressions conditional_block. %for_block
+blocks embraced expressions conditional_block for_block.
 
 Terminals
  '{' '}' identifier arithmetic comparator logical not_op text value conditional_op end_op reserved nest for_op in_op dot.
@@ -7,15 +7,15 @@ Terminals
 Rootsymbol blocks.
 
 blocks -> conditional_block : ['$1'].
-%blocks -> for_block : ['$1'].
+blocks -> for_block : ['$1'].
 blocks -> embraced : ['$1'].
 blocks -> embraced blocks : ['$1'|'$2'].
 blocks -> text : ['$1'].
 blocks -> text blocks : ['$1'|'$2'].
 
-conditional_block -> '{' conditional_op expressions '}' text '{' end_op '}': {condition, unwrap_operator('$2'), '$3', '$5'}.
+conditional_block -> '{' conditional_op expressions '}' text '{' end_op '}' : {condition, unwrap_operator('$2'), '$3', '$5'}.
 
-% for_block -> '{' for_op identifier in_op identifier '}' text '{' end_op '}': {for, unwrap_operator('$2'), '$3', '$5'}.
+for_block -> '{' for_op identifier in_op identifier '}' text '{' end_op '}' : {for, remove_id('$3'), '$5', '$7'}.
 
 embraced    -> '{' expressions '}' : '$2'.
 embraced    -> '{' '}' : ''.

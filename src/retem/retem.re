@@ -113,8 +113,15 @@ module Retem
   def sub_render((page, subbindings))
     Ryan.page(page.to_s(), subbindings)
 
+# object properties
   def render((~property, object, property), vars)
     render(object, vars)[property]
+
+# for loop
+  def render((~for, var, object, text), vars)
+    array = render(object, vars)
+    [el | el in array].join()
+#    [render(text, vars.insert(var, el) | el in array]
 
 # list of blocks
   def render(list, vars)
