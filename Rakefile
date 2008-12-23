@@ -14,17 +14,7 @@ ERL_SRC.each do |input|
   end
 end
  
-REIA_SRC = FileList.new('src/example/*.re') + FileList.new('src/ryan/*.re') + FileList.new('src/retem/*.re')
-REIA_SRC.each do |input|
-  output = output_file(input)
-  file output => input do
-    puts "compiling #{input}"
-    sh "reiac #{input}"
-    sh 'mv *.beam ebin'
-  end
-end
- 
-task :compile => (ERL_SRC + REIA_SRC).map { |input_file| output_file(input_file) }
+task :compile => ERL_SRC.map { |input_file| output_file(input_file) }
 
 # Retem Leex
 task :leex => ["ebin/leex.beam", "ebin/retem_scan.beam"]
@@ -61,9 +51,13 @@ task :install_only do
   mkdir ryan_dir
 
   %w[LICENSE README.markdown ebin].each { |f| cp_r f, ryan_dir }
+  rm File.join(ryan_dir, 'ebin/leex.beam')
+  
+  cp 'src/retem/retem.re', ryan_dir
+  cp 'src/ryan/ryan.re', ryan_dir
 
   mkdir "/usr/local/bin" unless File.exist?("/usr/local/bin")
-  rm '/usr/local/bin/ryan'
+  rm '/usr/local/bin/ryan' if File.exist?("/usr/local/bin/ryan")
   cp 'bin/ryan', '/usr/local/bin'
 
   File.chmod 0755, "/usr/local/bin/ryan"

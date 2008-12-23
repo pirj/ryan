@@ -1,3 +1,18 @@
 #!/usr/bin/env reia
 
+puts('Starting up Ryan...')
+ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
+
+# required = ['retem.re', 'ryan.re']
+# required.each do |lib|
+#   puts(['Loading ', lib].join())
+#   load([ryan_dir, lib].join('/'))
+
+lib = 'retem.re'
+puts(['Loading ', lib].join())
+load([ryan_dir, lib].join('/'))
+lib = 'ryan.re'
+puts(['Loading ', lib].join())
+load([ryan_dir, lib].join('/'))
+
 yaws_shim::init_yaws()
