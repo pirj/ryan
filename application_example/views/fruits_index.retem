@@ -1,3 +1,2 @@
 {apples} apples total<br/>
-color: {apple_color}<br/>
-weight: {apple_weight}kg
+{for apple in apples} {apple.color} {apple.weight}kg {end}
