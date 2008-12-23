@@ -113,6 +113,9 @@ module Retem
   def sub_render((page, subbindings))
     Ryan.page(page.to_s(), subbindings)
 
+  def render((~property, object, property), vars)
+    render(object, vars)[property]
+
 # list of blocks
   def render(list, vars)
     [render(block, vars).to_s() | block in list].join()

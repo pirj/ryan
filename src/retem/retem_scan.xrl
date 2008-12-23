@@ -20,6 +20,9 @@ END = end
 NST = nest
 FLT = -?{D}+\.{D}+
 INT = -?{D}+
+FOR = for
+IN  = in
+DOT = \.
  
 Rules.
 {     : {token, {'{'}}.
@@ -38,6 +41,9 @@ Rules.
 {ID}  : {token, {identifier, list_to_atom(TokenChars)}}.
 {FLT} : {token, {value, string_to_float(TokenChars)}}.
 {INT} : {token, {value, string_to_integer(TokenChars)}}.
+{FOR} : {token, {for_op}}.
+{IN}  : {token, {in_op}}.
+{DOT} : {token, {dot}}.
 {WS}+ : skip_token.
  
 Erlang code.
@@ -49,4 +55,3 @@ string_to_float(Chars) -> list_to_float(Chars).
   
 string_to_integer([$-|Chars]) -> -list_to_integer(Chars);
 string_to_integer(Chars) -> list_to_integer(Chars).
-
