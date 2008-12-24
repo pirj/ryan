@@ -1,5 +1,7 @@
 #!/usr/bin/env reia
 
+# load([code::lib_dir().to_string(), 'ryan', 'retem.re'].join('/'))
+
 puts('Starting up Ryan...')
 ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
 
