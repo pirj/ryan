@@ -7,22 +7,19 @@ out(Arg) ->
 	Req = Arg#arg.req,
 	Headers = Arg#arg.headers,
 
+	Cookie = Headers#headers.cookie,
 	Method = reia_erl:e2r(Req#http_request.method),
 
 	{abs_path, Abs_Path} = Req#http_request.path,
 	[Full_Path|_] = string:tokens(Abs_Path, [$?]),
-	[Application, Controller, Action] = string:tokens(Full_Path, [$/]),
-	
-	Cookie = Headers#headers.cookie,
+	PathParts = string:tokens(Full_Path, [$/]),
 
 	Params = case Method of
 		'POST' -> yaws_api:parse_post(Arg);
 		_      -> yaws_api:parse_query(Arg)
 	end,
 
-	{string, Result} = 'Ryan':out(Abs_Path, Method, Application, Controller, Action, 
-		reia_erl:e2r(Cookie), 
-		reia_erl:e2r(Params)),
+	{string, Result} = 'Ryan':out(Abs_Path, Method, PathParts, Cookie, Params),
 	{html, Result}.
 	
 read_file({string, Filename}) ->
