@@ -5,8 +5,8 @@ module Ryan
     controller_file = ['controllers/', controller, '.re'].join()
     Local.load(controller_file)
     controller = controller.capitalize().to_atom()
-    cookies = cookies.map {|(k,v)| (k.to_string(), v.to_string())}
-    parameters = parameters.map {|(k,v)| (k.to_string().to_atom(), v.to_string())}
+    # cookies = cookies.map {|(k,v)| (k.to_string(), v.to_string())}
+    # parameters = parameters.map {|(k,v)| (k.to_string().to_atom(), v.to_string())}
     result = reia::apply(controller, action, [parameters, cookies, method])
     result
 
