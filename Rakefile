@@ -6,6 +6,7 @@ def output_file(input_file)
 end
  
 # Reia
+
 ERL_SRC = FileList.new('src/**/*.erl')
 ERL_SRC.each do |input|
   file output_file(input) => input do
@@ -14,7 +15,17 @@ ERL_SRC.each do |input|
   end
 end
  
-task :compile => ERL_SRC.map { |input_file| output_file(input_file) }
+REIA_SRC = FileList.new('src/ryan/*.re') + FileList.new('src/retem/*.re')
+REIA_SRC.each do |input|
+  output = output_file(input)
+  file output => input do
+    puts "compiling #{input}"
+    sh "reiac #{input}"
+    sh 'mv *.beam ebin'
+  end
+end
+
+task :compile => (ERL_SRC + REIA_SRC).map { |input_file| output_file(input_file) }
 
 # Retem Leex
 task :leex => ["ebin/leex.beam", "ebin/retem_scan.beam"]
@@ -50,7 +61,7 @@ task :install_only do
   rm_r ryan_dir if File.exist?(ryan_dir)
   mkdir ryan_dir
 
-  %w[LICENSE README.markdown ebin].each { |f| cp_r f, ryan_dir }
+  %w[LICENSE README.md ebin].each { |f| cp_r f, ryan_dir }
   rm File.join(ryan_dir, 'ebin/leex.beam')
   
   cp 'src/retem/retem.re', ryan_dir
