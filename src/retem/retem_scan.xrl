@@ -30,10 +30,10 @@ Rules.
 {TXT} : [{token, {'}'}} , {token, {text, remove_leading_brace(TokenChars, TokenLen)}}].
 
 {RES} : {token, {reserved, list_to_atom(TokenChars)}}.
-{LO}  : {token, {logical, list_to_atom(TokenChars)}}.
-{NOT} : {token, {logical, not_op}}.
-{CO}  : {token, {comparator, list_to_atom(TokenChars)}}.
-{AR}  : {token, {arithmetic, list_to_atom(TokenChars)}}.
+{LO}  : {token, {op, logical, list_to_atom(TokenChars)}}.
+{NOT} : {token, {op, not_op}}.
+{CO}  : {token, {op, comparator, list_to_atom(TokenChars)}}.
+{AR}  : {token, {op, arithmetic, list_to_atom(TokenChars)}}.
 {COO} : {token, {conditional_op, list_to_atom(TokenChars)}}.
 {COE} : {token, {conditional_else, list_to_atom(TokenChars)}}.
 {NST} : {token, {nest}}.
