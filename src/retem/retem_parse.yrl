@@ -20,13 +20,9 @@ end -> '{' endc '}' : '$1'.
 
 if_block -> '{' conditional expression '}' blocks end : {conditional('$2'), '$3', '$5'}.
 if_block -> '{' conditional expression '}' block end : {conditional('$2'), '$3', '$5'}.
-if_block -> '{' conditional expression '}' text end : {conditional('$2'), '$3', '$5'}.
-if_block -> '{' conditional expression '}' expressions end : {conditional('$2'), '$3', '$5'}.
 
 for_block -> '{' for identifier in identifier '}' blocks end : {for, remove_id('$3'), '$5', ['$7']}.
 for_block -> '{' for identifier in identifier '}' block end : {for, remove_id('$3'), '$5', '$7'}.
-for_block -> '{' for identifier in identifier '}' text end : {for, remove_id('$3'), '$5', '$7'}.
-for_block -> '{' for identifier in identifier '}' expressions end : {for, remove_id('$3'), '$5', '$7'}.
 
 expressions -> '{' expression '}' : '$2'.
 expressions -> '{' '}' : ''.
