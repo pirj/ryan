@@ -2,7 +2,7 @@ Nonterminals
 syntax blocks block if_block for_block expressions expression end.
 
 Terminals
- '{' '}' identifier op text value conditional endc reserved nest for in dot nt.
+ '{' '}' ',' identifier op text value conditional endc reserved nest for in dot nt.
 
 Rootsymbol syntax.
 
@@ -18,10 +18,7 @@ block -> text : '$1'.
 
 end -> '{' endc '}' : '$1'.
 
-if_block -> '{' conditional expression '}' blocks end : {conditional('$2'), '$3', '$5'}.
 if_block -> '{' conditional expression '}' block end : {conditional('$2'), '$3', '$5'}.
-
-for_block -> '{' for identifier in identifier '}' blocks end : {for, remove_id('$3'), '$5', ['$7']}.
 for_block -> '{' for identifier in identifier '}' block end : {for, remove_id('$3'), '$5', '$7'}.
 
 expressions -> '{' expression '}' : '$2'.
@@ -33,6 +30,7 @@ expression -> identifier dot identifier: {property, '$1', remove_id('$3')}.
 expression -> identifier : '$1'.
 expression -> value : '$1'.
 expression -> reserved : '$1'.
+expression -> nest identifier ',' identifier: {nest, remove_id('$2'), remove_id('$4')}.
 expression -> nest identifier: {nest, remove_id('$2')}.
 
 Erlang code.

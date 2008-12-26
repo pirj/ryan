@@ -104,6 +104,10 @@ module Retem
       ''
       
 # nesting
+  def render((~nest, sub, subbinding), vars)
+    sub_render((sub, vars))
+    # sub_render((sub, {subbinding: vars[subbinding]}))
+
   def render((~nest, sub), vars)
     sub_render(vars[sub])
 

@@ -19,7 +19,7 @@ out(Arg) ->
 		_      -> yaws_api:parse_query(Arg)
 	end,
 
-	{string, Result} = 'Ryan':out(Abs_Path, Method, PathParts, Cookie, Params),
+	{string, Result} = reia:apply('Ryan',out, [Abs_Path, Method, PathParts, Cookie, Params]),
 	{html, Result}.
 	
 read_file({string, Filename}) ->

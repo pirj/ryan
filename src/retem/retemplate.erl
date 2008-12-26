@@ -5,7 +5,8 @@ scan({string,String}) ->
   {ok, Scanned, _EndLine} = retem_scan:string(binary_to_list(String)),
   Scanned.
 
-parse({string,String}) ->
-  {ok, Scanned, _EndLine} = retem_scan:string(binary_to_list(String)),
+parse({string, _String} = Input) ->
+  parse(scan(Input));
+parse(Scanned) ->
   {ok, Parsed} = retem_parse:parse(Scanned),
   Parsed.
