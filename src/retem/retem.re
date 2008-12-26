@@ -87,17 +87,17 @@ module Retem
   def render((~logical, ~or, expression1, expression2), vars)
     render(expression1, vars) or render(expression2, vars)
 
-  def render((~logical, ~not, expression), vars)
+  def render((~logical, ~nt, expression), vars)
     not render(expression, vars)
 
 # conditionals 
-  def render((~condition, ~'if', condition, statement), vars)
+  def render((~'if', condition, statement), vars)
     if(render(condition, vars))
       render(statement, vars)
     else
       ''
 
-  def render((~condition, ~'unless', condition, statement), vars)
+  def render((~'unless', condition, statement), vars)
     if(!render(condition, vars))
       render(statement, vars)
     else
@@ -118,10 +118,9 @@ module Retem
     render(object, vars)[property]
 
 # for loop
-  def render((~for, var, object, text), vars)
+  def render((~for, var, object, block), vars)
     array = render(object, vars)
-    [el | el in array].join()
-#    [render(text, vars.insert(var, el) | el in array]
+    [render(block, vars.insert(var, el)) | el in array].join()
 
 # list of blocks
   def render(list, vars)

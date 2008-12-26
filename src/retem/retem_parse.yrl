@@ -1,8 +1,8 @@
 Nonterminals 
-syntax blocks block if_block for_block expression.
+syntax blocks block if_block for_block expressions expression end.
 
 Terminals
- '{' '}' identifier op text value conditional_op end_op reserved nest for_op in_op dot not_op.
+ '{' '}' identifier op text value conditional endc reserved nest for in dot nt.
 
 Rootsymbol syntax.
 
@@ -13,20 +13,26 @@ blocks -> block blocks : ['$1'|'$2'].
 
 block -> if_block : '$1'.
 block -> for_block : '$1'.
-block -> '{' expression '}' : '$2'.
-block -> '{' '}' : ''.
+block -> expressions : '$1'.
 block -> text : '$1'.
 
-if_block -> '{' conditional_op expression '}' block '{' end_op '}' : {condition, conditional('$2'), '$5'}.
-if_block -> '{' conditional_op expression '}' text '{' end_op '}' : {condition, conditional('$2'), '$5'}.
-if_block -> '{' conditional_op expression '}' '{' expression '}' '{' end_op '}' : {condition, conditional('$2'), '$6'}.
+end -> '{' endc '}' : '$1'.
 
-for_block -> '{' for_op identifier in_op identifier '}' block '{' end_op '}' : {for, remove_id('$3'), '$5', '$7'}.
-for_block -> '{' for_op identifier in_op identifier '}' text '{' end_op '}' : {for, remove_id('$3'), '$5', '$7'}.
-for_block -> '{' for_op identifier in_op identifier '}' '{' expression '}' '{' end_op '}' : {for, remove_id('$3'), '$5', '$8'}.
+if_block -> '{' conditional expression '}' blocks end : {conditional('$2'), '$3', '$5'}.
+if_block -> '{' conditional expression '}' block end : {conditional('$2'), '$3', '$5'}.
+if_block -> '{' conditional expression '}' text end : {conditional('$2'), '$3', '$5'}.
+if_block -> '{' conditional expression '}' expressions end : {conditional('$2'), '$3', '$5'}.
+
+for_block -> '{' for identifier in identifier '}' blocks end : {for, remove_id('$3'), '$5', ['$7']}.
+for_block -> '{' for identifier in identifier '}' block end : {for, remove_id('$3'), '$5', '$7'}.
+for_block -> '{' for identifier in identifier '}' text end : {for, remove_id('$3'), '$5', '$7'}.
+for_block -> '{' for identifier in identifier '}' expressions end : {for, remove_id('$3'), '$5', '$7'}.
+
+expressions -> '{' expression '}' : '$2'.
+expressions -> '{' '}' : ''.
 
 expression -> expression op expression : {category('$2'), operator('$2'), '$1', '$3'}.
-% expression -> not_op expression : {not_op, '$2'}.
+expression -> nt expression : {nt, '$2'}.
 expression -> identifier dot identifier: {property, '$1', remove_id('$3')}.
 expression -> identifier : '$1'.
 expression -> value : '$1'.
