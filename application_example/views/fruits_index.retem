@@ -1,2 +1,2 @@
-{apples} apples total<br/>
-{for apple in apples} {apple.color} {apple.weight}kg {end}
+{}Apples:<br/>
+{for apple in apples}{nest fruits_index_row, apple}{end}

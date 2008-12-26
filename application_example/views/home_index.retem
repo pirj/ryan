@@ -1,1 +1,11 @@
-okay, you're at home
+{}
+<img src='/favicon.ico'/>
+<h1>Home</h1>
+<h4>Okay, if you are seeing this that means you're running Ryan and Reia example page</h4>
+
+<dl>
+	<dt><a href='fruits'>Fruit store</a>: example of shopping cart and drag'n'drop
+	<dt><a href='todo'>Todo</a>: example of server push
+	<dt><a href='album'>Photo album</a>: example of autosave
+	<dt><a href='budget'>Family budget</a>: server-side calculations with graphs
+</ul>
