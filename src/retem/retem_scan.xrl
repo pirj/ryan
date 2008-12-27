@@ -30,15 +30,15 @@ Rules.
 {TXT} : [{token, {'}'}} , {token, {text, remove_leading_brace(TokenChars, TokenLen)}}].
 ,     : {token, {','}}.
 {RES} : {token, {reserved, list_to_atom(TokenChars)}}.
-{LO}  : {token, {op, {logical, list_to_atom(TokenChars)}}}.
+{LO}  : {token, {op, logical, list_to_atom(TokenChars)}}.
 {NOT} : {token, {nt}}.
-{CO}  : {token, {op, {comparator, list_to_atom(TokenChars)}}}.
-{AR}  : {token, {op, {arithmetic, list_to_atom(TokenChars)}}}.
+{CO}  : {token, {op, comparator, list_to_atom(TokenChars)}}.
+{AR}  : {token, {op, arithmetic, list_to_atom(TokenChars)}}.
 {COO} : {token, {conditional, list_to_atom(TokenChars)}}.
 {COE} : {token, {conditional_else, list_to_atom(TokenChars)}}.
 {NST} : {token, {nest}}.
 {END} : {token, {endc}}.
-{FOR} : {token, {forc}}.
+{FOR} : {token, {for}}.
 {IN}  : {token, {in}}.
 {DOT} : {token, {dot}}.
 
