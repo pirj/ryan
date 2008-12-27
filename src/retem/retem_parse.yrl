@@ -1,18 +1,21 @@
 Nonterminals 
- list element elements expressions expression.
+ syntax blocks block cond_block for_block expressions expression.
 
 Terminals
  '{' '}' ',' identifier op text value conditional endc reserved nest forc in dot nt.
 
-Rootsymbol list.
+Rootsymbol syntax.
 
-list -> elements : '$1'.
-elements -> '$empty' : [].
-elements -> elements element : '$1' ++ ['$2'].
-element -> '{' conditional expression '}' elements '{' endc '}' : {conditional('$2'), '$3', '$5'}.
-element -> '{' forc identifier in identifier '}' elements '{' endc '}' : {forcycle, remove_id('$3'), '$5', '$7'}.
-element -> expressions : '$1'.
-element -> text : '$1'.
+syntax -> blocks : '$1'.
+blocks -> '$empty' : [].
+blocks -> blocks block : '$1' ++ ['$2'].
+block -> cond_block : '$1'.
+block -> for_block : '$1'.
+block -> expressions : '$1'.
+block -> text : '$1'.
+
+cond_block -> '{' conditional expression '}' blocks '{' endc '}' : {conditional('$2'), '$3', '$5'}.
+for_block -> '{' forc identifier in identifier '}' blocks '{' endc '}' : {forcycle, remove_id('$3'), '$5', '$7'}.
 
 expressions -> '{' expression '}' : '$2'.
 expressions -> '{' '}' : nil.
