@@ -25,26 +25,26 @@ IN  = in
 DOT = \.
  
 Rules.
-{     : {token, {'{', TokenLine}}.
-}     : {token, {'}', TokenLine}}.
-{TXT} : [{token, {'}', TokenLine}} , {token, {text, TokenLine, remove_leading_brace(TokenChars, TokenLen)}}].
-,     : {token, {',', TokenLine}}.
-{RES} : {token, {reserved, TokenLine, list_to_atom(TokenChars)}}.
-{LO}  : {token, {op, TokenLine, {logical, list_to_atom(TokenChars)}}}.
-{NOT} : {token, {nt, TokenLine}}.
-{CO}  : {token, {op, TokenLine, {comparator, list_to_atom(TokenChars)}}}.
-{AR}  : {token, {op, TokenLine, {arithmetic, list_to_atom(TokenChars)}}}.
-{COO} : {token, {conditional, TokenLine, list_to_atom(TokenChars)}}.
-{COE} : {token, {conditional_else, TokenLine, list_to_atom(TokenChars)}}.
-{NST} : {token, {nest, TokenLine}}.
-{END} : {token, {endc, TokenLine}}.
-{FOR} : {token, {forc, TokenLine}}.
-{IN}  : {token, {in, TokenLine}}.
-{DOT} : {token, {dot, TokenLine}}.
+{     : {token, {'{'}}.
+}     : {token, {'}'}}.
+{TXT} : [{token, {'}'}} , {token, {text, remove_leading_brace(TokenChars, TokenLen)}}].
+,     : {token, {','}}.
+{RES} : {token, {reserved, list_to_atom(TokenChars)}}.
+{LO}  : {token, {op, {logical, list_to_atom(TokenChars)}}}.
+{NOT} : {token, {nt}}.
+{CO}  : {token, {op, {comparator, list_to_atom(TokenChars)}}}.
+{AR}  : {token, {op, {arithmetic, list_to_atom(TokenChars)}}}.
+{COO} : {token, {conditional, list_to_atom(TokenChars)}}.
+{COE} : {token, {conditional_else, list_to_atom(TokenChars)}}.
+{NST} : {token, {nest}}.
+{END} : {token, {endc}}.
+{FOR} : {token, {forc}}.
+{IN}  : {token, {in}}.
+{DOT} : {token, {dot}}.
 
-{ID}  : {token, {identifier, TokenLine, list_to_atom(TokenChars)}}.
-{FLT} : {token, {value, TokenLine, string_to_float(TokenChars)}}.
-{INT} : {token, {value, TokenLine, string_to_integer(TokenChars)}}.
+{ID}  : {token, {identifier, list_to_atom(TokenChars)}}.
+{FLT} : {token, {value, string_to_float(TokenChars)}}.
+{INT} : {token, {value, string_to_integer(TokenChars)}}.
 {WS}+ : skip_token.
  
 Erlang code.

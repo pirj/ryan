@@ -31,7 +31,7 @@ expression -> nest identifier: {nest, remove_id('$2')}.
 
 Erlang code.
 
-category({_Op, _Line, {Category, _Operator}}) -> Category.
-operator({_Op, _Line, {_Category, Operator}}) -> Operator.
-conditional({_, _Line, Conditional}) -> Conditional.
-remove_id({identifier, _Line, Id}) -> Id.
+category({_Op, {Category, _Operator}}) -> Category.
+operator({_Op, {_Category, Operator}}) -> Operator.
+conditional({_, Conditional}) -> Conditional.
+remove_id({identifier, Id}) -> Id.
