@@ -1,31 +1,21 @@
 Nonterminals 
-syntax blocks block if_block for_block expressions expression end.
+ list element elements expressions expression.
 
 Terminals
- '{' '}' ',' identifier op text value conditional endc reserved nest for in dot nt.
+ '{' '}' ',' identifier op text value conditional endc reserved nest forc in dot nt.
 
-Rootsymbol syntax.
+Rootsymbol list.
 
-syntax -> blocks : '$1'.
-
-blocks -> block : ['$1'].
-blocks -> block blocks : ['$1'|'$2'].
-
-block -> if_block : '$1'.
-block -> for_block : '$1'.
-block -> expressions : '$1'.
-block -> text : '$1'.
-
-end -> '{' endc '}' : '$1'.
-
-if_block -> '{' conditional expression '}' blocks end : {conditional('$2'), '$3', '$5'}.
-if_block -> '{' conditional expression '}' block end : {conditional('$2'), '$3', '$5'}.
-
-for_block -> '{' for identifier in identifier '}' blocks end : {for, remove_id('$3'), '$5', '$7'}.
-for_block -> '{' for identifier in identifier '}' block end : {for, remove_id('$3'), '$5', '$7'}.
+list -> elements : '$1'.
+elements -> '$empty' : [].
+elements -> elements element : '$1' ++ ['$2'].
+element -> '{' conditional expression '}' elements '{' endc '}' : {conditional('$2'), '$3', '$5'}.
+element -> '{' forc identifier in identifier '}' elements '{' endc '}' : {forcycle, remove_id('$3'), '$5', '$7'}.
+element -> expressions : '$1'.
+element -> text : '$1'.
 
 expressions -> '{' expression '}' : '$2'.
-expressions -> '{' '}' : ''.
+expressions -> '{' '}' : nil.
 
 expression -> expression op expression : {category('$2'), operator('$2'), '$1', '$3'}.
 expression -> nt expression : {nt, '$2'}.
@@ -38,7 +28,7 @@ expression -> nest identifier: {nest, remove_id('$2')}.
 
 Erlang code.
 
-category({_Op, Category, _Operator}) -> Category.
-operator({_Op, _Category, Operator}) -> Operator.
-conditional({_, Conditional}) -> Conditional.
-remove_id({identifier, Id}) -> Id.
+category({_Op, _Line, {Category, _Operator}}) -> Category.
+operator({_Op, _Line, {_Category, Operator}}) -> Operator.
+conditional({_, _Line, Conditional}) -> Conditional.
+remove_id({identifier, _Line, Id}) -> Id.
