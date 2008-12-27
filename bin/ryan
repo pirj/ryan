@@ -10,11 +10,11 @@ ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
 #   puts(['Loading ', lib].join())
 #   load([ryan_dir, lib].join('/'))
 
-lib = 'retem.re'
-puts(['Loading ', lib].join())
-load([ryan_dir, lib].join('/'))
-lib = 'ryan.re'
-puts(['Loading ', lib].join())
-load([ryan_dir, lib].join('/'))
+# lib = 'retem.re'
+# puts(['Loading ', lib].join())
+# load([ryan_dir, lib].join('/'))
+# lib = 'ryan.re'
+# puts(['Loading ', lib].join())
+# load([ryan_dir, lib].join('/'))
 
 yaws_shim::init_yaws()
