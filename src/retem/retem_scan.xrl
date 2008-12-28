@@ -28,7 +28,7 @@ Rules.
 {     : {token, {'{'}}.
 }     : {token, {'}'}}.
 {TXT} : [{token, {'}'}} , {token, {text, remove_leading_brace(TokenChars, TokenLen)}}].
-,     : {token, {','}}.
+,     : {token, {comma}}.
 {RES} : {token, {reserved, list_to_atom(TokenChars)}}.
 {LO}  : {token, {op, logical, list_to_atom(TokenChars)}}.
 {NOT} : {token, {nt}}.

@@ -4,17 +4,16 @@ module Ryan
     (controller, action) = route(path_parts)
     controller_file = ['controllers/', controller, '.re'].join()
     Local.load(controller_file)
-    controller = controller.capitalize().to_atom()
+    page(controller, action, parameters, cookies)
+
+  def page(controller, action, parameters, cookies)
+    controller = controller.to_s().capitalize().to_atom()
     # cookies = cookies.map {|(k,v)| (k.to_string(), v.to_string())}
-    # parameters = parameters.map {|(k,v)| (k.to_string().to_atom(), v.to_string())}
-    result = reia::apply(controller, action, [parameters, cookies, method])
-    result
+    # parameters = parameters.map {|p| {p[0].to_string().to_atom(): p[1].to_string()}}
+    result = reia::apply(controller, action, [parameters, cookies])
+    result.to_s()
 
-  def page(pagename, bindings)
-    contents = Ryan.part(pagename, bindings)
-    contents.to_s()
-
-  def part(filename, bindings)
+  def view(filename, bindings)
     file = yaws_shim::read_file(['views/', filename, '.retem'].join(''))
     template = Retem.parse(file.to_string())
     rendered = Retem.render(template, bindings)

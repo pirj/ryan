@@ -1,8 +1,8 @@
 Nonterminals 
- syntax blocks block if_block for_block expressions expression.
+ syntax blocks block if_block for_block expressions expression nested.
 
 Terminals
- '{' '}' ',' identifier op text value conditional reserved nest for in endc dot nt.
+ '{' '}' comma identifier op text value conditional reserved nest for in endc dot nt.
 
 Rootsymbol syntax.
 
@@ -26,8 +26,10 @@ expression -> identifier dot identifier: {property, '$1', remove_id('$3')}.
 expression -> identifier : '$1'.
 expression -> value : '$1'.
 expression -> reserved : '$1'.
-expression -> nest identifier ',' identifier: {nest, remove_id('$2'), remove_id('$4')}.
-expression -> nest identifier: {nest, remove_id('$2')}.
+expression -> nested : '$1'.
+
+nested -> nest identifier identifier comma identifier: {nest, remove_id('$2'), remove_id('$3'), remove_id('$5')}.
+nested -> nest identifier identifier: {nest, remove_id('$2'), remove_id('$3')}.
 
 Erlang code.
 

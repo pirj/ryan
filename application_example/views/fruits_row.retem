@@ -1,0 +1,1 @@
+<a href='fruits/show?id={apple.id}'>{apple.color}</a><br/>

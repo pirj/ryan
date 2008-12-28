@@ -1,2 +1,7 @@
 Apples:<br/>
-{for apple in apples}{nest fruits_index_row, apple}{end}
+<div>
+{for apple in apples}{nest fruits row, apple}{end}
+</div>
+<div>
+{nest fruits show}
+</div>

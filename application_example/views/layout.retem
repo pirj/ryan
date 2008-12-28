@@ -4,5 +4,5 @@
 {head}
 <link href="/css/app.css" rel=stylesheet type=text/css>
 </head>
-<body>{nest contents}</body>
+<body>{contents}</body>
 </html>
