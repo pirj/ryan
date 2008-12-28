@@ -1,8 +1,8 @@
-{}<html>
+<html>
 <head>
 <title>{title}</title>
 {head}
 <link href="/css/app.css" rel=stylesheet type=text/css>
 </head>
-{}<body>{nest contents}</body>
+<body>{nest contents}</body>
 </html>
