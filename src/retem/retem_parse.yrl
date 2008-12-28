@@ -18,7 +18,7 @@ if_block -> '{' conditional expression '}' blocks '{' endc '}' : {conditional('$
 for_block -> '{' for identifier in identifier '}' blocks '{' endc '}' : {for, remove_id('$3'), '$5', '$7'}.
 
 expressions -> '{' expression '}' : '$2'.
-expressions -> '{' '}' : nil.
+expressions -> '{' '}' : ''.
 
 expression -> expression op expression : parse_opertator('$2', '$1', '$3').
 expression -> nt expression : {nt, '$2'}.
