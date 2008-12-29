@@ -6,7 +6,7 @@ module Fruits
   def show(parameters, cookies)
     # apples = [{~color: 'red', ~weight: 2.3}, {~color: 'yellow', ~weight: 1.3}]
     # id = param(parameters, 'id')
-    ('fruits_show', {~apple: {~color: 'yellow', ~weight: 1.3}})
+    ('fruits_show', {~apple: {~color: 'yellow', ~weight: "1.3"}})
 
   def row(parameters, cookies)
     ('fruits_row', parameters)
