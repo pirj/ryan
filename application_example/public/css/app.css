@@ -1,10 +1,39 @@
 *{
-  overflow: hidden;
+	overflow: hidden;
 }
 
 html, body {
-  font-family: Arial, Tahoma, Verdana;
-  font-size: 12px;
-  height: 100%;
-  width: 100%;
+	font: 14px "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+
+html {
+	color: #fff;
+	background-color: #222;
+	border: solid .2em #ccc;
+}
+
+div {
+	margin: .2em;
+	padding: .4em;
+}
+
+ul {
+	list-style-type: none;
+	margin: .4em;
+	padding: .1em;
+}
+
+div.apples {
+	border: solid .2em #659CEF;
+	background-color: #2956B2;
+}
+
+div.apples a{
+	color: #df5;
+}
+
+div.apple {
+	border: solid .2em #9DDD00;
+	background-color: #5F9D11;
+	color: #000;
 }

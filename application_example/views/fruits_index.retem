@@ -1,7 +1,9 @@
 Apples:<br/>
-<div>
-{for apple in apples}{nest fruits row, apple}{end}
+<div class=apples>
+	<ul>
+		{for apple in apples}{nest fruits row, apple}{end}
+	</ul>
 </div>
-<div>
-{nest fruits show}
+<div class=apple>
+	{nest fruits show}
 </div>
