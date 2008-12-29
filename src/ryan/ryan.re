@@ -10,7 +10,7 @@ module Ryan
     controller = controller.to_s().capitalize().to_atom()
     # cookies = cookies.map {|(k,v)| (k.to_string(), v.to_string())}
     # parameters = parameters.map {|p| {p[0].to_string().to_atom(): p[1].to_string()}}
-    render(reia::apply(controller, action, [parameters, cookies]))
+    render(reia::apply(controller, action, [parameters, cookies])).to_s()
     
   def render((~redirect, abspath))
     '' # todo
