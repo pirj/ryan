@@ -16,8 +16,13 @@ $(document).ready(function() {
 					$('.apple').fadeOut(.5, function(){
 						$(this).html(res.responseText).fadeIn()
 					})
-				} else
-					$.jGrowl('error', {theme:  'error'})
+				} else {
+					var error = 'Error loading data'
+					$.jGrowl(error, {theme:  'error'})
+					$('.apple').fadeOut(.5, function(){
+						$(this).html(error).fadeIn()
+					})
+				}
 			}
 		})
 
