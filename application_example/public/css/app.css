@@ -8,7 +8,7 @@ html, body {
 
 html {
 	color: #fff;
-	background-color: #222;
+	background-color: #121258;
 	border: solid .2em #ccc;
 }
 
@@ -28,7 +28,7 @@ div.apples {
 	background-color: #2956B2;
 }
 
-div.apples a{
+a {
 	color: #df5;
 }
 
