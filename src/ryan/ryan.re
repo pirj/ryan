@@ -10,13 +10,33 @@ module Ryan
     controller = controller.to_s().capitalize().to_atom()
     # cookies = cookies.map {|(k,v)| (k.to_string(), v.to_string())}
     # parameters = parameters.map {|p| {p[0].to_string().to_atom(): p[1].to_string()}}
-    render(reia::apply(controller, action, [parameters, cookies])).to_s()
+    render(reia::apply(controller, action, [parameters, cookies]))
     
-  def render((~redirect, abspath))
-    '' # todo
+# redirect to url
+# example: (~redirect, 'http://search4betterplace.com')
+  def render((~redirect, url))
+    (~redirect, url)
 
+# do nothing
+# example: (~ok)
+  def render(~ok)
+    ~ok
+
+# return status (other than default 200)
+# example: (~status, 404)
+# for status codes list surf to http://www.w3.org/Protocols/HTTP/HTRESP.html
+  def render((~status, status))
+    (~status, status)
+    
+# return rendered content from a view template file
+# example: ('fruits_index', {~apple: {~weight: 30, ~color: 'red'}})
   def render((view, bindings))
-    Ryan.view(view, bindings).to_s()
+    (~html, Ryan.view(view, bindings))
+
+# return content of a specific mimetype
+# example: (~content, 'application/pdf', pdf)
+  def render((~content, mimetype, content))
+    (~content, mimetype, content)
 
   def view(filename, bindings)
     file = yaws_shim::read_file(['views/', filename, '.html'].join(''))

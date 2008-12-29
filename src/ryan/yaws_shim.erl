@@ -19,9 +19,15 @@ out(Arg) ->
 		_      -> yaws_api:parse_query(Arg)
 	end,
 
-	{string, Result} = reia:apply('Ryan',out, [Abs_Path, Method, PathParts, Cookie, Params]),
-	{html, Result}.
+	strip_reia_types(reia_erl:r2e(reia:apply('Ryan',out, [Abs_Path, Method, PathParts, Cookie, Params]))).
 	
+strip_reia_types({content, {string, Mime}, {string, Content}}) -> 
+	{content, Mime, Content};
+strip_reia_types({html, {string, String}}) -> 
+	{html, String};
+strip_reia_types(PassThru) -> 
+	PassThru.
+
 read_file({string, Filename}) ->
 	Absname = filename:absname(binary_to_list(Filename)),
 	Data = file:read_file(Absname),
