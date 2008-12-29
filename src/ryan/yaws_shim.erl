@@ -41,13 +41,17 @@ init_yaws() ->
 	{ok, ApplicationPath} = file:get_cwd(),
 	io:format("Starting up YAWS to run in ~s~n", [ApplicationPath]),
 	Public = filename:join(ApplicationPath, "public"),
-	yaws:start_embedded(Public, [
+	yaws:start_embedded(Public,
+		[
 			{servername, "localhost"},
 			{port, 8001},
 			{listen, {0,0,0,0}},
 			{appmods, [{"/app/", yaws_shim}]}
 		],
-		[{logdir, "logs"}]
+		[
+			{logdir, "logs"},
+			{cache_refresh_secs, 0}
+		]
 	),
 	loop().
 
