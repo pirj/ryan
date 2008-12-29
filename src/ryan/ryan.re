@@ -19,7 +19,7 @@ module Ryan
     Ryan.view(view, bindings).to_s()
 
   def view(filename, bindings)
-    file = yaws_shim::read_file(['views/', filename, '.retem'].join(''))
+    file = yaws_shim::read_file(['views/', filename, '.html'].join(''))
     template = Retem.parse(file.to_string())
     rendered = Retem.render(template, bindings)
     rendered.to_s()
