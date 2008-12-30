@@ -32,14 +32,11 @@ Run:
 cd application_example
 ryan
 
-Surf to:
-http://localhost:8001/app/fruits/show?param1=123&param2=aba
-http://localhost:8001/app/fruits/index?param1=apple&param2=banana
-
-Play with different parameter values.
+Surf to: http://localhost:8001/app
 
 Modify Fruits controller, implement or change actions
-Create you own controllers and see the results immediately
+Create your own controllers and see the results without the need
+to even reload web page.
 Enjoy!
 
 ## Routing
