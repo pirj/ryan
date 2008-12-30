@@ -4,14 +4,25 @@ module Ryan
     (controller, action) = route(path_parts)
     controller_file = ['controllers/', controller, '.re'].join()
     Local.load(controller_file)
-    page(controller, action, parameters, cookies)
+    page(controller, action, cp(parameters), cp(cookies))
 
   def page(controller, action, parameters, cookies)
     controller = controller.to_s().capitalize().to_atom()
-    # cookies = cookies.map {|(k,v)| (k.to_string(), v.to_string())}
-    # parameters = parameters.map {|p| {p[0].to_string().to_atom(): p[1].to_string()}}
-    render(reia::apply(controller, action, [parameters, cookies]))
-    
+    controller_object = reia::apply(controller, ~start, [])
+    render(reia::apply(controller_object, action, [parameters, cookies]))
+
+# remove this as soon as ssa issue is resolved vvv
+# parameters.map {|p| {p[0].to_string().to_atom(): p[1].to_string()}} oneliner looks better
+  def cp(ps)
+    cp(ps, 0, {})
+
+  def cp(ps, i, di)
+    if(ps.size() <= i)
+      di
+    else
+      cp(ps, i+1, di.insert(ps[i][0].to_string().to_atom(), ps[i][1].to_string()))
+# remove this as soon as ssa issue is resolved ^^^
+
 # redirect to url
 # example: (~redirect, 'http://search4betterplace.com')
   def render((~redirect, url))
