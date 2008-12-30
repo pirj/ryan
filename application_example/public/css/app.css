@@ -10,28 +10,61 @@ html {
 	border: solid .2em #ccc;
 }
 
+a {
+	display: block;
+	text-decoration: none;
+}
+
 div {
-	margin: .2em;
-	padding: .4em;
+	padding: .5em;
 }
 
-ul {
-	list-style-type: none;
-	margin: .4em;
-	padding: .1em;
-}
-
-div.blue {
+#menu {
 	border: solid .2em #659CEF;
 	background-color: #2956B2;
+	color: #ffc;
 }
 
-a {
-	color: #df5;
+div.gray {
+	border: solid .2em #aaa;
+	background-color: #ccc;
+	color: #222;
 }
 
-div.green {
-	border: solid .2em #9DDD00;
-	background-color: #5F9D11;
+div.gray a {
+	color: #00a;
+}
+
+div.gray a:hover {
+	color: #22f;
+}
+
+div.box {
+	border: solid .2em #999;
+	background-color: #aaa;
 	color: #000;
+}
+
+div.float {
+	float: left;
+}
+
+#menu a {
+	color: #dd0;
+}
+
+#menu ul {
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+
+#menu li {
+	padding: 0.4em;
+	list-style-type: none;
+	cursor:default;
+}
+
+#menu li:hover {
+	background-color: #3966c2;
 }
