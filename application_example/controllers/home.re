@@ -4,5 +4,5 @@ class Home
     pre = '<script type="text/javascript" src="/js/'
     post = '.js"></script>'
     head = [[pre, js, post].join() | js in jss].join()
-    ('layout', {}.insert(~title, 'Ryan and Reia homemade webapp').insert(~head, head).insert(~contents, Ryan.view('home_index', {})))
-# ('layout', {~title: 'home', ~head: head, ~contents: Ryan.view('home_index', {})})
+    ('layout', {}.insert(~title, 'Ryan and Reia homemade webapp').insert(~head, head).insert(~contents, Ryan.view('home', {})))
+# ('layout', {~title: 'Ryan and Reia homemade webapp', ~head: head, ~contents: Ryan.view('home', {})})
