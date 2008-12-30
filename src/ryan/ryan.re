@@ -48,6 +48,10 @@ module Ryan
 # example: (~content, 'application/pdf', pdf)
   def render((~content, mimetype, content))
     (~content, mimetype, content)
+    
+# return plain text
+  def render(text)
+    (~html, text)
 
   def view(filename, bindings)
     file = yaws_shim::read_file(['views/', filename, '.html'].join(''))
