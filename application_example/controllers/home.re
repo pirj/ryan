@@ -1,6 +1,6 @@
 class Home
   def index(parameters, cookies)
-    jss = ['jquery-1.2.6.min', 'jquery.livequery.min', 'effects.core', 'ui.core.min', 'effects.highlight', 'jquery.jgrowl.min', 'app']
+    jss = ['jquery-1.2.6.min', 'jquery.livequery.min', 'effects.core', 'ui.core.min', 'effects.highlight', 'jquery.jgrowl', 'app']
     pre = '<script type="text/javascript" src="/js/'
     post = '.js"></script>'
     head = [[pre, js, post].join() | js in jss].join()
