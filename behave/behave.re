@@ -23,7 +23,7 @@
 
 # module Behave
 #   def context(title, lambda)
-#     bc = Context.start()
+#     bc = Context()
 #     bc.context(title, lambda)
 
 class Context

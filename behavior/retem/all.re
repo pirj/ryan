@@ -33,9 +33,9 @@ Behave.context('Templating') do
       Retem.render('{a}', {~a: ~b, ~b: 'abc'}) == 'abc'
 
   context('variable properties') do
-    address = Address.start()
+    address = Address()
     address.set_street('main st.')
-    store = Store.start()
+    store = Store()
     store.set_address(address)
     store.set_name('store name')
     should() do
