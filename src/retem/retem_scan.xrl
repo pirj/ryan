@@ -27,6 +27,7 @@ DOT = \.
 Rules.
 {     : {token, {'{'}}.
 }     : {token, {'}'}}.
+/     : {token, {'/'}}.
 {TXT} : [{token, {'}'}} , {token, {text, remove_leading_brace(TokenChars, TokenLen)}}].
 ,     : {token, {comma}}.
 {RES} : {token, {reserved, list_to_atom(TokenChars)}}.
