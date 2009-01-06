@@ -22,7 +22,7 @@ $(document).ready(function() {
 		return false
 	})
 
-	$('div#menu a').livequery('click',function(){
+	$('div#menu li').livequery('click',function(){
 		var loaded = false
 		$('#contents').fadeOut(.5, function(){
 			if(!loaded)
@@ -30,7 +30,7 @@ $(document).ready(function() {
 		})
 
 		$.ajax({
-			url: $(this).attr('href'),
+			url: $(this).children('a').attr('href'),
 			dataType: 'html',
 			complete: function(res, status){
 				loaded = true
