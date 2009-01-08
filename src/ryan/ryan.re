@@ -1,10 +1,14 @@
 module Ryan
   def out(abspath, method, path_parts, cookies, parameters)
+    (_h, is, ins) = erlang::now()
     path_parts = path_parts.map { |part| part.to_string() }.to_tuple()
     (controller, action) = route(path_parts)
     controller_file = ['controllers/', controller, '.re'].join()
     Local.load(controller_file)
-    page(controller, action, cp(parameters), cp(cookies))
+    result = page(controller, action, cp(parameters), cp(cookies))
+    (_h, s, ns) = erlang::now()
+    Local.puts([abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
+    result
 
   def page(controller, action, parameters, cookies)
     controller = controller.to_s().capitalize().to_atom()
