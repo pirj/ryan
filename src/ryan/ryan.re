@@ -4,7 +4,7 @@ module Ryan
     path_parts = path_parts.map { |part| part.to_string() }.to_tuple()
     (controller, action) = route(path_parts)
     controller_file = ['controllers/', controller, '.re'].join()
-    Local.load(controller_file)
+    Local.load(controller_file) unless yaws_shim::is_loaded(controller.capitalize())
     result = page(controller, action, cp(parameters), cp(cookies))
     (_h, s, ns) = erlang::now()
     Local.puts([abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))

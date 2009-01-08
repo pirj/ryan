@@ -1,5 +1,5 @@
 -module(yaws_shim).
--export([out/1, init_yaws/0, read_file/1]).
+-export([out/1, init_yaws/0, read_file/1, is_loaded/1]).
 -include("../yaws/yaws_api.hrl").
 -include("../yaws/yaws.hrl").
 
@@ -39,6 +39,9 @@ read_file({string, Filename}) ->
 		{error, enotdir} -> "A component of the file name is not a directory. On some platforms, enoent is returned instead.";
 		{error, enomem} -> "There is not enough memory for the contents of the file."
 	end.
+
+is_loaded({string, Module}) ->
+	code:is_loaded(list_to_atom(binary_to_list(Module))).
 
 init_yaws() ->
 	YawsHome = "/usr/local/lib/yaws/",
