@@ -1,0 +1,16 @@
+<div id=todo_bar class=toolbar>
+	<a icon=add href=todo/add>add</a>
+	<a icon=today href=todo/today>today</a>
+	<a icon=tomorrow href=todo/tomorrow>tomorrow</a>
+	<a icon=few_days href=todo/few_days>next few days</a>
+	<a icon=later href=todo/later>later</a>
+	<a icon=history href=todo/history>history</a>
+</div>
+<div class=ghostbox>
+	<div id=todos class='box float'>
+		{nest todo/today}
+	</div>
+	<div id=todo class='box float'>
+		{nest todo/show}
+	</div>
+</div>
