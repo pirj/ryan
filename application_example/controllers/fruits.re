@@ -9,7 +9,7 @@ class Fruits
   def show(parameters, cookies)
     id = parameters[~id]
     if(id == nil)
-      ""
+      ''
     else
       apple = @apples[id.to_int()]
       ('fruits/show', {}.insert(~apple, apple))
