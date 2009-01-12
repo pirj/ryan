@@ -4,8 +4,7 @@ class Todo
 
   def index(parameters, cookies)
     bindings = {}.insert(~todos, @todos)
-    add = fun {'add pressed'}
-    handlers = [(~add, add)]
+    handlers = [(~click, ~add, ~todos)]
     ('todo/index', bindings, handlers)
 
   def today(parameters, cookies)
@@ -23,6 +22,9 @@ class Todo
   def for_range(range)
     todos = @todos.filter{|t| t[~when]==range}
     ('todo/list', {}.insert(~todos, todos))
+
+  def add(parameters, cookies)
+    'something added'
 
   def show(parameters, cookies)
     id = parameters[~id]
