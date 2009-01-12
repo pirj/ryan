@@ -72,7 +72,7 @@ module Ryan
 #    (_h, s, ns) = erlang::now()
 #    Local.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
     rendered = Retem.render(template, bindings)
-    script = [['alert("', h[0],'");'].join() | h in handlers].join()
+    script = [["add_handler('", h[0].to_s(),"', '#", h[1].to_s(), " a', '#", h[2].to_s(), "');"].join() | h in handlers].join()
 #    (_h, s1, ns1) = erlang::now()
 #    Local.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
     [rendered.to_s(),'<script>', script, '</script>'].join()
