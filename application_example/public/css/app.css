@@ -77,29 +77,24 @@ div.float {
 #menu a {
 	display: block;
 	color: #dd0;
-}
-
-#menu ul {
-	padding: 0;
-	margin: 0;
-	list-style-type: none;
-}
-
-#menu li {
 	cursor: pointer;
 	padding: 0.4em;
 	margin: 0 0.2em 0 0.2em;
-	list-style-type: none;
 }
 
-#menu li:hover {
+#menu a:hover {
 	background-color: #2f5eba;
 	border-left: solid 0.2em #fff;
 	margin-left: 0;
 }
 
-#menu li.selected {
+#menu a.selected {
 	background-color: #3966c2;
+}
+
+#menu a span {
+	display: block;
+	color: #ddd;
 }
 
 #footer {
