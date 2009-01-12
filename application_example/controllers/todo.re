@@ -4,7 +4,7 @@ class Todo
 
   def index(parameters, cookies)
     bindings = {}.insert(~todos, @todos)
-    handlers = [(~click, ~add, ~todos)]
+    handlers = [(~add, ~todos, 'app/todo/add'), (~today, ~todos, 'app/todo/today'), (~tomorrow, ~todos, 'app/todo/tomorrow')]
     ('todo/index', bindings, handlers)
 
   def today(parameters, cookies)

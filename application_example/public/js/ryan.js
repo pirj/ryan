@@ -1,5 +1,8 @@
-function add_handler(type, who, target){
-	$(who).livequery(type, function(){
+function add_handler(id, type, target, href){
+	if(href)
+		$(id).attr('href', href)
+	
+	$(id).livequery(type, function(){
 		self = $(this)
 		var loaded = false
 		$(target).fadeOut(.5, function(){

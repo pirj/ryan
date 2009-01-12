@@ -67,15 +67,24 @@ module Ryan
 
   def view(filename, bindings, handlers)
     file = yaws_shim::read_file(['views/', filename, '.html'].join(''))
-#    (_h, is, ins) = erlang::now()
+    # (_h, is, ins) = erlang::now()
     template = Retem.parse(file.to_string())
-#    (_h, s, ns) = erlang::now()
-#    Local.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
-    rendered = Retem.render(template, bindings)
-    script = [["add_handler('", h[0].to_s(),"', '#", h[1].to_s(), " a', '#", h[2].to_s(), "');"].join() | h in handlers].join()
-#    (_h, s1, ns1) = erlang::now()
-#    Local.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
-    [rendered.to_s(),'<script>', script, '</script>'].join()
+    # (_h, s, ns) = erlang::now()
+    # Local.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
+    rendered = Retem.render(template, bindings.insert(~handlers, add_handlers(handlers)))
+    # (_h, s1, ns1) = erlang::now()
+    # Local.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
+    rendered.to_s()
+
+  def add_handlers(handlers)
+    js = [add_handler(handler) | handler in handlers].join()
+    ['<script>$(document).ready(function() {', js, '})</script>'].join()
+
+  def add_handler((id, target))
+    ["add_handler('#", id.to_s(), "', 'click', '#", target.to_s(), "');"].join()
+
+  def add_handler((id, target, href))
+    ["add_handler('#", id.to_s(), "', 'click', '#", target.to_s(), "', '", href.to_s(), "');"].join()
 
   def route((app, controller, action))
     (controller, action.to_atom())

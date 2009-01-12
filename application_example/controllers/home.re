@@ -5,5 +5,6 @@ class Home
     csss = ['app', 'jquery.jgrowl']
     headcss = [['<link href="/css/', css, '.css" rel=stylesheet type=text/css>'].join() | css in csss].join()
     head = [headcss, headjs].join()
-    ('layout', {}.insert(~title, 'Ryan and Reia homemade webapp').insert(~head, head).insert(~contents, Ryan.view('home', {})))
-# ('layout', {~title: 'Ryan and Reia homemade webapp', ~head: head, ~contents: Ryan.view('home', {})})
+    bindings = {}.insert(~title, 'Ryan and Reia homemade webapp').insert(~head, head).insert(~contents, Ryan.view('home', {}))
+    handlers = [(~fruits, ~contents, 'app/fruits'), (~todo, ~contents, 'app/todo')]
+    ('layout', bindings, handlers)
