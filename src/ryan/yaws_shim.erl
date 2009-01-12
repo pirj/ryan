@@ -41,7 +41,8 @@ read_file({string, Filename}) ->
 	end.
 
 up_to_date({string, Module}, {string, ReiaFile}) ->
-	code:is_loaded(list_to_atom(binary_to_list(Module)));
+	false;
+%	code:is_loaded(list_to_atom(binary_to_list(Module)));
 %	up_to_date(code:is_loaded(list_to_atom(binary_to_list(Module))), {string, ReiaFile});
 up_to_date(false, _) ->
 	false;
