@@ -29,28 +29,22 @@ a {
 }
 
 #wrapper {
-	width: 980px;
-	margin: 2em auto;
+	margin: 2em;
 	background: #fff;
-}
-
-#content {
-	width: 980px;
-	margin: 0px auto;
 }
 
 #right {
 	border: 1px dashed #ddd;
 	float: right;
-	width: 680px;
-	margin: 0 10px 10px 0;
+	width: 650px;
+	margin: 0 1em 1em 0;
 	padding: .5em 1em;
 }
 
 #left {
 	float: left;
 	width: 210px;
-	padding: 0 10px 10px 10px;
+	padding: 0 1em 1em 1em;
 }
 
 div.ghostbox {
@@ -115,7 +109,6 @@ div.float {
 
 #footer .copyright {
 	margin: 0px;
-	padding-left: 20px;
 	text-align: center;
 }
 
