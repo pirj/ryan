@@ -48,15 +48,15 @@ module Ryan
   def render((~content, mimetype, content))
     (~content, mimetype, content)
     
+# return rendered content from a view template file with handlers attached
+# example: ('fruits_index', {~apple: {~weight: 30, ~color: 'red'}}, [(~landing, ~contents, 'landing')])
+  def render((view, bindings, handlers))
+    (~html, Ryan.view(view, bindings, handlers))
+
 # return rendered content from a view template file
 # example: ('fruits_index', {~apple: {~weight: 30, ~color: 'red'}})
   def render((view, bindings))
     (~html, Ryan.view(view, bindings))
-
-# return rendered content from a view template file with handlers attached
-# example: ('fruits_index', {~apple: {~weight: 30, ~color: 'red'}}, [])
-  def render((view, bindings, handlers))
-    (~html, Ryan.view(view, bindings, handlers))
 
 # return plain text
   def render(text)
