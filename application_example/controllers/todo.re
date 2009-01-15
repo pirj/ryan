@@ -4,9 +4,9 @@ class Todo
 
   def index(parameters, cookies)
     bindings = {}.insert(~todos, @todos)
-    handlers = [(~add, ~todos, '/app/todo/add', ~append),
-    (~today, ~todos, '/app/todo/today', ~update, true),
-    (~tomorrow, ~todos, '/app/todo/tomorrow', ~update, true)]
+    handlers = [('#add', ~append, ~todos, '/app/todo/add'),
+    ('#today', ~update, ~todos, '/app/todo/today', true),
+    ('#tomorrow', ~update, ~todos, '/app/todo/tomorrow', true)]
     ('todo/index', bindings, handlers)
 
   def today(parameters, cookies)
@@ -26,7 +26,7 @@ class Todo
     ('todo/list', {}.insert(~todos, todos))
 
   def add(parameters, cookies)
-    'something added'
+    'something added<br/>'
 
   def show(parameters, cookies)
     id = parameters[~id]

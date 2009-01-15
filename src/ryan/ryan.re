@@ -81,17 +81,14 @@ module Ryan
     js = [add_handler(handler) | handler in handlers].join()
     ['<script>$(document).ready(function() {', js, '})</script>'].join()
 
-  def add_handler((id, target))
-    ["add_handler('#", id.to_s(), "', 'click', '#", target.to_s(), "');"].join()
+  def add_handler((id, command, argument))
+    ["add_handler('", id.to_s(), "', 'click', '", command.to_s(), "', '", id.to_s(), "', '", argument.to_s(), "');"].join()
 
-  def add_handler((id, target, href))
-    ["add_handler('#", id.to_s(), "', 'click', '#", target.to_s(), "', '", href.to_s(), "');"].join()
+  def add_handler((selector, command, target, argument))
+    ["add_handler('", selector.to_s(), "', 'click', '", command.to_s(), "', '#", target.to_s(), "', '", argument.to_s(), "');"].join()
 
-  def add_handler((id, target, href, command))
-    ["add_handler('#", id.to_s(), "', 'click', '#", target.to_s(), "', '", href.to_s(), "', '", command.to_s(), "');"].join()
-
-  def add_handler((id, target, href, command, fade))
-    ["add_handler('#", id.to_s(), "', 'click', '#", target.to_s(), "', '", href.to_s(), "', '", command.to_s(), "', '", fade.to_s(), "');"].join()
+  def add_handler((selector, command, target, argument, fade))
+    ["add_handler('", selector.to_s(), "', 'click', '", command.to_s(), "', '#", target.to_s(), "', '", argument.to_s(), "', '", fade.to_s(), "');"].join()
 
   def route((app, controller, action))
     (controller, action.to_atom())

@@ -76,19 +76,19 @@ div.float {
 	margin: 0 0.2em 0 0.2em;
 }
 
-#menu a[href] {
+#menu a[rel] {
 	color: #dd0;
 	cursor: pointer;
 }
 
-#menu a[href]:hover {
+#menu a[rel]:hover {
 	background-color: #2f5eba;
 	border-left: solid 0.2em #fff;
 	margin-left: 0;
 	color: #ee0;
 }
 
-#menu a[href].selected {
+#menu a[rel].selected {
 	background-color: #3966c2;
 	color: #ee0;
 }
@@ -96,6 +96,14 @@ div.float {
 #menu a span {
 	display: block;
 	color: #ddd;
+}
+
+#menu a[rel] span {
+	color: #eee;
+}
+
+#menu a[rel]:hover span {
+	color: #fff;
 }
 
 #footer {
