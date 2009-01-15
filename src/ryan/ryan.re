@@ -3,16 +3,17 @@ module Ryan
     (_h, is, ins) = erlang::now()
     path_parts = path_parts.map { |part| part.to_string() }.to_tuple()
     (controller, action) = route(path_parts)
-    controller_file = ['controllers/', controller, '.re'].join()
-    Local.load(controller_file) unless yaws_shim::up_to_date(controller.capitalize(), controller_file)
     result = page(controller, action, cp(parameters), cp(cookies))
     (_h, s, ns) = erlang::now()
     Local.puts([abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
     result
 
   def page(controller, action, parameters, cookies)
-    controller = controller.to_s().capitalize().to_atom()
-    controller_object = reia::apply(controller, ~start, [])
+    controller = controller.to_s()
+    controller_file = ['controllers/', controller, '.re'].join()
+    controller = controller.capitalize()
+    Local.load(controller_file) unless yaws_shim::up_to_date(controller, controller_file)
+    controller_object = reia::apply(controller.to_atom(), ~start, [])
     render(reia::apply(controller_object, action, [parameters, cookies]))
 
 # remove this as soon as ssa issue is resolved vvv
