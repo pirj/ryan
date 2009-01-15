@@ -86,6 +86,12 @@ module Ryan
   def add_handler((id, target, href))
     ["add_handler('#", id.to_s(), "', 'click', '#", target.to_s(), "', '", href.to_s(), "');"].join()
 
+  def add_handler((id, target, href, command))
+    ["add_handler('#", id.to_s(), "', 'click', '#", target.to_s(), "', '", href.to_s(), "', '", command.to_s(), "');"].join()
+
+  def add_handler((id, target, href, command, fade))
+    ["add_handler('#", id.to_s(), "', 'click', '#", target.to_s(), "', '", href.to_s(), "', '", command.to_s(), "', '", fade.to_s(), "');"].join()
+
   def route((app, controller, action))
     (controller, action.to_atom())
 

@@ -1,30 +1,38 @@
-function add_handler(id, type, target, href){
+function add_handler(id, type, target, href, command, fade){
 	if(href)
 		$(id).attr('href', href)
 	
-	$(id).livequery(type, function(){
+	$(id).bind(type, function(){
 		self = $(this)
-		var loaded = false
-		$(target).fadeOut(.5, function(){
-			if(!loaded)
-				$(this).html('please wait, loading...').fadeIn()
-		})
+		if(fade)
+			$(target).fadeOut()
+
+		//, function(){
+		// 	if(!loaded)
+		// 		$(this).html('please wait, loading...').fadeIn()
+		// })
 
 		$.ajax({
 			url: $(this).attr('href'),
 			dataType: 'html',
 			complete: function(res, status){
-				loaded = true
 				if (status == 'success' || status == 'notmodified'){
-					$(target).fadeOut(.5, function(){
-						self.parent().children().removeClass('selected')
-						self.addClass('selected')
-						$(this).html(res.responseText).fadeIn()
-					})
+					// self.parent().children().removeClass('selected')
+					// self.addClass('selected')
+					if(!command || command == 'update')
+						$(target).html(res.responseText)
+					else if(command == 'append')
+						$(target).append(res.responseText)
+					else if(command == 'prepend')
+						$(target).prepend(res.responseText)
+					else if(command == 'empty')
+						$(target).empty()
 				} else {
 					$.jGrowl('Error loading data', {theme:  'error'})
-					$(target).fadeIn()
 				}
+
+				if(fade)
+					$(target).fadeIn()
 			}
 		})
 
