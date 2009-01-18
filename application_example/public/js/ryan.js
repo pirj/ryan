@@ -1,9 +1,9 @@
 function add_handler(id, type, command, target, argument, fade){
-	if(command == 'update' || command == 'append' || command == 'prepend' || command == 'empty')
+	if(command == 'update' || command == 'append' || command == 'prepend' || command == 'empty' || command == 'message')
 		if(argument)
 			$(id).attr('rel', argument)
 	
-	$(id).live(type, function(){
+	$(id).bind(type, function(){
 		if(fade)
 			$(target).fadeOut()
 		//, function(){
@@ -23,6 +23,8 @@ function add_handler(id, type, command, target, argument, fade){
 							$(target).append(res.responseText)
 						else if(command == 'prepend')
 							$(target).prepend(res.responseText)
+						else if(command == 'message')
+							$.jGrowl(res.responseText)
 					} else {
 						$.jGrowl('Error loading data', {theme:  'error'})
 					}

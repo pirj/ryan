@@ -31,7 +31,7 @@ module Ryan
 # redirect to url
 # example: (~redirect, 'http://search4betterplace.com')
   def render((~redirect, url))
-    (~redirect, url)
+    (~redirect, url.to_list())
 
 # do nothing
 # example: (~ok)
@@ -47,27 +47,27 @@ module Ryan
 # return content of a specific mimetype
 # example: (~content, 'application/pdf', pdf)
   def render((~content, mimetype, content))
-    (~content, mimetype, content)
+    (~content, mimetype.to_list(), content.to_list())
     
 # return rendered content from a view template file with handlers attached
 # example: ('fruits_index', {~apple: {~weight: 30, ~color: 'red'}}, [(~landing, ~contents, 'landing')])
   def render((view, bindings, handlers))
-    (~html, Ryan.view(view, bindings, handlers))
+    (~html, Ryan.view(view, bindings, handlers).to_list())
 
 # return rendered content from a view template file
 # example: ('fruits_index', {~apple: {~weight: 30, ~color: 'red'}})
   def render((view, bindings))
-    (~html, Ryan.view(view, bindings))
+    (~html, Ryan.view(view, bindings).to_list())
 
 # return plain text
   def render(text)
-    (~html, text)
+    (~html, text.to_list())
 
   def view(filename, bindings)
     view(filename, bindings, [])
 
   def view(filename, bindings, handlers)
-    file = yaws_shim::read_file(['views/', filename, '.html'].join(''))
+    file = yaws_shim::read_file(['views/', filename, '.html'].join().to_list())
     # (_h, is, ins) = erlang::now()
     template = Retem.parse(file.to_string())
     # (_h, s, ns) = erlang::now()
@@ -75,7 +75,7 @@ module Ryan
     rendered = Retem.render(template, bindings.insert(~handlers, add_handlers(handlers)))
     # (_h, s1, ns1) = erlang::now()
     # Local.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
-    rendered.to_s()
+    rendered
 
   def add_handlers(handlers)
     js = [add_handler(handler) | handler in handlers].join()

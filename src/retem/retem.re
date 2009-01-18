@@ -106,12 +106,11 @@ module Retem
 # nesting
   def render((~nest, controller, action, subbinding), vars)
     (~html, contents) = Ryan.page(controller, action, vars, []) # need to find a way to pass cookies along with parameters
-    contents
+    contents.to_string()
 
   def render((~nest, controller, action), vars)
     (~html, contents) = Ryan.page(controller, action, vars, []) # need to find a way to pass cookies along with parameters
-    contents
-  #   Ryan.page(controller, action, vars, []) # need to find a way to pass cookies along with parameters
+    contents.to_string()
 
 # object properties
   def render((~property, object, property), vars)

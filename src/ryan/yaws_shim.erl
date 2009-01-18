@@ -19,17 +19,10 @@ out(Arg) ->
 		_      -> yaws_api:parse_query(Arg)
 	end,
 
-	strip_reia_types(reia_erl:r2e(reia:apply('Ryan',out, [Abs_Path, Method, PathParts, Cookie, Params]))).
+	reia_erl:r2e(reia:apply('Ryan',out, [Abs_Path, Method, PathParts, Cookie, Params])).
 	
-strip_reia_types({content, {string, Mime}, {string, Content}}) -> 
-	{content, Mime, Content};
-strip_reia_types({html, {string, String}}) -> 
-	{html, String};
-strip_reia_types(PassThru) -> 
-	PassThru.
-
-read_file({string, Filename}) ->
-	Absname = filename:absname(binary_to_list(Filename)),
+read_file(Filename) ->
+	Absname = filename:absname(Filename),
 	Data = file:read_file(Absname),
 	case Data of
 		{ok, Contents} -> Contents;
@@ -41,8 +34,8 @@ read_file({string, Filename}) ->
 	end.
 
 up_to_date({string, Module}, {string, ReiaFile}) ->
-	false;
-%	code:is_loaded(list_to_atom(binary_to_list(Module)));
+%	false;
+	code:is_loaded(list_to_atom(binary_to_list(Module)));
 %	up_to_date(code:is_loaded(list_to_atom(binary_to_list(Module))), {string, ReiaFile});
 up_to_date(false, _) ->
 	false;
