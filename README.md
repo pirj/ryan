@@ -8,7 +8,7 @@ Ryan consists of:
  - Retem (templating engine)
  - [Behave (RSpec-like testing tool)](http://github.com/pirj/behave)
  - YAWS, Mochiweb and Inets HTTP server adapters
- - SQLite3, PostgreSQL, MySQL, Mnesia and Mongo database adapters
+ - SQLite3, PostgreSQL, MySQL, CouchDB, Mnesia and Mongo database adapters
 
 ### Prerequisites
 
