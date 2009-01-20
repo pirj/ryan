@@ -17,4 +17,8 @@ ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
 # puts(['Loading ', lib].join())
 # load([ryan_dir, lib].join('/'))
 
+# Initializing application
+load('startup.re')
+Startup.initialize()
+
 yaws_shim::init_yaws()
