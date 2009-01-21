@@ -6,8 +6,11 @@
 out(Arg) ->
 	Req = Arg#arg.req,
 	Headers = Arg#arg.headers,
+	io:fwrite("H: ~p~n", [Headers]),
 
 	Cookie = Headers#headers.cookie,
+	Session = session(Cookie),
+	io:fwrite("Cookie: ~p~nSession: ~p~n", [Cookie, Session]),
 	Method = reia_erl:e2r(Req#http_request.method),
 
 	{abs_path, Abs_Path} = Req#http_request.path,
@@ -20,7 +23,47 @@ out(Arg) ->
 	end,
 
 	reia_erl:r2e(reia:apply('Ryan',out, [Abs_Path, Method, PathParts, Cookie, Params])).
+
+session(Cookie) ->
+	case yaws_api:find_cookie_val("sid", Cookie) of
+		[] ->
+			Token = yaws_api:new_cookie_session([]),
+			yaws_api:setcookie("sid", Token, "/"),
+			io:fwrite("created token: ~p~n", [Token]),
+			Token;
+		Token ->
+			io:fwrite("using token: ~p~n", [Token]),
+			yaws_api:cookieval_to_opaque(Token)
+	end.
 	
+
+session(Cookie, X) ->
+	case yaws_api:find_cookie_val("sid", Cookie) of
+		[] ->
+			Token = create_session_token(),
+			yaws_api:setcookie("sid", Token, "/"),
+			io:fwrite("created token: ~p~n", [Token]),
+			Token;
+		Token ->
+			yaws_api:cookieval_to_opaque(Token)
+	end.
+
+create_session_token() ->
+	random_seed(),
+	RandomOne = integer_to_list(random:uniform(100000000000)),
+	RandomTwo = integer_to_list(random:uniform(100000000000)),
+	MD5One = binary_to_list(erlang:md5(RandomOne)),
+	MD5Two = binary_to_list(erlang:md5(RandomTwo)),
+	base64:encode_to_string(MD5One ++ MD5Two). % ++ Secret !!!!
+
+random_seed() -> % Hat tip to Joe!
+	{_,_,X} = erlang:now(),
+	{H,M,S} = time(),
+	H1 = H * X rem 32767,
+	M1 = M * X rem 32767,
+	S1 = S * X rem 32767,
+	put(random_seed, {H1,M1,S1}).
+
 read_file(Filename) ->
 	Absname = filename:absname(Filename),
 	Data = file:read_file(Absname),
@@ -51,6 +94,7 @@ init_yaws() ->
 	{ok, ApplicationPath} = file:get_cwd(),
 	io:format("Starting up YAWS to run in ~s~n", [ApplicationPath]),
 	Public = filename:join(ApplicationPath, "public"),
+	ets:new(sessions, [named_table]),
 	yaws:start_embedded(Public,
 		[
 			{servername, "localhost"},
