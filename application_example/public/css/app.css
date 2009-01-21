@@ -70,7 +70,7 @@ div.float {
 
 #menu a {
 	display: block;
-	color: #aa0;
+	color: #880;
 	cursor: default;
 	padding: 0.4em;
 	margin: 0 0.2em 0 0.2em;
@@ -95,7 +95,7 @@ div.float {
 
 #menu a span {
 	display: block;
-	color: #ddd;
+	color: #aaa;
 }
 
 #menu a[rel] span {
