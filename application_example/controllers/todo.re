@@ -1,35 +1,35 @@
 class Todo
-  def index(parameters, cookies)
+  def index(session, parameters)
     bindings = {}.insert(~todos, todos())
     handlers = [('#add', ~append, ~todos, '/app/todo/add'),
     ('#today', ~update, ~todos, '/app/todo/today', true),
     ('#tomorrow', ~update, ~todos, '/app/todo/tomorrow', true)]
     ('todo/index', bindings, handlers)
 
-  def today(parameters, cookies)
+  def today(session, parameters)
     for_range(~today)
 
-  def tomorrow(parameters, cookies)
+  def tomorrow(session, parameters)
     for_range(~tomorrow)
 
-  def few_days(parameters, cookies)
+  def few_days(session, parameters)
     for_range(~few_days)
 
-  def later(parameters, cookies)
+  def later(session, parameters)
     for_range(~later)
 
   def for_range(range)
     todos = todos().filter{|t| t[~when]==range}
     ('todo/list', {}.insert(~todos, todos))
 
-  def add(parameters, cookies)
+  def add(session, parameters)
     'something added<br/>'
 
   def todos
     [(~todos, todos)] = ets::lookup(~mocks, ~todos)
     todos
 
-  def show(parameters, cookies)
+  def show(session, parameters)
     id = parameters[~id]
     if(id == nil)
       ''

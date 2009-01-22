@@ -1,3 +1,3 @@
 class Budget
-  def index(parameters, cookies)
+  def index(session, parameters)
     'Not yet implemented'

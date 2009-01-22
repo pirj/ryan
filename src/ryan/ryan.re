@@ -1,20 +1,21 @@
 module Ryan
-  def out(abspath, method, path_parts, cookies, parameters)
+  def out(abspath, method, path_parts, session, parameters)
     (_h, is, ins) = erlang::now()
     path_parts = path_parts.map { |part| part.to_string() }.to_tuple()
     (controller, action) = route(path_parts)
-    result = page(controller, action, cp(parameters), cp(cookies))
+    result = page(controller, action, session, cp(parameters))
     (_h, s, ns) = erlang::now()
-    Local.puts([abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
+    Local.puts(['session', session.to_string(), ':', abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
     result
 
-  def page(controller, action, parameters, cookies)
+  def page(controller, action, session, parameters)
     controller = controller.to_s()
     controller_file = ['controllers/', controller, '.re'].join()
     controller = controller.capitalize()
     Local.load(controller_file) unless yaws_shim::up_to_date(controller, controller_file)
     controller_object = reia::apply(controller.to_atom(), ~start, [])
-    render(reia::apply(controller_object, action, [parameters, cookies]))
+    reply = reia::apply(controller_object, action, [session, parameters])
+    render(session, reply)
 
 # remove this as soon as ssa issue is resolved vvv
 # parameters.map {|p| {p[0].to_string().to_atom(): p[1].to_string()}} oneliner looks better
@@ -30,37 +31,37 @@ module Ryan
 
 # redirect to url
 # example: (~redirect, 'http://search4betterplace.com')
-  def render((~redirect, url))
+  def render(session, (~redirect, url))
     (~redirect, url.to_list())
 
 # do nothing
 # example: (~ok)
-  def render(~ok)
+  def render(session, ~ok)
     ~ok
 
 # return status (other than default 200)
 # example: (~status, 404)
 # for status codes list surf to http://www.w3.org/Protocols/HTTP/HTRESP.html
-  def render((~status, status))
+  def render(session, (~status, status))
     (~status, status)
     
 # return content of a specific mimetype
 # example: (~content, 'application/pdf', pdf)
-  def render((~content, mimetype, content))
+  def render(session, (~content, mimetype, content))
     (~content, mimetype.to_list(), content.to_list())
     
 # return rendered content from a view template file with handlers attached
 # example: ('fruits_index', {~apple: {~weight: 30, ~color: 'red'}}, [(~landing, ~contents, 'landing')])
-  def render((view, bindings, handlers))
-    (~html, Ryan.view(view, bindings, handlers).to_list())
+  def render(session, (view, bindings, handlers))
+    (~html, Ryan.view(view, bindings.insert(~session, session), handlers).to_list())
 
 # return rendered content from a view template file
 # example: ('fruits_index', {~apple: {~weight: 30, ~color: 'red'}})
-  def render((view, bindings))
-    (~html, Ryan.view(view, bindings).to_list())
+  def render(session, (view, bindings))
+    (~html, Ryan.view(view, bindings.insert(~session, session)).to_list())
 
 # return plain text
-  def render(text)
+  def render(session, text)
     (~html, text.to_list())
 
   def view(filename, bindings)

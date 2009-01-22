@@ -1,3 +1,3 @@
 class Landing
-  def index(parameters, cookies)
+  def index(session, parameters)
     ('landing/index', {})

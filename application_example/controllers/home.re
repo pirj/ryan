@@ -11,5 +11,5 @@ class Home
     ('#budget', ~update, ~contents, '/app/budget'),
     ('#menu a', ~toggleclass, ~selected)]
     
-  def index(parameters, cookies)
+  def index(session, parameters)
     ('layout', @bindings, @handlers)
