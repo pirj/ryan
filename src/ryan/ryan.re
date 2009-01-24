@@ -1,11 +1,12 @@
 module Ryan
-  def out(abspath, method, path_parts, session, parameters)
+  def out(abspath, method, path_parts, session_token, parameters)
     (_h, is, ins) = erlang::now()
     path_parts = path_parts.map { |part| part.to_string() }.to_tuple()
     (controller, action) = route(path_parts)
-    result = page(controller, action, session, cp(parameters))
+    session_token = session_token.to_string()
+    result = page(controller, action, session(session_token), cp(parameters))
     (_h, s, ns) = erlang::now()
-    Local.puts(['session', session.to_string(), ':', abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
+    Local.puts(['session', session_token, ':', abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
     result
 
   def page(controller, action, session, parameters)
@@ -16,6 +17,17 @@ module Ryan
     controller_object = reia::apply(controller.to_atom(), ~start, [])
     reply = reia::apply(controller_object, action, [session, parameters])
     render(session, reply)
+
+  def session(token)
+    session(token, ets::lookup(~sessions, token))
+
+  def session(token, [])
+    session = Session()
+    ets::insert(~sessions, (token, session))
+    session
+
+  def session(_token, [(_token2, session)])
+    session
 
 # remove this as soon as ssa issue is resolved vvv
 # parameters.map {|p| {p[0].to_string().to_atom(): p[1].to_string()}} oneliner looks better

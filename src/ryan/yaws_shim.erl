@@ -81,6 +81,7 @@ init_yaws() ->
 	code:add_patha(YawsLib),
 	{ok, ApplicationPath} = file:get_cwd(),
 	io:format("Starting up YAWS to run in ~s~n", [ApplicationPath]),
+	ets:new(sessions, [named_table, public]),
 	Public = filename:join(ApplicationPath, "public"),
 	yaws:start_embedded(Public,
 		[

@@ -8,5 +8,8 @@ class Session
   def set(key, value)
     @data = @data.insert(key, value)
 
+  def inspect()
+    @data.to_s()
+
   # def remove(key)
   #   @data = @data.remove(key)
