@@ -4,17 +4,18 @@ module Ryan
     path_parts = path_parts.map { |part| part.to_string() }.to_tuple()
     (controller, action) = route(path_parts)
     session_token = session_token.to_string()
-    result = page(controller, action, session(session_token), cp(parameters))
+    session = session(session_token)
+    result = page(controller, action, session, cp(parameters))
     (_h, s, ns) = erlang::now()
-    Local.puts(['session', session_token, ':', abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
+    Main.puts(['session', session_token, ':', abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
     result
 
   def page(controller, action, session, parameters)
     controller = controller.to_s()
     controller_file = ['controllers/', controller, '.re'].join()
     controller = controller.capitalize()
-    Local.load(controller_file) unless yaws_shim::up_to_date(controller, controller_file)
-    controller_object = reia::apply(controller.to_atom(), ~start, [])
+    Main.load(controller_file) unless yaws_shim::up_to_date(controller, controller_file)
+    controller_object = reia_class::inst(controller.to_atom(), [], '_block')
     reply = reia::apply(controller_object, action, [session, parameters])
     render(session, reply)
 
@@ -84,10 +85,10 @@ module Ryan
     # (_h, is, ins) = erlang::now()
     template = Retem.parse(file.to_string())
     # (_h, s, ns) = erlang::now()
-    # Local.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
+    # Main.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
     rendered = Retem.render(template, bindings.insert(~handlers, add_handlers(handlers)))
     # (_h, s1, ns1) = erlang::now()
-    # Local.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
+    # Main.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
     rendered
 
   def add_handlers(handlers)

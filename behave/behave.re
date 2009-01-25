@@ -28,24 +28,24 @@
 
 class Context
   def run
-    Local.puts('init')
+    Main.puts('init')
 
   def context(title, l)
     @title = title
-    Local.puts(['entering context', title].join(' '))
-    Local.puts(l)
+    Main.puts(['entering context', title].join(' '))
+    Main.puts(l)
     should('aaa', fun do
-      Local.puts(title)
-      Local.puts(@title)
+      Main.puts(title)
+      Main.puts(@title)
     )
     l()
-    Local.puts(['exiting context', title].join(' '))
+    Main.puts(['exiting context', title].join(' '))
     
   def should(title, l)
-    Local.puts('should!')
-    Local.puts(title)
-    Local.puts(@title)
+    Main.puts('should!')
+    Main.puts(title)
+    Main.puts(@title)
     if l() == true
-      Local.puts(['ok', title].join(' '))
+      Main.puts(['ok', title].join(' '))
     else
-      Local.puts(['failed', title].join(' '))
+      Main.puts(['failed', title].join(' '))

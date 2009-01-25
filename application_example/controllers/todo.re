@@ -1,33 +1,35 @@
 class Todo
   def index(session, parameters)
-    bindings = {}.insert(~todos, todos())
-    handlers = [('#add', ~append, ~todos, '/app/todo/add'),
-    ('#today', ~update, ~todos, '/app/todo/today', true),
-    ('#tomorrow', ~update, ~todos, '/app/todo/tomorrow', true)]
+    data = get_data(session)
+    bindings = {}.insert(~todos, get_data(session))
+    handlers = [('#add', ~prepend, ~todos, '/app/todo/add'),
+    ('#today', ~update, ~todos, '/app/todo/today'),
+    ('#tomorrow', ~update, ~todos, '/app/todo/tomorrow')]
     ('todo/index', bindings, handlers)
 
   def today(session, parameters)
-    for_range(~today)
+    session.set(~current_day, ~today)
+    for_range(session, ~today)
 
   def tomorrow(session, parameters)
-    for_range(~tomorrow)
+    session.set(~current_day, ~tomorrow)
+    for_range(session, ~tomorrow)
 
-  def few_days(session, parameters)
-    for_range(~few_days)
-
-  def later(session, parameters)
-    for_range(~later)
-
-  def for_range(range)
-    todos = todos().filter{|t| t[~when]==range}
+  def for_range(session, range)
+    data = get_data(session)
+    todos = data.filter{|t| t[~when]==range}
     ('todo/list', {}.insert(~todos, todos))
 
   def add(session, parameters)
-    'something added<br/>'
+    day = session.get(~current_day)
+    todos = session.get(~todo_data).unshift({}.insert(~what, 'something').insert(~when, day))
+    session.set(~todo_data, todos)
+    'something<br/>'
 
-  def todos
-    [(~todos, todos)] = ets::lookup(~mocks, ~todos)
-    todos
+  def get_data(session)
+    initial_todos = [{~what: 'buy milk', ~when: ~today}, {~what: 'call parents', ~when: ~tomorrow}, {~what: 'visit dentist', ~when: ~later}]
+    session.set(~todo_data, initial_todos) if session.get(~todo_data) == nil
+    session.get(~todo_data)
 
   def show(session, parameters)
     id = parameters[~id]

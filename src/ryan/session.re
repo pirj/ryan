@@ -2,6 +2,9 @@ class Session
   def initialize
     @data = {}
 
+  def has(key)
+    @data[key] == nil
+
   def get(key)
     @data[key]
 
