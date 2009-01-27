@@ -1,5 +1,5 @@
 -module(yaws_shim).
--export([out/1, init_yaws/0, read_file/1, up_to_date/2]).
+-export([out/1, init_yaws/0, read_file/1]).
 -include("../yaws/yaws_api.hrl").
 -include("../yaws/yaws.hrl").
 
@@ -63,17 +63,6 @@ read_file(Filename) ->
 		{error, enotdir} -> "A component of the file name is not a directory. On some platforms, enoent is returned instead.";
 		{error, enomem} -> "There is not enough memory for the contents of the file."
 	end.
-
-up_to_date({string, Module}, {string, ReiaFile}) ->
-%	false;
-	code:is_loaded(list_to_atom(binary_to_list(Module)));
-%	up_to_date(code:is_loaded(list_to_atom(binary_to_list(Module))), {string, ReiaFile});
-up_to_date(false, _) ->
-	false;
-up_to_date({file, BeamFile}, {string, ReiaFile}) ->
-	{ok, {file_info,_,_,_,_,BeamFileLastModified,_,_,_,_,_,_,_,_}}=file:read_file_info(BeamFile),
-	{ok, {file_info,_,_,_,_,ReiaFileLastModified,_,_,_,_,_,_,_,_}}=file:read_file_info(ReiaFile),
-	BeamFileLastModified >= ReiaFileLastModified.
 
 init_yaws() ->
 	YawsHome = "/usr/local/lib/yaws/",

@@ -13,11 +13,22 @@ module Ryan
   def page(controller, action, session, parameters)
     controller = controller.to_s()
     controller_file = ['controllers/', controller, '.re'].join()
-    controller = controller.capitalize()
-    Main.load(controller_file) unless yaws_shim::up_to_date(controller, controller_file)
-    controller_object = reia_class::inst(controller.to_atom(), [], '_block')
+    controller = controller.capitalize().to_atom()
+    Main.load(controller_file) unless up_to_date(controller, controller_file)
+    controller_object = reia_class::inst(controller, [], '_block')
     reply = reia::apply(controller_object, action, [session, parameters])
     render(session, reply)
+
+  def up_to_date(controller, controller_file)
+    up_to_date(code::is_loaded(controller), controller, controller_file)
+
+  def up_to_date(false, controller, controller_file)
+    false
+
+  def up_to_date(_loaded, controller, controller_file)
+    (~ok, (~file_info,_,_,_,_,last_modified,_,_,_,_,_,_,_,_)) = file::read_file_info(controller_file.to_list())
+    [_,_,_,(~compile,[_,_,(~time,last_loaded),_])] = reia::apply(controller, ~module_info, [])
+    last_loaded > last_modified
 
   def session(token)
     session(token, ets::lookup(~sessions, token))
