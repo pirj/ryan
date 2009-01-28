@@ -6,7 +6,7 @@ puts('Starting up Ryan...')
 ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
 
 required = ['retem.re', 'ryan.re', 'session.re']
-required.each { |lib| load([ryan_dir, lib].join('/')) }
+required.each { |lib| puts(['Loading', lib].join(' ')); load([ryan_dir, lib].join('/')) }
 
 # Initializing application
 load('startup.re')
