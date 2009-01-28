@@ -28,7 +28,8 @@ module Ryan
   def up_to_date(_loaded, controller, controller_file)
     (~ok, (~file_info,_,_,_,_,last_modified,_,_,_,_,_,_,_,_)) = file::read_file_info(controller_file.to_list())
     [_,_,_,(~compile,[_,_,(~time,last_loaded),_])] = reia::apply(controller, ~module_info, [])
-    last_loaded > last_modified
+    ((y,m,d),(h,n,s))=last_modified
+    last_loaded > (y,m,d,h,n,s)
 
   def session(token)
     session(token, ets::lookup(~sessions, token))
