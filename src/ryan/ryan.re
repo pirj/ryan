@@ -14,9 +14,11 @@ module Ryan
     controller = controller.to_s()
     controller_file = ['controllers/', controller, '.re'].join()
     controller = controller.capitalize().to_atom()
-    Main.load(controller_file) unless up_to_date(controller, controller_file)
-    controller_object = reia_class::inst(controller, [], '_block')
-    reply = reia::apply(controller_object, action, [session, parameters])
+    need_reload = up_to_date(controller, controller_file)
+    Main.puts(['Reloading ', controller_file].join()) unless need_reload
+    Main.load(controller_file) unless need_reload
+    controller_object = reia::spawn(controller, [])
+    reply = reia::invoke(controller_object, action, [session, parameters])
     render(session, reply)
 
   def up_to_date(controller, controller_file)
