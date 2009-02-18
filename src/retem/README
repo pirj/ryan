@@ -15,7 +15,7 @@ It provides convenient syntax and a lot if features available out of the box:
 template = """Total {apples|count:~apples}
 {for apple in apples} {apple.color} {apple.weight}kg {end}"""
 apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
-renderer = Retem.new()
+renderer = Retem()
 renderer.parse(template).render({~apples: apples})
 => Total 2 apples
 .. red 0.2kg
@@ -288,7 +288,7 @@ module ChildFilter
      if string == 'shit'
        '****'
 
-renderer = Retem.new()
+renderer = Retem()
 renderer.add_filter(ChildFilter)
 template = renderer.parse('{a|child_filter}')
 template.render({~a: 'holy shit}) # holy ****
@@ -313,7 +313,7 @@ i18n = {
 Retem uses 'en-US' as default unless otherwise requested.
 Dictionary is added to renderer instance:
 
-renderer = Retem.new()
+renderer = Retem()
 
 template = renderer.parse('{apples|count:~apples}')
 template.render({~apples: 3})
@@ -336,7 +336,7 @@ My contacts
 In this case the feedback is called, and it is passed the nested atom and all the parameters.
 With this it is possible to nest templates:
 
-renderer=Retem.new()
+renderer=Retem()
 template = renderer.parse('...')
 template.render({~apples: apples}) do |nested_template, params| 
   get_template_by_name(nested_template).render(params) 
@@ -349,7 +349,7 @@ the result to itself. Of course, nested parts can have nested parts too.
 To skip rendering of the code pieces, that are render-to-render static, preprocessing
 can be used.
 
-renderer=Retem.new()
+renderer=Retem()
 template = renderer.parse("Server's ip address is {{server_ip}}, user's ip address is {user_ip}", {~server_ip: '55.55.55.55'})
 template.render({~user_ip: '111.111.111.111'})
 => Server's ip address is '55.55.55.55', user's ip address is 111.111.111.111

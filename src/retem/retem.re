@@ -2,7 +2,7 @@
 # template = """Total {apples|count:~apples}
 # {for apple in apples} {apple.color} {apple.weight}kg {end}"""
 # apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
-# renderer = Retem.new()
+# renderer = Retem()
 # renderer.parse(template).render({~apples: apples})
 
 # Current syntax:

@@ -21,10 +21,10 @@
 #  A User instance should return its email address.
 #  A User instance with a profile should return true calling .has_profile?.
 
-# module Behave
-#   def context(title, lambda)
-#     bc = Context()
-#     bc.context(title, lambda)
+module Behave
+  def context(title, lambda)
+    bc = Context()
+    bc.context(title, lambda)
 
 class Context
   def run

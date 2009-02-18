@@ -9,7 +9,7 @@ class Address
     @street = street
 
 Behave.context('Templating') do
-  renderer = Retem.new()
+  renderer = Retem()
 
   context('text') do
     string = 'la 123%5442!@#$%^&*()|":LK<MN~123efgsfd"'
@@ -534,7 +534,7 @@ Behave.context('Templating') do
 # In this case the feedback is called, and it is passed the nested atom and all the parameters.
 # With this it is possible to nest templates:
 # 
-# renderer=Retem.new()
+# renderer=Retem()
 # template = renderer.parse('...')
 # template.render({~apples: apples}) do |nested_template, params| 
 #   get_template_by_name(nested_template).render(params) 
