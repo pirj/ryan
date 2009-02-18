@@ -14,5 +14,5 @@ class Session
   def inspect()
     @data.to_s()
 
-  # def remove(key)
-  #   @data = @data.remove(key)
+  def remove(key)
+    @data = @data.remove(key)
