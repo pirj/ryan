@@ -1,3 +1,3 @@
-class Landing
-  def index(session, parameters)
+class Landing < Controller
+  def index
     ('landing/index', {})

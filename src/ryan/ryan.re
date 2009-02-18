@@ -14,11 +14,11 @@ module Ryan
     controller = controller.to_s()
     controller_file = ['controllers/', controller, '.re'].join()
     controller = controller.capitalize().to_atom()
-    need_reload = up_to_date(controller, controller_file)
-    Main.puts(['Reloading ', controller_file].join()) unless need_reload
-    Main.load(controller_file) unless need_reload
-    controller_object = reia::spawn(controller, [])
-    reply = reia::invoke(controller_object, action, [session, parameters])
+    up_to_date = up_to_date(controller, controller_file)
+    Main.puts(['Reloading ', controller_file].join()) unless up_to_date
+    Main.load(controller_file) unless up_to_date
+    controller_object = reia::spawn(controller, [session, parameters])
+    reply = reia::invoke(controller_object, action, [])
     render(session, reply)
 
   def up_to_date(controller, controller_file)
@@ -29,8 +29,10 @@ module Ryan
 
   def up_to_date(_loaded, controller, controller_file)
     (~ok, (~file_info,_,_,_,_,last_modified,_,_,_,_,_,_,_,_)) = file::read_file_info(controller_file.to_list())
-    [_,_,_,(~compile,[_,_,(~time,last_loaded),_])] = reia::apply(controller, ~module_info, [])
+    [_,_,(~time,last_loaded),_] = reia::apply(controller, ~module_info, [~compile])
     ((y,m,d),(h,n,s))=last_modified
+    last_modified.inspect().puts()
+    last_loaded.inspect().puts()
     last_loaded > (y,m,d,h,n,s)
 
   def session(token)

@@ -56,6 +56,7 @@ task :install_only do
   cp 'src/retem/retem.re', ryan_dir
   cp 'src/ryan/ryan.re', ryan_dir
   cp 'src/ryan/session.re', ryan_dir
+  cp 'src/ryan/controller.re', ryan_dir
 
   mkdir "/usr/local/bin" unless File.exist?("/usr/local/bin")
   rm '/usr/local/bin/ryan' if File.exist?("/usr/local/bin/ryan")

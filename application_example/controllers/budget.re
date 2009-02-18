@@ -1,3 +1,3 @@
-class Budget
-  def index(session, parameters)
+class Budget < Controller
+  def index
     'Not yet implemented'

@@ -1,5 +1,5 @@
-class Home
-  def initialize
+class Home < Controller
+  def initialize(_session, _parameters)
     jss = ['ryan', 'jquery-1.3.min', 'jquery.jgrowl_minimized', 'app']
     headjs = [['<script type="text/javascript" src="/js/', js, '.js"></script>'].join() | js in jss].join()
     csss = ['app', 'jquery.jgrowl']
@@ -11,5 +11,5 @@ class Home
     ('#budget', ~update, ~contents, '/app/budget'),
     ('#menu a', ~toggleclass, ~selected)]
 
-  def index(session, parameters)
+  def index
     ('layout', @bindings, @handlers)
