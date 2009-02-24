@@ -1,8 +1,7 @@
 # How Behave works:
 # 
 # Behave.context('A User instance') do
-#   setup do
-#     user = User.find(~first)
+#   user = User.find(~first)
 # 
 #   should('return its full name') do
 #     assert('John Doe' == user.full_name)
@@ -23,29 +22,17 @@
 
 module Behave
   def context(title, lambda)
-    bc = Context()
-    bc.context(title, lambda)
+    Behavior().context(title, lambda)
 
-class Context
-  def run
-    Main.puts('init')
-
-  def context(title, l)
-    @title = title
-    Main.puts(['entering context', title].join(' '))
-    Main.puts(l)
-    should('aaa', fun do
-      Main.puts(title)
-      Main.puts(@title)
-    )
-    l()
+class Behavior
+  def context(title, lambda)
+    ['entering context', title].join(' ').puts()
+    lambda()
     Main.puts(['exiting context', title].join(' '))
-    
-  def should(title, l)
-    Main.puts('should!')
-    Main.puts(title)
-    Main.puts(@title)
-    if l() == true
-      Main.puts(['ok', title].join(' '))
+
+  def should(title, lambda)
+    ['should', title].join(' ').print()
+    if lambda()
+      ':ok'.puts()
     else
-      Main.puts(['failed', title].join(' '))
+      ':failed'.puts()
