@@ -12,4 +12,7 @@ required.each { |lib| puts(['Loading', lib].join(' ')); load([ryan_dir, lib].joi
 load('startup.re')
 Startup.initialize()
 
-yaws_shim::init_yaws()
+port = 8001
+port = System.args()[1].to_int() if System.args()[0] == "-p"
+
+yaws_shim::init_yaws(port)

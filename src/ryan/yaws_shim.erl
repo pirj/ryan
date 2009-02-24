@@ -1,5 +1,5 @@
 -module(yaws_shim).
--export([out/1, init_yaws/0, read_file/1]).
+-export([out/1, init_yaws/1, read_file/1]).
 -include("../yaws/yaws_api.hrl").
 -include("../yaws/yaws.hrl").
 
@@ -64,7 +64,7 @@ read_file(Filename) ->
 		{error, enomem} -> "There is not enough memory for the contents of the file."
 	end.
 
-init_yaws() ->
+init_yaws(Port) ->
 	YawsHome = "/usr/local/lib/yaws/",
 	YawsLib = filename:join(YawsHome, "ebin"),
 	code:add_patha(YawsLib),
@@ -75,7 +75,7 @@ init_yaws() ->
 	yaws:start_embedded(Public,
 		[
 			{servername, "localhost"},
-			{port, 8001},
+			{port, Port},
 			{listen, {0,0,0,0}},
 			{appmods, [{"/app/", yaws_shim}]}
 		],

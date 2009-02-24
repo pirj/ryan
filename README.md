@@ -34,6 +34,9 @@ ryan
 
 Surf to: http://localhost:8001/app
 
+You can specify a port number to run on in command line:
+ryan -p 8080
+
 Modify Fruits controller, implement or change actions
 Create your own controllers and see the results without the need
 to even reload web page.
