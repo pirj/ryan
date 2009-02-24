@@ -11,29 +11,9 @@ module Ryan
     result
 
   def page(controller, action, session, parameters)
-    controller = controller.to_s()
-    controller_file = ['controllers/', controller, '.re'].join()
-    controller = controller.capitalize().to_atom()
-    up_to_date = up_to_date(controller, controller_file)
-    Main.puts(['Reloading ', controller_file].join()) unless up_to_date
-    Main.load(controller_file) unless up_to_date
-    controller_object = reia::spawn(controller, [session, parameters])
+    controller_object = Controllers.get(controller, session, parameters)
     reply = reia::invoke(controller_object, action, [])
     render(session, reply)
-
-  def up_to_date(controller, controller_file)
-    up_to_date(code::is_loaded(controller), controller, controller_file)
-
-  def up_to_date(false, controller, controller_file)
-    false
-
-  def up_to_date(_loaded, controller, controller_file)
-    (~ok, (~file_info,_,_,_,_,last_modified,_,_,_,_,_,_,_,_)) = file::read_file_info(controller_file.to_list())
-    [_,_,(~time,last_loaded),_] = reia::apply(controller, ~module_info, [~compile])
-    ((y,m,d),(h,n,s))=last_modified
-    last_modified.inspect().puts()
-    last_loaded.inspect().puts()
-    last_loaded > (y,m,d,h,n,s)
 
 # remove this as soon as ssa issue is resolved vvv
 # parameters.map {|p| {p[0].to_string().to_atom(): p[1].to_string()}} oneliner looks better
