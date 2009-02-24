@@ -4,7 +4,7 @@ module Ryan
     path_parts = path_parts.map { |part| part.to_string() }.to_tuple()
     (controller, action) = route(path_parts)
     session_token = session_token.to_string()
-    session = session(session_token)
+    session = Sessions.get(session_token)
     result = page(controller, action, session, cp(parameters))
     (_h, s, ns) = erlang::now()
     Main.puts(['session', session_token, ':', abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
@@ -34,17 +34,6 @@ module Ryan
     last_modified.inspect().puts()
     last_loaded.inspect().puts()
     last_loaded > (y,m,d,h,n,s)
-
-  def session(token)
-    session(token, ets::lookup(~sessions, token))
-
-  def session(token, [])
-    session = Session()
-    ets::insert(~sessions, (token, session))
-    session
-
-  def session(_token, [(_token2, session)])
-    session
 
 # remove this as soon as ssa issue is resolved vvv
 # parameters.map {|p| {p[0].to_string().to_atom(): p[1].to_string()}} oneliner looks better
