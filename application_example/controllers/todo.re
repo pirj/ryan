@@ -2,7 +2,7 @@ class Todo < Controller
   def index
     data = get_data()
     bindings = {}.insert(~todos, get_data())
-    handlers = [('#add', ~prepend, ~todos, '/app/todo/add'),
+    handlers = [('#add_new', ~update, ~todo_new, '/app/todo/add_new', true),
     ('#today', ~update, ~todos, '/app/todo/today'),
     ('#tomorrow', ~update, ~todos, '/app/todo/tomorrow')]
     ('todo/index', bindings, handlers)
@@ -20,7 +20,12 @@ class Todo < Controller
     todos = data.filter{|t| t[~when]==range}
     ('todo/list', {}.insert(~todos, todos))
 
-  def add
+  def add_new
+    handlers = [('#add', ~prepend, ~todos, '/app/todo/add_todo'),
+    ('#cancel', ~empty, ~todo_new, '')]
+    ('todo/new', {}, handlers)
+
+  def add_todo
     day = @session.get(~current_day)
     todos = @session.get(~todo_data).unshift({}.insert(~what, 'something').insert(~when, day))
     @session.set(~todo_data, todos)
