@@ -1,6 +1,6 @@
 class Home < Controller
   def initialize(_session, _parameters)
-    jss = ['ryan', 'jquery-1.3.min', 'jquery.jgrowl_minimized', 'app']
+    jss = ['ryan', 'jquery-1.3.1', 'jquery.jgrowl_minimized']
     headjs = [['<script type="text/javascript" src="/js/', js, '.js"></script>'].join() | js in jss].join()
     csss = ['app', 'jquery.jgrowl']
     headcss = [['<link href="/css/', css, '.css" rel=stylesheet type=text/css>'].join() | css in csss].join()

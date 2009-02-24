@@ -5,7 +5,7 @@ function add_handler(id, type, command, target, argument, fade){
 	
 	$(id).bind(type, function(){
 		if(fade)
-			$(target).fadeOut()
+			$(target).hide()
 		//, function(){
 		// 	if(!loaded)
 		// 		$(this).html('please wait, loading...').fadeIn()
@@ -29,7 +29,7 @@ function add_handler(id, type, command, target, argument, fade){
 						$.jGrowl('Error loading data', {theme:  'error'})
 					}
 
-					if(fade)
+					// if(fade)
 						$(target).fadeIn()
 				}
 			})
