@@ -2,9 +2,9 @@ class Todo < Controller
   def index
     data = get_data()
     bindings = {}.insert(~todos, get_data())
-    handlers = [('#add_new', ~update, ~todo_new, '/app/todo/add_new', true),
-    ('#today', ~update, ~todos, '/app/todo/today'),
-    ('#tomorrow', ~update, ~todos, '/app/todo/tomorrow')]
+    handlers = [{~id: '#add_new', ~command: ~update, ~what: ~todo_new, ~url: '/app/todo/add_new', ~fade: true},
+    {~id: '#today', ~command: ~update, ~what: ~todos, ~url: '/app/todo/today'},
+    {~id: '#tomorrow', ~command: ~update, ~what: ~todos, ~url: '/app/todo/tomorrow'}]
     ('todo/index', bindings, handlers)
 
   def today
@@ -21,8 +21,9 @@ class Todo < Controller
     ('todo/list', {}.insert(~todos, todos))
 
   def add_new
-    handlers = [('#add', ~prepend, ~todos, '/app/todo/add_todo'),
-    ('#cancel', ~empty, ~todo_new, '')]
+    handlers = [{~id: '#add', ~command: ~prepend, ~what: ~todos, ~url: '/app/todo/add_todo'},
+    {~id: '#add', ~command: ~empty, ~what: ~todo_new, ~fade: true},
+    {~id: '#cancel', ~command: ~empty, ~what: ~todo_new, ~fade: true}]
     ('todo/new', {}, handlers)
 
   def add_todo

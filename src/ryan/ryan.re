@@ -7,7 +7,7 @@ module Ryan
     session = Sessions.get(session_token)
     result = page(controller, action, session, cp(parameters))
     (_h, s, ns) = erlang::now()
-    Main.puts(['session', session_token, ':', abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
+    ['session', session_token, ':', abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' ').puts()
     result
 
   def page(controller, action, session, parameters)
@@ -77,17 +77,12 @@ module Ryan
     rendered
 
   def add_handlers(handlers)
-    js = [add_handler(handler) | handler in handlers].join()
+    js = [add_handler(handler) | handler in handlers].join(';')
     ['<script>$(document).ready(function() {', js, '})</script>'].join()
 
-  def add_handler((id, command, argument))
-    ["add_handler('", id.to_s(), "', 'click', '", command.to_s(), "', '", id.to_s(), "', '", argument.to_s(), "');"].join()
-
-  def add_handler((selector, command, target, argument))
-    ["add_handler('", selector.to_s(), "', 'click', '", command.to_s(), "', '#", target.to_s(), "', '", argument.to_s(), "');"].join()
-
-  def add_handler((selector, command, target, argument, fade))
-    ["add_handler('", selector.to_s(), "', 'click', '", command.to_s(), "', '#", target.to_s(), "', '", argument.to_s(), "', '", fade.to_s(), "');"].join()
+  def add_handler(handler)
+    h = handler.insert(~event, ~click)
+    ['add_handler({', h.to_list().map{|(k,v)| [k.to_s(), ": '", v.to_s(), "'"].join()}.join(','), '})'].join()
 
   def route((app, controller, action))
     (controller, action.to_atom())

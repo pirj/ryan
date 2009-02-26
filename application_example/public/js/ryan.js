@@ -1,47 +1,60 @@
-function add_handler(id, type, command, target, argument, fade){
-	if(command == 'update' || command == 'append' || command == 'prepend' || command == 'empty' || command == 'message')
-		if(argument)
-			$(id).attr('rel', argument)
+function add_handler(options){
+	var id = options['id']
+	var event = options['event']
+	var command = options['command']
+	var what = '#' + options['what']
+	var url = options['url']
+	var fade = options['fade']
+	var clazz = options['clazz']
 	
-	$(id).bind(type, function(){
-		if(fade)
-			$(target).hide()
-		//, function(){
-		// 	if(!loaded)
-		// 		$(this).html('please wait, loading...').fadeIn()
-		// })
+	if(command == 'send' || command == 'update' || command == 'append' || command == 'prepend' || command == 'empty' || command == 'message')
+		if(url)
+			$(id).attr('rel', url)
+	
+	$(id).bind(event, function(){
 		
-		if(command == 'update' || command == 'append' || command == 'prepend')
+		if(command == 'send' || command == 'update' || command == 'append' || command == 'prepend'){
+			if(fade)
+				$(what).fadeOut()
 			$.ajax({
 				url: $(this).attr('rel'),
 				dataType: 'html',
 				complete: function(res, status){
 					if (status == 'success' || status == 'notmodified'){
-						if(command == 'update')
-							$(target).html(res.responseText)
+						if(command == 'send')
+							$(what).html(res.responseText)
+						else if(command == 'update')
+							$(what).html(res.responseText)
 						else if(command == 'append')
-							$(target).append(res.responseText)
+							$(what).append(res.responseText)
 						else if(command == 'prepend')
-							$(target).prepend(res.responseText)
+							$(what).prepend(res.responseText)
 						else if(command == 'message')
 							$.jGrowl(res.responseText)
 					} else {
-						$.jGrowl('Error loading data', {theme:  'error'})
+						$.jGrowl('Error loading data: ', {theme:  'error'})
 					}
 
-					// if(fade)
-						$(target).fadeIn()
 				}
 			})
-		else if(command == 'empty')
-			$(target).empty()
+
+			if(fade)
+				$(what).fadeIn()
+		} else if(command == 'empty'){
+			if(fade)
+				$(what).fadeOut(300, function(){
+					$(what).empty()
+				})
+			else
+				$(what).empty()
+		}
 		else if(command == 'addclass')
-			$(target).addClass(argument)
+			$(what).addClass(clazz)
 		else if(command == 'removeclass')
-			$(target).removeClass(argument)
+			$(what).removeClass(clazz)
 		else if(command == 'toggleclass'){
-			$(this).parent().children().removeClass(argument)
-			$(this).addClass(argument)
+			$(this).parent().children().removeClass(clazz)
+			$(this).addClass(clazz)
 		}
 
 		return false
