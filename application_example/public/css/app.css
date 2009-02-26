@@ -161,3 +161,10 @@ a[icon=tomorrow] {
 	background: transparent url(/images/lightbulb_off.png) no-repeat center left;
 }
 
+a[icon=cancel] {
+	background: transparent url(/images/cross.png) no-repeat center left;
+}
+
+#todo_new {
+	display: none;
+}
