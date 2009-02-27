@@ -1,10 +1,10 @@
 module Controllers
   def get(controller, session, parameters)
     controller = controller.to_s()
-    controller_file = ['controllers/', controller, '.re'].join()
+    controller_file = 'controllers/#{controller}.re'
     controller = controller.capitalize().to_atom()
     up_to_date = up_to_date(controller, controller_file)
-    Main.puts(['Reloading ', controller_file].join()) unless up_to_date
+    'Reloading #{controller_file}'.puts() unless up_to_date
     Main.load(controller_file) unless up_to_date
     reia::spawn(controller, [session, parameters])
 

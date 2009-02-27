@@ -7,7 +7,9 @@ module Ryan
     session = Sessions.get(session_token)
     result = page(controller, action, session, cp(parameters))
     (_h, s, ns) = erlang::now()
-    ['session', session_token, ':', abspath.to_string(), ":", (s-is) * 1000000 + ns - ins, "ns"].join(' ').puts()
+    abspath = abspath.to_string()
+    took = (s-is) * 1000000 + ns - ins
+    'session #{session_token}: #{abspath}, took #{took} ns'.puts()
     result
 
   def page(controller, action, session, parameters)
@@ -66,7 +68,7 @@ module Ryan
     view(filename, bindings, [])
 
   def view(filename, bindings, handlers)
-    file = yaws_shim::read_file(['views/', filename, '.html'].join().to_list())
+    file = yaws_shim::read_file('views/#{filename}.html'.to_list())
     # (_h, is, ins) = erlang::now()
     template = Retem.parse(file.to_string())
     # (_h, s, ns) = erlang::now()
@@ -78,11 +80,12 @@ module Ryan
 
   def add_handlers(handlers)
     js = [add_handler(handler) | handler in handlers].join(';')
-    ['<script>$(document).ready(function() {', js, '})</script>'].join()
+    '<script>$(document).ready(function() {#{js}})</script>'
 
   def add_handler(handler)
     h = handler.insert(~event, ~click)
-    ['add_handler({', h.to_list().map{|(k,v)| [k.to_s(), ": '", v.to_s(), "'"].join()}.join(','), '})'].join()
+    arguments = h.to_list().map{|(k,v)| "#{k}: '#{v}'"}.join(',')
+    'add_handler({#{arguments}})'
 
   def route((app, controller, action))
     (controller, action.to_atom())

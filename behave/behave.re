@@ -26,12 +26,12 @@ module Behave
 
 class Behavior
   def context(title, lambda)
-    ['entering context', title].join(' ').puts()
+    'entering context #{title}'.puts()
     lambda()
-    Main.puts(['exiting context', title].join(' '))
+    'exiting context #{title}'.puts()
 
   def should(title, lambda)
-    ['should', title].join(' ').print()
+    'should #{title}'.print()
     if lambda()
       ':ok'.puts()
     else
