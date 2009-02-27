@@ -5,11 +5,11 @@ class Home < Controller
     csss = ['app', 'jquery.jgrowl']
     headcss = ['<link href="/css/#{css}.css" rel=stylesheet type=text/css>' | css in csss].join()
     head = [headcss, headjs].join()
-    @bindings = {}.insert(~title, 'Ryan and Reia homemade webapp').insert(~head, head).insert(~contents, Ryan.view('home', {}))
+    @bindings = {}.insert(~title, 'Ryan and Reia homemade webapp').insert(~head, head).insert(~contents, view('home', {}, []))
     @handlers = [{~id: '#landing', ~command: ~update, ~what: ~contents, ~url: '/app/landing', ~fade: true},
     {~id: '#todo', ~command: ~update, ~what: ~contents, ~url: '/app/todo', ~fade: true},
     {~id: '#budget', ~command: ~update, ~what: ~contents, ~url: '/app/budget', ~fade: true},
     {~id: '#menu a', ~command: ~toggleclass, ~clazz: ~selected}]
 
   def index
-    ('layout', @bindings, @handlers)
+    render('layout', @bindings, @handlers)

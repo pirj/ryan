@@ -25,3 +25,62 @@ class Controller
   def initialize(session, parameters)
     @session = session
     @parameters = parameters
+
+# redirect to url
+  def redirect(url)
+    (~redirect, url.to_list())
+
+# do nothing
+  def ok
+    ~ok
+
+# return status (other than default 200)
+# example: status(404)
+# for status codes list surf to http://www.w3.org/Protocols/HTTP/HTRESP.html
+  def status(status)
+    (~status, status)
+
+# return content of a specific mimetype
+# example: content('application/pdf', pdf)
+  def content(mimetype, content)
+    (~content, mimetype.to_list(), content.to_list())
+
+# return plain text
+  def text(text)
+    (~html, text.to_list())
+
+# # return rendered content from a view template file
+# # example: render('fruits_index')
+#   def render(filename)
+#     render(filename, {})
+# 
+# # return rendered content from a view template file
+# # example: render('fruits_index', {~apple: {~weight: 30, ~color: 'red'}})
+#   def render(filename, bindings)
+#     render(filename, bindings, [])
+# 
+  def view(filename, bindings, handlers)
+    file = yaws_shim::read_file('views/#{filename}.html'.to_list())
+    # (_h, is, ins) = erlang::now()
+    template = Retem.parse(file.to_string())
+    # (_h, s, ns) = erlang::now()
+    # Main.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
+    rendered = Retem.render(template, bindings.insert(~handlers, Ryan.add_handlers(handlers)).insert(~session, @session))
+    # (_h, s1, ns1) = erlang::now()
+    # Main.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
+    rendered
+
+# return rendered content from a view template file with handlers attached
+# example: render('fruits_index', {~apple: {~weight: 30, ~color: 'red'}}, [(~landing, ~contents, 'landing')])
+  def render(filename, bindings, handlers)
+    (~html, view(filename, bindings, handlers).to_list())
+# 
+#   def add_handlers(hdlrs)
+#     js = [add_handler(handler) | handler in hdlrs].join(';\n')
+#     '<script>$(document).ready(function() {\n#{js}\n})</script>'
+# 
+#   def add_handler(handler)
+#     h = handler.insert(~event, ~click)
+#     arguments = h.to_list().map{|(k,v)| [k.to_s(), ": '", v.to_s(), "'"].join()}.join(', ')
+#     'add_handler({#{arguments}})'
+# #    arguments = h.to_list().map{|(k, v)| "#{k}: '#{v}'"}.join(',')

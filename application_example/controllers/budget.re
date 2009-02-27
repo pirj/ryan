@@ -1,3 +1,3 @@
 class Budget < Controller
   def index
-    'Not yet implemented'
+    text('Not yet implemented')

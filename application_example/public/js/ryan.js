@@ -13,6 +13,8 @@ function add_handler(options){
 	
 	var on_complete = function(res, status){
 		if (status == 'success' || status == 'notmodified'){
+			if(fade)
+				$(what).fadeOut()
 			if(command == 'send')
 				$(what).html(res.responseText)
 			else if(command == 'update')
@@ -33,15 +35,13 @@ function add_handler(options){
 	$(id).bind(event, function(){
 		
 		if(command == 'send' || command == 'update' || command == 'append' || command == 'prepend'){
-			var url = $(this).attr('rel')
 			if(fade)
-				$(what).fadeOut(function(){
-					$.ajax({
-						url: url,
-						dataType: 'html',
-						complete: on_complete
-					})
-				})
+				$(what).fadeOut()
+			$.ajax({
+				url: $(this).attr('rel'),
+				dataType: 'html',
+				complete: on_complete
+			})
 		} else if(command == 'empty'){
 			if(fade)
 				$(what).fadeOut(300, function(){
