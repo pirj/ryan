@@ -84,7 +84,8 @@ module Ryan
 
   def add_handler(handler)
     h = handler.insert(~event, ~click)
-    arguments = h.to_list().map{|(k,v)| "#{k}: '#{v}'"}.join(',')
+#    arguments = h.to_list().map{|(k, v)| "#{k}: '#{v}'"}.join(',')
+    arguments = h.to_list().map{|(k,v)| [k.to_s(), ": '", v.to_s(), "'"].join()}.join(',')
     'add_handler({#{arguments}})'
 
   def route((app, controller, action))
