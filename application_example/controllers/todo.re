@@ -8,9 +8,7 @@ class Todo < Controller
     render('todo/index', bindings, handlers)
 
   def today
-    "111".puts()
     @session.set(~current_day, ~today)
-    "222".puts()
     data = get_data()
     todos = data.filter{|t| t[~when]==~today}
     render('todo/list', {}.insert(~todos, todos), [])

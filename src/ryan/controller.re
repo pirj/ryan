@@ -65,7 +65,9 @@ class Controller
     template = Retem.parse(file.to_string())
     # (_h, s, ns) = erlang::now()
     # Main.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
-    rendered = Retem.render(template, bindings.insert(~handlers, Ryan.add_handlers(handlers)).insert(~session, @session))
+    js = add_handlers(handlers)
+    full_bindings = bindings.insert(~handlers, js).insert(~session, @session)
+    rendered = Retem.render(template, full_bindings)
     # (_h, s1, ns1) = erlang::now()
     # Main.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
     rendered
@@ -74,13 +76,12 @@ class Controller
 # example: render('fruits_index', {~apple: {~weight: 30, ~color: 'red'}}, [(~landing, ~contents, 'landing')])
   def render(filename, bindings, handlers)
     (~html, view(filename, bindings, handlers).to_list())
-# 
-#   def add_handlers(hdlrs)
-#     js = [add_handler(handler) | handler in hdlrs].join(';\n')
-#     '<script>$(document).ready(function() {\n#{js}\n})</script>'
-# 
-#   def add_handler(handler)
-#     h = handler.insert(~event, ~click)
-#     arguments = h.to_list().map{|(k,v)| [k.to_s(), ": '", v.to_s(), "'"].join()}.join(', ')
-#     'add_handler({#{arguments}})'
-# #    arguments = h.to_list().map{|(k, v)| "#{k}: '#{v}'"}.join(',')
+
+  def add_handlers(handlers)
+    js = handlers.map{ |handler| add_handler(handler)}.join(';\n')
+    '<script>$(document).ready(function() {\n#{js}\n})</script>'
+
+  def add_handler(handler)
+    h = handler.insert(~event, ~click)
+    arguments = h.to_list().map{|(k,v)| [k.to_s(), ": '", v.to_s(), "'"].join()}.join(', ')
+    'add_handler({#{arguments}})'

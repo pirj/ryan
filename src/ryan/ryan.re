@@ -36,13 +36,3 @@ module Ryan
 
   def route((app))
     ('home', ~index)
-
-  def add_handlers(handlers)
-    js = [add_handler(handler) | handler in handlers].join(';')
-    '<script>$(document).ready(function() {#{js}})</script>'
-
-  def add_handler(handler)
-    h = handler.insert(~event, ~click)
-    arguments = h.to_list().map{|(k,v)| [k.to_s(), ": '", v.to_s(), "'"].join()}.join(',')
-    'add_handler({#{arguments}})'
-#    arguments = h.to_list().map{|(k, v)| "#{k}: '#{v}'"}.join(',')
