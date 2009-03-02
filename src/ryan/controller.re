@@ -83,5 +83,5 @@ class Controller
 
   def add_handler(handler)
     h = handler.insert(~event, ~click)
-    arguments = h.to_list().map{|(k,v)| [k.to_s(), ": '", v.to_s(), "'"].join()}.join(', ')
+    arguments = h.to_list().map{ |(k,v)| "#{k}: '#{v}'"}.join(', ')
     'add_handler({#{arguments}})'
