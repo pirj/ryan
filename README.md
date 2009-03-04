@@ -74,7 +74,7 @@ SQLite3, PostgreSQL, MySQL, Mnesia and Mongo are to be supported.
 [Ryan@lighthouse](http://ryan_reia.lighthouseapp.com/projects/19645-ryan)
 [Ryan@github](http://github.com/pirj/ryan)
 [Reia language home](http://reia-lang.org)
-[Dev blog](http://devaddict.jot.ly)
+[Dev blog](http://dev_addict.jot.ly)
 
 ### Authors
 * Philpipp Pirozhkov pirj@mail.ru
