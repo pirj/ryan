@@ -26,9 +26,9 @@ class Todo < Controller
     render('todo/list', {}.insert(~todos, todos), [])
 
   def add_new
-    handlers = [{~id: '#add', ~command: ~prepend, ~what: ~todos, ~url: '/app/todo/add_todo'},
-    {~id: '#add', ~command: ~empty, ~what: ~todo_new, ~effect: ~slide},
-    {~id: '#cancel', ~command: ~empty, ~what: ~todo_new, ~effect: ~slide}]
+    handlers = [{~id: '#add', ~command: ~prepend, ~what: ~todos, ~url: '/app/todo/add_todo', ~get: '#todo_new_text'},
+    {~id: '#add', ~command: ~empty, ~what: ~todo_new, ~effect: ~fade},
+    {~id: '#cancel', ~command: ~empty, ~what: ~todo_new, ~effect: ~fade}]
     render('todo/new', {}, handlers)
 
   def add_todo
