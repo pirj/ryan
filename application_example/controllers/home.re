@@ -6,9 +6,10 @@ class Home < Controller
     headcss = ['<link href="/css/#{css}.css" rel=stylesheet type=text/css>' | css in csss].join()
     head = [headcss, headjs].join()
     @bindings = {}.insert(~title, 'Ryan and Reia homemade webapp').insert(~head, head).insert(~contents, view('home', {}, []))
-    @handlers = [{~id: '#landing', ~command: ~update, ~what: ~contents, ~url: '/app/landing', ~fade: true},
-    {~id: '#todo', ~command: ~update, ~what: ~contents, ~url: '/app/todo', ~fade: true},
-    {~id: '#budget', ~command: ~update, ~what: ~contents, ~url: '/app/budget', ~fade: true},
+
+    @handlers = [{~id: '#landing', ~command: ~update, ~what: ~contents, ~url: '/app/landing', ~effect: ~slide},
+    {~id: '#todo', ~command: ~update, ~what: ~contents, ~url: '/app/todo', ~effect: ~slide},
+    {~id: '#budget', ~command: ~update, ~what: ~contents, ~url: '/app/budget', ~effect: ~slide},
     {~id: '#menu a', ~command: ~toggleclass, ~clazz: ~selected}]
 
   def index

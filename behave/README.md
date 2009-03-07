@@ -50,7 +50,7 @@ FAIL A User instance should return its email address: behave/models/user.re: 14
 [Ryan@github](http://github.com/pirj/ryan)
 [Reia language home](http://reia-lang.org)
 [Reia@github](http://github.com/tarcieri/reia)
-[Dev blog](http://devaddict.jot.ly)
+[Dev blog](http://dev_addict.jot.ly)
 
 ### Authors
 * Philpipp Pirozhkov pirj@mail.ru

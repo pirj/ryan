@@ -4,17 +4,17 @@ function add_handler(options){
 	var command = options['command']
 	var what = '#' + options['what']
 	var url = options['url']
-	var fade = options['fade']
+	var effect = options['effect']
 	var clazz = options['clazz']
 	
 	if(command == 'send' || command == 'update' || command == 'append' || command == 'prepend' || command == 'empty' || command == 'message')
 		if(url)
-			$(id).attr('rel', url)
+			$(id).attr('rel', 'url')
 	
 	var on_complete = function(res, status){
 		if (status == 'success' || status == 'notmodified'){
-			if(fade)
-				$(what).fadeOut()
+			if(effect)
+				$(what).hide(effect)
 			if(command == 'send')
 				$(what).html(res.responseText)
 			else if(command == 'update')
@@ -25,8 +25,8 @@ function add_handler(options){
 				$(what).prepend(res.responseText)
 			else if(command == 'message')
 				$.jGrowl(res.responseText)
-			if(fade)
-				$(what).fadeIn()
+			if(effect)
+				$(what).show(effect)
 		} else {
 			$.jGrowl('Error loading data: ', {theme:  'error'})
 		}
@@ -35,16 +35,16 @@ function add_handler(options){
 	$(id).bind(event, function(){
 		
 		if(command == 'send' || command == 'update' || command == 'append' || command == 'prepend'){
-			if(fade)
-				$(what).fadeOut()
+			if(effect)
+				$(what).hide(effect)
 			$.ajax({
-				url: $(this).attr('rel'),
+				url: url,
 				dataType: 'html',
 				complete: on_complete
 			})
 		} else if(command == 'empty'){
-			if(fade)
-				$(what).fadeOut(300, function(){
+			if(effect)
+				$(what).hide(effect, {}, 300, function(){
 					$(what).empty()
 				})
 			else
