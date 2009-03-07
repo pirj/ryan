@@ -21,6 +21,19 @@ module Controllers
     ((y,m,d),(h,n,s))=last_modified
     last_loaded > (y,m,d,h,n,s)
 
+  def template(filename)
+    template(filename, ets::lookup(~templates, filename))
+
+  def template(filename, [])
+    "Parsing #{filename}".puts()
+    file = yaws_shim::read_file('views/#{filename}.html'.to_list())
+    t = Retem.parse(file.to_string())
+    ets::insert(~templates, (filename, t))
+    t
+
+  def template(_filename, [(_filename2, t)])
+    t
+
 class Controller
   def initialize(session, parameters)
     @session = session
@@ -60,10 +73,9 @@ class Controller
 #     render(filename, bindings, [])
 # 
   def view(filename, bindings, handlers)
-    file = yaws_shim::read_file('views/#{filename}.html'.to_list())
     # (_h, is, ins) = erlang::now()
-    template = Retem.parse(file.to_string())
     # (_h, s, ns) = erlang::now()
+    template = Controllers.template(filename)
     # Main.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
     js = add_handlers(handlers)
     full_bindings = bindings.insert(~handlers, js).insert(~session, @session)
