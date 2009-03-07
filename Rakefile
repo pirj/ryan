@@ -54,9 +54,9 @@ task :install_only do
   rm File.join(ryan_dir, 'ebin/leex.beam')
   
   cp 'src/retem/retem.re', ryan_dir
-  cp 'src/ryan/ryan.re', ryan_dir
-  cp 'src/ryan/session.re', ryan_dir
-  cp 'src/ryan/controller.re', ryan_dir
+  cp 'src/core/ryan.re', ryan_dir
+  cp 'src/core/session.re', ryan_dir
+  cp 'src/core/controller.re', ryan_dir
 
   mkdir "/usr/local/bin" unless File.exist?("/usr/local/bin")
   rm '/usr/local/bin/ryan' if File.exist?("/usr/local/bin/ryan")
