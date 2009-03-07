@@ -1,6 +1,7 @@
 class Todo < Controller
-  def initialize(session, _parameters)
+  def initialize(session, parameters)
     @session = session
+    @parameters = parameters
     initial_todos = [{~what: 'buy milk', ~when: ~today}, {~what: 'call parents', ~when: ~tomorrow}, {~what: 'visit dentist', ~when: ~later}]
     @session.set(~todo, initial_todos) if @session.get(~todo) == nil
     
@@ -33,6 +34,7 @@ class Todo < Controller
 
   def add_todo
     day = @session.get(~current_day)
-    todos = @session.get(~todo).unshift({}.insert(~what, 'something').insert(~when, day))
+    todo_text = @parameters[~todo_new_text]
+    todos = @session.get(~todo).unshift({}.insert(~what, todo_text).insert(~when, day))
     @session.set(~todo, todos)
-    text('something<br/>')
+    text('#{todo_text}<br/>')

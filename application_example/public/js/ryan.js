@@ -6,6 +6,7 @@ function add_handler(options){
 	var url = options['url']
 	var effect = options['effect']
 	var clazz = options['clazz']
+	var get = options['get']
 	
 	if(command == 'send' || command == 'update' || command == 'append' || command == 'prepend' || command == 'empty' || command == 'message')
 		if(url)
@@ -33,18 +34,21 @@ function add_handler(options){
 	}
 
 	$(id).bind(event, function(){
-		
+		var params = ''
+		if(url && get)
+			params = '?' + $(get).attr('id') + '=' + $(get).val()
+
 		if(command == 'send' || command == 'update' || command == 'append' || command == 'prepend'){
 			if(effect)
 				$(what).hide(effect)
 			$.ajax({
-				url: url,
+				url: url + params,
 				dataType: 'html',
 				complete: on_complete
 			})
 		} else if(command == 'empty'){
 			if(effect)
-				$(what).hide(effect, {}, 300, function(){
+				$(what).hide(effect, function(){
 					$(what).empty()
 				})
 			else
