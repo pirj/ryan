@@ -11,6 +11,9 @@ class Home < Controller
     {~id: '#todo', ~command: ~update, ~what: ~contents, ~url: '/app/todo', ~effect: ~slide},
     {~id: '#budget', ~command: ~update, ~what: ~contents, ~url: '/app/budget', ~effect: ~slide},
     {~id: '#menu a', ~command: ~toggleclass, ~clazz: ~selected}]
+  end
 
   def index
     render('layout', @bindings, @handlers)
+  end
+end

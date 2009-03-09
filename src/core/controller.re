@@ -7,12 +7,15 @@ module Controllers
     'Reloading #{controller_file}'.puts() unless up_to_date
     Main.load(controller_file) unless up_to_date
     reia::spawn(controller, [session, parameters])
+  end
 
   def up_to_date(controller, controller_file)
     up_to_date(code::is_loaded(controller), controller, controller_file)
+  end
 
   def up_to_date(false, controller, controller_file)
     false
+  end
 
   def up_to_date(_loaded, controller, controller_file)
     (~ok, (~file_info,_,_,_,_,last_modified,_,_,_,_,_,_,_,_)) = file::read_file_info(controller_file.to_list())
@@ -20,9 +23,11 @@ module Controllers
     last_modified = erlang::localtime_to_universaltime(last_modified)
     ((y,m,d),(h,n,s))=last_modified
     last_loaded > (y,m,d,h,n,s)
+  end
 
   def template(filename)
     template(filename, ets::lookup(~templates, filename))
+  end
 
   def template(filename, [])
     "Parsing #{filename}".puts()
@@ -30,37 +35,46 @@ module Controllers
     t = Retem.parse(file.to_string())
     ets::insert(~templates, (filename, t))
     t
+  end
 
   def template(_filename, [(_filename2, t)])
     t
+  end
+end
 
 class Controller
   def initialize(session, parameters)
     @session = session
     @parameters = parameters
+  end
 
 # redirect to url
   def redirect(url)
     (~redirect, url.to_list())
+  end
 
 # do nothing
   def ok
     ~ok
+  end
 
 # return status (other than default 200)
 # example: status(404)
 # for status codes list surf to http://www.w3.org/Protocols/HTTP/HTRESP.html
   def status(status)
     (~status, status)
+  end
 
 # return content of a specific mimetype
 # example: content('application/pdf', pdf)
   def content(mimetype, content)
     (~content, mimetype.to_list(), content.to_list())
+  end
 
 # return plain text
   def text(text)
     (~html, text.to_list())
+  end
 
 # # return rendered content from a view template file
 # # example: render('fruits_index')
@@ -83,17 +97,22 @@ class Controller
     # (_h, s1, ns1) = erlang::now()
     # Main.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
     rendered
+  end
 
 # return rendered content from a view template file with handlers attached
 # example: render('fruits_index', {~apple: {~weight: 30, ~color: 'red'}}, [(~landing, ~contents, 'landing')])
   def render(filename, bindings, handlers)
     (~html, view(filename, bindings, handlers).to_list())
+  end
 
   def add_handlers(handlers)
     js = handlers.map{ |handler| add_handler(handler)}.join(';\n')
     '<script>$(document).ready(function() {\n#{js}\n})</script>'
+  end
 
   def add_handler(handler)
     h = handler.insert(~event, ~click)
     arguments = h.to_list().map{ |(k,v)| "#{k}: '#{v}'"}.join(', ')
     'add_handler({#{arguments}})'
+  end
+end
