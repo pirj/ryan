@@ -100,7 +100,7 @@ class Controller
   end
 
 # return rendered content from a view template file with handlers attached
-# example: render('fruits_index', {:apple: {:weight: 30, :color: 'red'}}, [(:landing, :contents, 'landing')])
+# example: render('fruits_index', {:apple => {:weight => 30, :color => 'red'}}, [(:landing, :contents, 'landing')])
   def render(filename, bindings, handlers)
     (:html, view(filename, bindings, handlers).to_list())
   end
