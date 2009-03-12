@@ -7,10 +7,10 @@ class Home < Controller
     head = [headcss, headjs].join()
     @bindings = {}.insert(~title, 'Ryan and Reia homemade webapp').insert(~head, head).insert(~contents, view('home', {}, []))
 
-    @handlers = [{~id: '#landing', ~command: ~update, ~what: ~contents, ~url: '/app/landing', ~effect: ~slide},
-    {~id: '#todo', ~command: ~update, ~what: ~contents, ~url: '/app/todo', ~effect: ~slide},
-    {~id: '#budget', ~command: ~update, ~what: ~contents, ~url: '/app/budget', ~effect: ~slide},
-    {~id: '#menu a', ~command: ~toggleclass, ~clazz: ~selected}]
+    @handlers = [{:id => '#landing', :command => :update, :what => :contents, :url => '/app/landing', :effect => :slide},
+    {:id => '#todo', :command => :update, :what => :contents, :url => '/app/todo', :effect => :slide},
+    {:id => '#budget', :command => :update, :what => :contents, :url => '/app/budget', :effect => :slide},
+    {:id => '#menu a', :command => :toggleclass, :clazz => :selected}]
   end
 
   def index
