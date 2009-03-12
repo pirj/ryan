@@ -1,7 +1,7 @@
 # How Behave works:
 # 
 # Behave.context('A User instance') do
-#   user = User.find(~first)
+#   user = User.find(:first)
 # 
 #   should('return its full name') do
 #     assert('John Doe' == user.full_name)
@@ -10,7 +10,7 @@
 #     assert('JohnDoe@gmail.com' == user.email)
 # 
 #   context('with a profile') do
-#     user.profile = Profile.find(~first)
+#     user.profile = Profile.find(:first)
 # 
 #     should('return true calling .has_profile?') do
 #       assert(user.has_profile?)
