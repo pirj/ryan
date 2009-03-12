@@ -1,15 +1,15 @@
 # Future (object/class) syntax:
 # template = """Total {apples|count:~apples}
 # {for apple in apples} {apple.color} {apple.weight}kg {end}"""
-# apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
+# apples = [{:color => 'red', :weight => 0.2}, {:color => 'yellow', :weight => 0.15}]
 # renderer = Retem()
-# renderer.parse(template).render({~apples: apples})
+# renderer.parse(template).render({:apples => apples})
 
 # Current syntax:
 #
 # template = Retem.parse("{abc+bcd} apples")
-# Retem.render(template, {~abc:22, ~bcd:33}) => 55 apples
-# Retem.render(template, {~abc:192, ~bcd:976}) => 1168 apples
+# Retem.render(template, {:abc => 22, ~bcd:33}) => 55 apples
+# Retem.render(template, {:abc => 192, ~bcd:976}) => 1168 apples
 
 module Retem
   def scan(template)
@@ -21,30 +21,30 @@ module Retem
   end
 
 # empty braces
-  def render((~''), vars)
+  def render((:''), vars)
     ''
   end
 
 # reserved values
-  def render((~true), vars)
+  def render((:true), vars)
     true
   end
 
-  def render((~false), vars)
+  def render((:false), vars)
     false
   end
 
-  def render((~nil), vars)
+  def render((:nil), vars)
     nil
   end
 
 # plain text
-  def render((~text, text), vars)
+  def render((:text, text), vars)
     text.to_string()
   end
 
 # get variable value from provided vars dict
-  def render((~identifier, atom), vars)
+  def render((:identifier, atom), vars)
     value = vars[atom]
     if value == nil
       ''
@@ -54,67 +54,67 @@ module Retem
   end
 
 # get value
-  def render((~value, value), _vars)
+  def render((:value, value), _vars)
     value
   end
 
 # arithmetic operators
-  def render((~arithmetic, ~'+', expression1, expression2), vars)
+  def render((:arithmetic, :'+', expression1, expression2), vars)
     render(expression1, vars) + render(expression2, vars)
   end
 
-  def render((~arithmetic, ~'-', expression1, expression2), vars)
+  def render((:arithmetic, :'-', expression1, expression2), vars)
     render(expression1, vars) - render(expression2, vars)
   end
 
-  def render((~arithmetic, ~'/', expression1, expression2), vars)
+  def render((:arithmetic, :'/', expression1, expression2), vars)
     render(expression1, vars) / render(expression2, vars)
   end
 
-  def render((~arithmetic, ~'*', expression1, expression2), vars)
+  def render((:arithmetic, :'*', expression1, expression2), vars)
     render(expression1, vars) * render(expression2, vars)
   end
 
 # comparators
-  def render((~comparator, ~eq, expression1, expression2), vars)
+  def render((:comparator, :eq, expression1, expression2), vars)
     render(expression1, vars) == render(expression2, vars)
   end
 
-  def render((~comparator, ~neq, expression1, expression2), vars)
+  def render((:comparator, :neq, expression1, expression2), vars)
     render(expression1, vars) != render(expression2, vars)
   end
 
-  def render((~comparator, ~gt, expression1, expression2), vars)
+  def render((:comparator, :gt, expression1, expression2), vars)
     render(expression1, vars) > render(expression2, vars)
   end
 
-  def render((~comparator, ~lt, expression1, expression2), vars)
+  def render((:comparator, :lt, expression1, expression2), vars)
     render(expression1, vars) < render(expression2, vars)
   end
 
-  def render((~comparator, ~gteq, expression1, expression2), vars)
+  def render((:comparator, :gteq, expression1, expression2), vars)
     render(expression1, vars) >= render(expression2, vars)
-  end
+  en
 
-  def render((~comparator, ~lteq, expression1, expression2), vars)
+  def render((:comparator, :lteq, expression1, expression2), vars)
     render(expression1, vars) <= render(expression2, vars)
   end
 
 # logical operators
-  def render((~logical, ~and, expression1, expression2), vars)
+  def render((:logical, :and, expression1, expression2), vars)
     render(expression1, vars) and render(expression2, vars)
   end
 
-  def render((~logical, ~or, expression1, expression2), vars)
+  def render((:logical, :or, expression1, expression2), vars)
     render(expression1, vars) or render(expression2, vars)
   end
 
-  def render((~logical, ~nt, expression), vars)
+  def render((:logical, :nt, expression), vars)
     not render(expression, vars)
   end
 
 # conditionals 
-  def render((~'if', condition, statement), vars)
+  def render((:'if', condition, statement), vars)
     if(render(condition, vars))
       render(statement, vars)
     else
@@ -122,7 +122,7 @@ module Retem
     end
   end
 
-  def render((~'unless', condition, statement), vars)
+  def render((:'unless', condition, statement), vars)
     if(!render(condition, vars))
       render(statement, vars)
     else
@@ -131,23 +131,23 @@ module Retem
   end
       
 # nesting
-  def render((~nest, controller, action, subbinding), vars)
-    (~html, contents) = Ryan.page(controller, action, vars[~session], vars)
+  def render((:nest, controller, action, subbinding), vars)
+    (:html, contents) = Ryan.page(controller, action, vars[:session], vars)
     contents.to_string()
   end
 
-  def render((~nest, controller, action), vars)
-    (~html, contents) = Ryan.page(controller, action, vars[~session], vars)
+  def render((:nest, controller, action), vars)
+    (:html, contents) = Ryan.page(controller, action, vars[:session], vars)
     contents.to_string()
   end
 
 # object properties
-  def render((~property, object, property), vars)
+  def render((:property, object, property), vars)
     render(object, vars)[property]
   end
 
 # for loop
-  def render((~for, var, object, block), vars)
+  def render((:for, var, object, block), vars)
     array = render(object, vars)
     [render(block, vars.insert(var, el)) | el in array].join()
   end
