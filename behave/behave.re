@@ -23,12 +23,15 @@
 module Behave
   def context(title, lambda)
     Behavior().context(title, lambda)
+  end
+end
 
 class Behavior
   def context(title, lambda)
     'entering context #{title}'.puts()
     lambda()
     'exiting context #{title}'.puts()
+  end
 
   def should(title, lambda)
     'should #{title}'.print()
@@ -36,3 +39,6 @@ class Behavior
       ':ok'.puts()
     else
       ':failed'.puts()
+    end
+  end
+end
