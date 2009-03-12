@@ -5,9 +5,13 @@ language.
 It provides convenient syntax and a lot if features available out of the box:
 
  - variables
+
  - flow control
+
  - filters
+
  - i18n
+
  - nesting of templates
 
 ## Usage
@@ -51,11 +55,17 @@ Condition can be a result of comparsion:
 {if bees_count gt flowers_count}...{end}
 
 The following comparsion operators can be used:
+
  - eq    equal to
+
  - neq   not equal to
+
  - gt    greater than
+
  - lt    less than
+
  - gteq  greater than or equal to
+
  - lteq  less than or equal to
 
 It is possible to use these kind of constructions:
