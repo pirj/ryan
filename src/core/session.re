@@ -1,11 +1,11 @@
 module Sessions
   def get(token)
-    get(token, ets::lookup(~sessions, token))
+    get(token, ets::lookup(:sessions, token))
   end
 
   def get(token, [])
     session = Session()
-    ets::insert(~sessions, (token, session))
+    ets::insert(:sessions, (token, session))
     session
   end
 
