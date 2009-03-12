@@ -20,7 +20,7 @@ Ryan consists of:
 ## Building
 
 Run the following from Ryan source folder to build it:
-mkdir ebin
+mkdir ebin &&
 sudo rake install
 
 That will install ryan libraries into Erlang lib folder and
