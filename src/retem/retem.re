@@ -94,7 +94,7 @@ module Retem
 
   def render((:comparator, :gteq, expression1, expression2), vars)
     render(expression1, vars) >= render(expression2, vars)
-  en
+  end
 
   def render((:comparator, :lteq, expression1, expression2), vars)
     render(expression1, vars) <= render(expression2, vars)
