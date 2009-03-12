@@ -38,10 +38,10 @@ module Ryan
   end
 
   def route((app, controller))
-    (controller, ~index)
+    (controller, :index)
   end
 
   def route((app))
-    ('home', ~index)
+    ('home', :index)
   end
 end

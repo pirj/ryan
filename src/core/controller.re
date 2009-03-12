@@ -18,22 +18,22 @@ module Controllers
   end
 
   def up_to_date(_loaded, controller, controller_file)
-    (~ok, (~file_info,_,_,_,_,last_modified,_,_,_,_,_,_,_,_)) = file::read_file_info(controller_file.to_list())
-    [_,_,(~time,last_loaded),_] = reia::apply(controller, ~module_info, [~compile])
+    (:ok, (:file_info,_,_,_,_,last_modified,_,_,_,_,_,_,_,_)) = file::read_file_info(controller_file.to_list())
+    [_,_,(:time,last_loaded),_] = reia::apply(controller, :module_info, [:compile])
     last_modified = erlang::localtime_to_universaltime(last_modified)
     ((y,m,d),(h,n,s))=last_modified
     last_loaded > (y,m,d,h,n,s)
   end
 
   def template(filename)
-    template(filename, ets::lookup(~templates, filename))
+    template(filename, ets::lookup(:templates, filename))
   end
 
   def template(filename, [])
     "Parsing #{filename}".puts()
     file = yaws_shim::read_file('views/#{filename}.html'.to_list())
     t = Retem.parse(file.to_string())
-    ets::insert(~templates, (filename, t))
+    ets::insert(:templates, (filename, t))
     t
   end
 
@@ -50,30 +50,30 @@ class Controller
 
 # redirect to url
   def redirect(url)
-    (~redirect, url.to_list())
+    (:redirect, url.to_list())
   end
 
 # do nothing
   def ok
-    ~ok
+    :ok
   end
 
 # return status (other than default 200)
 # example: status(404)
 # for status codes list surf to http://www.w3.org/Protocols/HTTP/HTRESP.html
   def status(status)
-    (~status, status)
+    (:status, status)
   end
 
 # return content of a specific mimetype
 # example: content('application/pdf', pdf)
   def content(mimetype, content)
-    (~content, mimetype.to_list(), content.to_list())
+    (:content, mimetype.to_list(), content.to_list())
   end
 
 # return plain text
   def text(text)
-    (~html, text.to_list())
+    (:html, text.to_list())
   end
 
 # # return rendered content from a view template file
@@ -82,7 +82,7 @@ class Controller
 #     render(filename, {})
 # 
 # # return rendered content from a view template file
-# # example: render('fruits_index', {~apple: {~weight: 30, ~color: 'red'}})
+# # example: render('fruits_index', {:apple: {:weight: 30, :color: 'red'}})
 #   def render(filename, bindings)
 #     render(filename, bindings, [])
 # 
@@ -92,7 +92,7 @@ class Controller
     template = Controllers.template(filename)
     # Main.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
     js = add_handlers(handlers)
-    full_bindings = bindings.insert(~handlers, js).insert(~session, @session)
+    full_bindings = bindings.insert(:handlers, js).insert(:session, @session)
     rendered = Retem.render(template, full_bindings)
     # (_h, s1, ns1) = erlang::now()
     # Main.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
@@ -100,9 +100,9 @@ class Controller
   end
 
 # return rendered content from a view template file with handlers attached
-# example: render('fruits_index', {~apple: {~weight: 30, ~color: 'red'}}, [(~landing, ~contents, 'landing')])
+# example: render('fruits_index', {:apple: {:weight: 30, :color: 'red'}}, [(:landing, :contents, 'landing')])
   def render(filename, bindings, handlers)
-    (~html, view(filename, bindings, handlers).to_list())
+    (:html, view(filename, bindings, handlers).to_list())
   end
 
   def add_handlers(handlers)
@@ -111,7 +111,7 @@ class Controller
   end
 
   def add_handler(handler)
-    h = handler.insert(~event, ~click)
+    h = handler.insert(:event, :click)
     arguments = h.to_list().map{ |(k,v)| "#{k}: '#{v}'"}.join(', ')
     'add_handler({#{arguments}})'
   end
