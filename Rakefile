@@ -1,6 +1,8 @@
 task :default => [:leex, :yecc, :compile]
 task :install => [:default, :install_only]
  
+mkdir 'ebin'
+
 def output_file(input_file)
   'ebin/' + File.basename(input_file).sub(/\.\w+$/, '.beam')
 end

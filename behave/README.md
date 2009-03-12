@@ -6,7 +6,7 @@ Behave is a testing framework dedicated to test Reia language and libraries
 all.re:
 Behave.context('A User instance') do 
   setup do 
-    user = User.find(~first) 
+    user = User.find(:first) 
 
   should('return its full name') do 
     assert('John Doe' == user.full_name)
@@ -17,7 +17,7 @@ Behave.context('A User instance') do
     'JohnDoe@gmail.com' == user.email
 
   context('with a profile') do 
-    user.profile = Profile.find(~first) 
+    user.profile = Profile.find(:first) 
 
     should('return true calling .has_profile?') do 
       user.has_profile()

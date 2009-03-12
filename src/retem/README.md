@@ -12,11 +12,11 @@ It provides convenient syntax and a lot if features available out of the box:
 
 ## Usage
 
-template = """Total {apples|count:~apples}
+template = """Total {apples|count:apples}
 {for apple in apples} {apple.color} {apple.weight}kg {end}"""
-apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
+apples = [{:color => 'red', :weight => 0.2}, {:color => 'yellow', :weight => 0.15}]
 renderer = Retem()
-renderer.parse(template).render({~apples: apples})
+renderer.parse(template).render({:apples => apples})
 => Total 2 apples
 .. red 0.2kg
 .. yellow 0.15kg
@@ -92,8 +92,8 @@ mylist = [('aaa', 123, 'www'), ('qqq', 456, 'zzz')]
 =>  aaa 123 www  qqq 456 zzz
 
 When iterating a list of dicts/objects:
-apples = [{~color: 'red', ~weight: 0.2}, {~color: 'yellow', ~weight: 0.15}]
-{for {color: ~color, weight: ~weight} in apples}
+apples = [{:color => 'red', :weight => 0.2}, {:color => 'yellow', :weight => 0.15}]
+{for {:color => color, :weight => weight} in apples}
   Color is {color} and weight is {weight}
 {end}
 => Color is red and weight is 0.2  Color is yellow and weight is 0.15
@@ -239,7 +239,7 @@ a=[123, 345, 567]
 - kilo !countable
   en-US: kilogram, kilograms
   fr-FR: kilogramme, kilogrammes
-{a|count:~kilo}
+{a|count:kilo}
 => 3 kilograms
 
 Filters can be chained:
@@ -270,7 +270,7 @@ a=[('apples', 11),('bananas', 32)]
 {a|sum:(_,x)}
 => 43
 
-a=[{~apples: 11},{~bananas: 32}]
+a=[{:apples => 11},{:bananas => 32}]
 {a|sum:{_,x}}
 => 43
 
@@ -291,23 +291,23 @@ module ChildFilter
 renderer = Retem()
 renderer.add_filter(ChildFilter)
 template = renderer.parse('{a|child_filter}')
-template.render({~a: 'holy shit}) # holy ****
+template.render({a => 'holy shit}) # holy ****
 
 ## i18n
 It is possible to provide custom translations dictionary in the following format:
 apps/my_app/i18n.re:
 i18n = {
-  ~apple: {
-    ~enUS: 'apple',
-    ~frFr: 'pomme'
+  apple => {
+    :enUS => 'apple',
+    :frFr => 'pomme'
   },
-  ~banana: {
-    ~enUS: 'banana',
-    ~frFr: 'banane'
+  :banana: {
+    :enUS => 'banana',
+    :frFr => 'banane'
   },
-  ~price: {
-    ~enUS: fun(cost, currency) {"Price: #{value} #{cur}" }
-    ~frFr: fun(cost, currency) {"Prix: #{value} #{cur}" }
+  :price: {
+    :enUS => fun(cost, currency) {"Price: #{value} #{cur}" }
+    :frFr => fun(cost, currency) {"Prix: #{value} #{cur}" }
   } 
 
 Retem uses 'en-US' as default unless otherwise requested.
@@ -315,10 +315,10 @@ Dictionary is added to renderer instance:
 
 renderer = Retem()
 
-template = renderer.parse('{apples|count:~apples}')
-template.render({~apples: 3})
+template = renderer.parse('{apples|count:apples}')
+template.render({:apples => 3})
 => 3 apples
-template.render('{apples|count:~apples}', {~apples: 3}, 'fr-FR')
+template.render('{apples|count:apples}', {:apples => 3}, 'fr-FR')
 => 3 pommes
 
 ## Nesting
@@ -327,18 +327,18 @@ It is possible to call external methods to provide nesting support.
 Imagine we have a template 'home_page', and we want it to consist of several parts:
 
 My mail
-{nest ~mail}
+{nest :mail}
 My calendar
-{nest ~calendar}
+{nest :calendar}
 My contacts
-{nest ~contacts}
+{nest :contacts}
 
 In this case the feedback is called, and it is passed the nested atom and all the parameters.
 With this it is possible to nest templates:
 
 renderer=Retem()
 template = renderer.parse('...')
-template.render({~apples: apples}) do |nested_template, params| 
+template.render({:apples => apples}) do |nested_template, params| 
   get_template_by_name(nested_template).render(params) 
 
 In this case, when retem sees a 'nest' statement, it calls the callback block and inserts
@@ -350,8 +350,8 @@ To skip rendering of the code pieces, that are render-to-render static, preproce
 can be used.
 
 renderer=Retem()
-template = renderer.parse("Server's ip address is {{server_ip}}, user's ip address is {user_ip}", {~server_ip: '55.55.55.55'})
-template.render({~user_ip: '111.111.111.111'})
+template = renderer.parse("Server's ip address is {{server_ip}}, user's ip address is {user_ip}", {:server_ip => '55.55.55.55'})
+template.render({:user_ip => '111.111.111.111'})
 => Server's ip address is '55.55.55.55', user's ip address is 111.111.111.111
 
 During render, only user_ip is evaluated.

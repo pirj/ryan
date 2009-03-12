@@ -9,7 +9,7 @@ class Todo < Controller
   def index
     data = @session.get(:todo)
     bindings = {}.insert(:todos, data)
-    handlers = [{:id: '#add_new', :command: :update, :what: :todo_new, :url: '/app/todo/add_new', :effect: :slide},
+    handlers = [{:id => '#add_new', :command => :update, :what => :todo_new, :url => '/app/todo/add_new', :effect => :slide},
     {:id => '#today', :command => :update, :what => :todos, :url => '/app/todo/today'},
     {:id => '#tomorrow', :command => :update, :what => :todos, :url => '/app/todo/tomorrow'}]
     render('todo/index', bindings, handlers)
