@@ -1,7 +1,7 @@
 -module(yaws_shim).
 -export([out/1, init_yaws/1, read_file/1]).
--include("../yaws/yaws_api.hrl").
--include("../yaws/yaws.hrl").
+-include("../third_party/yaws/yaws_api.hrl").
+-include("../third_party/yaws/yaws.hrl").
 
 out(Arg) ->
 	Req = Arg#arg.req,
@@ -70,8 +70,6 @@ init_yaws(Port) ->
 	code:add_patha(YawsLib),
 	{ok, ApplicationPath} = file:get_cwd(),
 	io:format("Starting up YAWS to run in ~s~n", [ApplicationPath]),
-	ets:new(sessions, [named_table, public]),
-	ets:new(templates, [named_table, public]),
 	Public = filename:join(ApplicationPath, "public"),
 	yaws:start_embedded(Public,
 		[

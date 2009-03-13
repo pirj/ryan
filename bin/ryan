@@ -7,13 +7,16 @@ ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
 
 required = ['retem.re', 'ryan.re', 'session.re', 'controller.re']
 required.each do |lib|
-  puts('Loading #{lib}')
+  'Loading #{lib}'.puts()
   load([ryan_dir, lib].join('/'))
 end
 
 # Initializing application
 load('startup.re')
 Startup.initialize()
+
+ets::new(:sessions, [:named_table, :public])
+ets::new(:templates, [:named_table, :public])
 
 port = 8001
 port = System.args()[1].to_int() if System.args()[0] == "-p"
