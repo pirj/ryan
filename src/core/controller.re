@@ -1,3 +1,5 @@
+load([code::lib_dir().to_string(), 'reia', 'lib', 'file.re'].join('/'))
+
 module Controllers
   def get(controller, session, parameters)
     controller = controller.to_s()
@@ -31,7 +33,7 @@ module Controllers
 
   def template(filename, [])
     "Parsing #{filename}".puts()
-    file = yaws_shim::read_file('views/#{filename}.html'.to_list())
+    file = File.read('views/#{filename}.html')
     t = Retem.parse(file.to_string())
     ets::insert(:templates, (filename, t))
     t

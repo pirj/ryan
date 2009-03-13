@@ -52,18 +52,6 @@ random_seed() -> % Hat tip to Joe Armstrong!
 	S1 = S * X rem 32767,
 	put(random_seed, {H1,M1,S1}).
 
-read_file(Filename) ->
-	Absname = filename:absname(Filename),
-	Data = file:read_file(Absname),
-	case Data of
-		{ok, Contents} -> Contents;
-		{error, enoent} -> "The file does not exist.";
-		{error, eacces} -> "Missing permission for reading the file, or for searching one of the parent directories.";
-		{error, eisdir} -> "The named file is a directory.";
-		{error, enotdir} -> "A component of the file name is not a directory. On some platforms, enoent is returned instead.";
-		{error, enomem} -> "There is not enough memory for the contents of the file."
-	end.
-
 init_yaws(Port) ->
 	YawsHome = "/usr/local/lib/yaws/",
 	YawsLib = filename:join(YawsHome, "ebin"),
