@@ -1,5 +1,5 @@
 -module(yaws_shim).
--export([out/1, init_yaws/1, read_file/1]).
+-export([out/1, init_yaws/1]).
 -include("../third_party/yaws/yaws_api.hrl").
 -include("../third_party/yaws/yaws.hrl").
 
