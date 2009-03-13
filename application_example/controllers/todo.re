@@ -1,11 +1,39 @@
 class Todo < Controller
+  def json(filename, bindings)
+    js = get_callbacks()
+    contents = view(filename, bindings)
+    content('json', "{script: #{js}, contents: #{contents}}")
+  end
+
+  def get_callbacks
+    @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
+  end
+
+  def get_callback(callback)
+    arguments = callback.to_list().map{ |(k,v)| "#{k}: '#{v}'"}.join(', ')
+    'callback({#{arguments}})'
+  end
+  
+  def on(what, event, where)
+    @callbacks = @callbacks.unshift({}.insert(:what, what).insert(:event, event).insert(:where, where))
+  end
+
+
   def initialize(session, parameters)
     @session = session
     @parameters = parameters
+    @callbacks = []
     initial_todos = [{:what => 'buy milk', :when => :today}, {:what => 'call parents', :when => :tomorrow}, {:what => 'visit dentist', :when => :later}]
     @session.set(:todo, initial_todos) if @session.get(:todo) == nil
   end
-    
+  
+  def index2
+    data = @session.get(:todo)
+    bindings = {}.insert(:todos, data)
+    on('#lala', :click, '/app/todo/json_test')
+    json('todo/index', bindings)
+  end
+
   def index
     data = @session.get(:todo)
     bindings = {}.insert(:todos, data)

@@ -1,3 +1,14 @@
+// $(document).ready(function() {
+// 	$.getJSON('/app/todo/json_test', {lala:'oioi'}, function(data){
+// 		$('#contents').html(data['contents']).prepend($('<script/>').text(data['script']))
+// 	})
+// })
+//
+
+function callback(options){
+	alert(options)
+}
+
 function add_handler(options){
 	var id = options['id']
 	var event = options['event']

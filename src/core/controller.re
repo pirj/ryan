@@ -79,23 +79,13 @@ class Controller
   end
 
 # # return rendered content from a view template file
-# # example: render('fruits_index')
-#   def render(filename)
-#     render(filename, {})
-# 
-# # return rendered content from a view template file
-# # example: render('fruits_index', {:apple: {:weight: 30, :color: 'red'}})
-#   def render(filename, bindings)
-#     render(filename, bindings, [])
-# 
-  def view(filename, bindings, handlers)
+# # example: view('fruits_index', {:apple: {:weight: 30, :color: 'red'}})
+  def view(filename, bindings)
     # (_h, is, ins) = erlang::now()
     # (_h, s, ns) = erlang::now()
     template = Controllers.template(filename)
     # Main.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
-    js = add_handlers(handlers)
-    full_bindings = bindings.insert(:handlers, js).insert(:session, @session)
-    rendered = Retem.render(template, full_bindings)
+    rendered = Retem.render(template, bindings.insert(:session, @session))
     # (_h, s1, ns1) = erlang::now()
     # Main.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
     rendered
@@ -104,12 +94,13 @@ class Controller
 # return rendered content from a view template file with handlers attached
 # example: render('fruits_index', {:apple => {:weight => 30, :color => 'red'}}, [(:landing, :contents, 'landing')])
   def render(filename, bindings, handlers)
-    (:html, view(filename, bindings, handlers).to_list())
+    page = view(filename, bindings)
+    js = add_handlers(handlers)
+    (:html, '<script>#{js}</script>#{page}'.to_list())
   end
-
+  
   def add_handlers(handlers)
-    js = handlers.map{ |handler| add_handler(handler)}.join(';\n')
-    '<script>$(document).ready(function() {\n#{js}\n})</script>'
+    handlers.map{ |handler| add_handler(handler)}.join(';\n')
   end
 
   def add_handler(handler)
