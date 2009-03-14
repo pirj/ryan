@@ -12,35 +12,46 @@ module Controllers
   end
 
   def up_to_date(controller, controller_file)
-    up_to_date(code::is_loaded(controller), controller, controller_file)
-  end
-
-  def up_to_date(false, controller, controller_file)
-    false
-  end
-
-  def up_to_date(_loaded, controller, controller_file)
-    (:ok, (:file_info,_,_,_,_,last_modified,_,_,_,_,_,_,_,_)) = file::read_file_info(controller_file.to_list())
-    [_,_,(:time,last_loaded),_] = reia::apply(controller, :module_info, [:compile])
-    last_modified = erlang::localtime_to_universaltime(last_modified)
-    ((y,m,d),(h,n,s))=last_modified
-    last_loaded > (y,m,d,h,n,s)
+    if code::is_loaded(controller)
+      last_modified = file_last_modified(controller_file)
+      [_,_,(:time,last_loaded),_] = reia::apply(controller, :module_info, [:compile])
+      last_loaded > last_modified
+    else
+      false
+    end
   end
 
   def template(filename)
-    template(filename, ets::lookup(:templates, filename))
+    last_modified = file_last_modified('views/#{filename}.html')
+    cached = ets::lookup(:templates, filename)
+    template_up_to_date(filename, cached, last_modified)
   end
 
-  def template(filename, [])
+  def template_up_to_date(filename, [], last_modified)
+    parse_template(filename, last_modified)
+  end
+
+  def template_up_to_date(filename, [(_filename, parsed_at, t)], last_modified)
+    if last_modified > parsed_at
+      parse_template(filename, last_modified)
+    else
+      t
+    end
+  end
+
+  def parse_template(filename, last_modified)
     "Parsing #{filename}".puts()
     file = File.read('views/#{filename}.html')
     t = Retem.parse(file.to_string())
-    ets::insert(:templates, (filename, t))
+    ets::insert(:templates, (filename, last_modified, t))
     t
   end
 
-  def template(_filename, [(_filename2, t)])
-    t
+  def file_last_modified(path)
+    (:ok, (:file_info,_,_,_,_,last_modified,_,_,_,_,_,_,_,_)) = file::read_file_info(path.to_list())
+    last_modified = erlang::localtime_to_universaltime(last_modified)
+    ((y,m,d),(h,n,s)) = last_modified
+    (y,m,d,h,n,s)
   end
 end
 
