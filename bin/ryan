@@ -19,4 +19,12 @@ ets::new(:templates, [:named_table, :public])
 port = 8001
 port = System.args()[1].to_int() if System.args()[0] == "-p"
 
-yaws_shim::init_yaws(port)
+yaws = true
+yaws = false if System.args()[2] == "--mochi"
+
+if yaws
+  yaws_shim::init_yaws(port)
+else
+  mochi_supervisor::start_link()
+  mochi_shim::start_mochi(port)
+end
