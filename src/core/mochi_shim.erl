@@ -14,9 +14,9 @@ out(Req) ->
 	end,
 
     Accept = Req:get_header_value("Accept"),
-    # io:format("~p request for ~p with headers ~p~n", [Method, Abs_Path, Accept]),
+    % io:format("~p request for ~p with headers ~p~n", [Method, Abs_Path, Accept]),
 
-    reia_erl:r2e(reia:apply('Ryan', out, [Abs_Path, Method, PathParts, nil, Params]))
+    reia_erl:r2e(reia:apply('Ryan', out, [Abs_Path, Method, PathParts, nil, Params])),
 	
 	Req:respond({200, [{"Content-Type", "text/plain"}], "ololo mochi is here!"}).
 
