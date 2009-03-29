@@ -25,6 +25,5 @@ yaws = false if System.args()[2] == "--mochi"
 if yaws
   yaws_shim::init_yaws(port)
 else
-  mochi_supervisor::start_link()
   mochi_shim::start_mochi(port)
 end
