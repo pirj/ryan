@@ -14,36 +14,25 @@ out(Req) ->
 	end,
 
     Accept = Req:get_header_value("Accept"),
-    % io:format("~p request for ~p with headers ~p~n", [Method, Abs_Path, Accept]),
+	Cookie = Req:parse_cookie(),
 
-    reia_erl:r2e(reia:apply('Ryan', out, [Abs_Path, Method, PathParts, nil, Params])),
-	
-	Req:respond({200, [{"Content-Type", "text/plain"}], "ololo mochi is here!"}).
+	{Token, Session} = session(Cookie),
 
-session(Cookie) ->
-	case yaws_api:find_cookie_val("sid", Cookie) of
+    io:format("~p request for ~p with headers ~p cookie:~p~n", [Method, Abs_Path, Accept, Cookie]),
+
+	Result = reia_erl:r2e(reia:apply('Ryan', out, [Abs_Path, Method, PathParts, Token, Params])),
+
+	Req:respond({200, [{"Content-Type", "text/plain"}] ++ Session, "ololo mochi is here!"}).
+
+session(Cookies) ->
+	SID = [X || {"sid", X} <- Cookies],
+	case SID of
 		[] -> 
-			Token = create_session_token(),
-			{Token, yaws_api:setcookie("sid", Token, "/")};
-		Token ->
-			{Token, nil}
+			Token = ryan_misc:create_session_token(),
+			{Token, [mochiweb_cookies:cookie("sid", Token)]};
+		[Token] ->
+			{Token, []}
 	end.
-
-create_session_token() ->
-	random_seed(),
-	RandomOne = integer_to_list(random:uniform(100000000000)),
-	RandomTwo = integer_to_list(random:uniform(100000000000)),
-	MD5One = binary_to_list(erlang:md5(RandomOne)),
-	MD5Two = binary_to_list(erlang:md5(RandomTwo)),
-	base64:encode_to_string(MD5One ++ MD5Two). % ++ Secret !!!!
-
-random_seed() -> % Hat tip to Joe Armstrong!
-	{_,_,X} = erlang:now(),
-	{H,M,S} = time(),
-	H1 = H * X rem 32767,
-	M1 = M * X rem 32767,
-	S1 = S * X rem 32767,
-	put(random_seed, {H1,M1,S1}).
 
 start_mochi(Port) ->
 	mochiweb_http:start([{loop, fun out/1}, {port, Port}]),
