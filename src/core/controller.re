@@ -14,7 +14,9 @@ module Controllers
   def up_to_date(controller, controller_file)
     if code::is_loaded(controller)
       last_modified = file_last_modified(controller_file)
-      [_,_,(:time,last_loaded),_] = reia::apply(controller, :module_info, [:compile])
+      class_info = erlang::apply(controller, :module_info, [])
+      compile_info = [ci | (:compile, ci) in class_info][0]
+      last_loaded = [ll | (:time, ll) in compile_info][0]
       last_loaded > last_modified
     else
       false
