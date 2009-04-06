@@ -1,5 +1,3 @@
-load([code::lib_dir().to_string(), 'reia', 'lib', 'file.re'].join('/'))
-
 module Controllers
   def get(controller, session, parameters)
     controller = controller.to_s()
