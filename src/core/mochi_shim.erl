@@ -18,11 +18,9 @@ out(Req) ->
 
 	{Token, Session} = session(Cookie),
 
-    io:format("~p request for ~p with headers ~p cookie:~p~n", [Method, Abs_Path, Accept, Cookie]),
+	{html, Result} = reia_erl:r2e(reia:apply('Ryan', out, [Abs_Path, Method, PathParts, Token, Params])),
 
-	Result = reia_erl:r2e(reia:apply('Ryan', out, [Abs_Path, Method, PathParts, Token, Params])),
-
-	Req:respond({200, [{"Content-Type", "text/plain"}] ++ Session, "ololo mochi is here!"}).
+	Req:respond({200, [{"Content-Type", "text/html"}] ++ Session, Result}).
 
 session(Cookies) ->
 	SID = [X || {"sid", X} <- Cookies],
