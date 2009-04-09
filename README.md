@@ -15,13 +15,12 @@ Ryan consists of:
 [Erlang/OTP R12B-3 or higher](http://www.erlang.org/download.html),
 [Reia language](http://github.com/tarcieri/reia),
 [YAWS 1.77 or higher](http://yaws.hyber.org),
-[Rake 0.8 or higher](http://github.com/jimweirich/rake)
 
 ## Building
 
 Run the following from Ryan source folder to build it:
 mkdir ebin &&
-sudo rake install
+sudo make install
 
 That will install ryan libraries into Erlang lib folder and
 ryan executable file into /usr/local/bin
