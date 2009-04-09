@@ -1,12 +1,11 @@
 -module(mochi_shim).
--export([out/1, start_mochi/1]).
+-export([out/2, start_mochi/1]).
 
-out(Req) ->
+out(Req, Public) ->
     Method = Req:get(method),
 
     Abs_Path = Req:get(path),
 	[Full_Path|_] = string:tokens(Abs_Path, [$?]),
-	io:format("fp:~p~n", [Full_Path]),
 	PathParts = string:tokens(Full_Path, [$/]),
 
 	Params = case Method of
@@ -19,11 +18,10 @@ out(Req) ->
 
 	{Token, Session} = session(Cookie),
 	
-	io:format("~p~n", [Full_Path]),
 	[App|_T] = PathParts,
 	case App of
 		"app" -> serve_dynamic(Req, Abs_Path, Method, PathParts, Token, Params, Session);
-		_ -> serve_static(Req, Full_Path)
+		_ -> serve_static(Req, Public, Full_Path)
 	end.
 	
 serve_dynamic(Req, Abs_Path, Method, PathParts, Token, Params, Session) ->
@@ -36,8 +34,13 @@ serve_dynamic(Req, Abs_Path, Method, PathParts, Token, Params, Session) ->
 	end,
 	Req:respond(Response).
 
-serve_static(Req, Full_Path) ->
-	Req:serve_file("", "/users/philpirj/source/ryan/application_example/public" ++ Full_Path).
+serve_static(Req, Public, Full_Path) ->
+	io:format("pub:~p, file:~p~n",[Public, Full_Path]),
+	[H|T] = Full_Path,
+	case H of
+		47 -> Req:serve_file(T, Public);
+		_  -> Req:serve_file(Full_Path, Public)
+	end.
 
 session(Cookies) ->
 	SID = [X || {"sid", X} <- Cookies],
@@ -50,7 +53,11 @@ session(Cookies) ->
 	end.
 
 start_mochi(Port) ->
-	mochiweb_http:start([{loop, fun out/1}, {port, Port}]),
+	{ok, ApplicationPath} = file:get_cwd(),
+	io:format("Starting up Mochiweb to run in ~s~n", [ApplicationPath]),
+	Public = filename:join(ApplicationPath, "public"),
+	Loop = fun(Req) -> out(Req, Public) end,
+	mochiweb_http:start([{loop, Loop}, {port, Port}]),
 	loop().
 
 loop() ->
