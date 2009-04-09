@@ -1,6 +1,6 @@
 module Startup
   def initialize
-    Main.puts('Loading example application...')
+    Main.puts('Running example application')
     # do something
   end
 end
