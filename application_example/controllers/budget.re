@@ -7,9 +7,9 @@ class Budget < Controller
   end
     
   def index
-    on(:add_new, :click, fun {add_new()})
-    on(:today, :click, fun {day(:today)})
-    on(:tomorrow, :click, fun {day(:tomorrow)})
+    on(:add_new, :click) do add_new() end
+    on(:today, :click) do day(:today) end
+    on(:tomorrow, :click) do day(:tomorrow) end
 
     render('todo/index', {}, [])
   end
@@ -25,8 +25,8 @@ class Budget < Controller
   end
 
   def add_new
-    on_withget(:add, :click, fun {add_todo()}, [:todo_new_text])
-    on(:cancel, :click, fun {empty(:todo_new, :fade)})
+    # on(:add, :click, [:todo_new_text]) do add_todo() end
+    # on(:cancel, :click) do empty(:todo_new, :fade) end
     
     (:html, contents) = render('todo/new', {}, [])
     update(:todo_new, contents)
@@ -57,7 +57,7 @@ class Budget < Controller
   #   "updating #{what} with #{effect} effect".puts()
   # end
   # 
-  def on(what, event, lambda)
+  def on(what, event, &block)
     ''
   end
 end

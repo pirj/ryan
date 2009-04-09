@@ -1,12 +1,8 @@
 class Todo < Controller
   def json(filename, bindings)
-    js = get_callbacks()
+    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
     contents = view(filename, bindings)
     content('json', "{script: #{js}, contents: #{contents}}")
-  end
-
-  def get_callbacks
-    @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
   end
 
   def get_callback(callback)
@@ -31,7 +27,7 @@ class Todo < Controller
     data = @session.get(:todo)
     bindings = {}.insert(:todos, data)
     on('#lala', :click, '/app/todo/json_test')
-    json('todo/index', bindings)
+    render('todo/index', bindings, [])
   end
 
   def index

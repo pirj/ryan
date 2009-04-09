@@ -3,10 +3,10 @@
 // 		$('#contents').html(data['contents']).prepend($('<script/>').text(data['script']))
 // 	})
 // })
-//
+
 
 function callback(options){
-	alert(options)
+	alert($.param(options))
 }
 
 function add_handler(options){
