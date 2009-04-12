@@ -3,17 +3,22 @@
 # Behave.context('A User instance') do
 #   user = User.find(:first)
 # 
-#   should('return its full name') do
+#   Behave.should('return its full name') do
 #     assert('John Doe' == user.full_name)
+#   end
 # 
-#   should('return its email address') do
+#   Behave.should('return its email address') do
 #     assert('JohnDoe@gmail.com' == user.email)
+#   end
 # 
-#   context('with a profile') do
+#   Behave.context('with a profile') do
 #     user.profile = Profile.find(:first)
 # 
-#     should('return true calling .has_profile?') do
+#     Behave.should('return true calling .has_profile?') do
 #       assert(user.has_profile?)
+#     end
+#   end
+# end
 #
 # Results in:
 #  A User instance should return its full name.
@@ -21,24 +26,17 @@
 #  A User instance with a profile should return true calling .has_profile?.
 
 module Behave
-  def context(title, lambda)
-    Behavior().context(title, lambda)
-  end
-end
-
-class Behavior
-  def context(title, lambda)
-    'entering context #{title}'.puts()
+  def context(title, &lambda)
+    ''.puts()
+    '#{title}:'.print()
     lambda()
-    'exiting context #{title}'.puts()
   end
 
-  def should(title, lambda)
-    'should #{title}'.print()
+  def should(title, &lambda)
     if lambda()
-      ':ok'.puts()
+      '.'.print()
     else
-      ':failed'.puts()
+      'F'.print()
     end
   end
 end

@@ -1,20 +1,18 @@
-class Foo
-  def a(x, lambda)
-    ['inside a', x].join(' ').puts()
-    lambda()
-    ['exiting a', x].join(' ').puts()
-  end
-
-  def b(y)
-    ['inside b', y].join(' ').puts()
-  end
-
-  def z
-    'z'.puts()
-    f = fun do
-      b('ccc')
+Behave.context('Templating') do
+  Behave.context('text') do
+    Behave.should('to_string test') do
+      :'foo bar'.to_s() == "foo bar"
     end
-    a('do something', f )
-    'exit z'.puts()
+    Behave.should('to_string test') do
+      :'foo bar'.inspect() == ":'foo bar'"
+    end
+    Behave.should('to_string test') do
+      :'foo bars'.inspect() == ":'foo bar'"
+    end
+    Behave.context('text2') do
+      Behave.should('to_string test') do
+        :'foo bar'.to_s() == "foo bar"
+      end
+    end
   end
 end
