@@ -14,7 +14,8 @@ Ryan consists of:
 
 [Erlang/OTP R12B-3 or higher](http://www.erlang.org/download.html),
 [Reia language](http://github.com/tarcieri/reia),
-[YAWS 1.77 or higher](http://yaws.hyber.org),
+[YAWS 1.77 or higher](http://yaws.hyber.org) or
+[Mochiweb]()
 
 ## Building
 
