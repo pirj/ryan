@@ -1,0 +1,30 @@
+Currently the following features work:
+
+Mochiweb web server adapter
+YAWS web server adapter
+Simple routing: controller methods are mapped to HTTP path
+Controllers are recompiled on change
+Views are reparsed on change
+Views have homebrewed templating engine (if/for/property/template nesting/utf-8 support)
+jQuery bundled
+Simple API to bind application behavior to user actions
+Both classic 'page load on click' and 'ajax page update on click' supported
+
+
+To do:
+
+Inets web server adapter (to simplify Ryan installation cycle)
+
+Basic authorization
+
+User-pluggable template engines (to allow designers to work with tools they are comfortable with)
+ - HAML (Herml)
+ - Django Template Language (ErlyDTL)
+
+Action binding simplification
+  future syntax: on('#button', :click, Controller.action)
+  current syntax: handlers = handlers.unshift({:id => '#button', :what => :click, :command => :update, :what => :contents, :url => '/app/controller/action'})
+
+Database interface
+ - Mnesia
+ - CouchDB
