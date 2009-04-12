@@ -2,7 +2,7 @@ class Todo < Controller
   def json(filename, bindings)
     js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
     contents = view(filename, bindings)
-    content('json', "{script: #{js}, contents: #{contents}}")
+    content(:json, "{script: #{js}, contents: #{contents}}")
   end
 
   def get_callback(callback)
@@ -19,7 +19,7 @@ class Todo < Controller
     @session = session
     @parameters = parameters
     @callbacks = []
-    initial_todos = [{:what => 'buy milk', :when => :today}, {:what => 'call parents', :when => :tomorrow}, {:what => 'visit dentist', :when => :later}]
+    initial_todos = [{:what => 'buy milk', :when => :today}, {:what => 'call parents', :when => :tomorrow}, {:what => 'visit dentist', :when => :few_days}]
     @session.set(:todo, initial_todos) if @session.get(:todo) == nil
   end
   
@@ -35,7 +35,9 @@ class Todo < Controller
     bindings = {}.insert(:todos, data)
     handlers = [{:id => '#add_new', :command => :update, :what => :todo_new, :url => '/app/todo/add_new', :effect => :slide},
     {:id => '#today', :command => :update, :what => :todos, :url => '/app/todo/today'},
-    {:id => '#tomorrow', :command => :update, :what => :todos, :url => '/app/todo/tomorrow'}]
+    {:id => '#tomorrow', :command => :update, :what => :todos, :url => '/app/todo/tomorrow'},
+    {:id => '#few_days', :command => :update, :what => :todos, :url => '/app/todo/few_days'},
+    {:id => '#day_select a', :command => :toggleclass, :clazz => :selected}]
     render('todo/index', bindings, handlers)
   end
 
@@ -47,6 +49,11 @@ class Todo < Controller
   def tomorrow
     @session.set(:current_day, :tomorrow)
     for_range(:tomorrow)
+  end
+  
+  def few_days
+    @session.set(:current_day, :few_days)
+    for_range(:few_days)
   end
 
   def for_range(range)
