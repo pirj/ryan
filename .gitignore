@@ -5,3 +5,4 @@ erl_crash.dump
 .DS_Store
 experiments
 application_example/logs/*
+application_example_classic/logs/*

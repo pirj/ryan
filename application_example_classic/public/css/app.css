@@ -1,0 +1,190 @@
+/*
+Template Design by TheWebhub.com
+http://www.thewebhub.com
+Released for free under a Creative Commons Attribution-Share Alike 3.0 Philippines
+*/
+
+html, body {
+	font: 14px Arial, Helvetica, Geneva, sans-serif;
+}
+
+body {
+	background: url(/images/img01.png) repeat;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	cursor: default;
+}
+
+a {
+	text-decoration: none;
+}
+
+#header {
+	padding: 1em;
+}
+
+#header h2 {
+/*	padding: 1.5em 0 0 3.5em;*/
+	margin: 0;
+}
+
+#wrapper {
+	margin: 2em;
+	background: #fff;
+}
+
+#right {
+	border: 1px dashed #ddd;
+	float: right;
+	width: 650px;
+	margin: 0 1em 1em 0;
+	padding: .5em 1em;
+}
+
+#left {
+	float: left;
+	width: 210px;
+	padding: 0 1em 1em 1em;
+}
+
+div.ghostbox {
+	padding: .3em;
+	margin: .1em;
+}
+
+div.box {
+	padding: .3em;
+	border: solid .1em #ccc;
+}
+
+div.float {
+	float: left;
+}
+
+#menu {
+	width: 100%;
+	padding: .6em .4em;
+	background-color: #2956B2;
+	color: #ffc;
+}
+
+#menu a {
+	display: block;
+	color: #880;
+	cursor: default;
+	padding: 0.4em;
+	margin: 0 0.2em 0 0.2em;
+}
+
+#menu a {
+	color: #dd0;
+	cursor: pointer;
+}
+
+#menu a:hover {
+	background-color: #2f5eba;
+	border-left: solid 0.2em #fff;
+	margin-left: 0;
+	color: #ee0;
+}
+
+#menu a.selected {
+	background-color: #3966c2;
+	color: #ee0;
+}
+
+#menu a span {
+	display: block;
+	color: #eee;
+}
+
+#menu a:hover span {
+	color: #fff;
+}
+
+#footer {
+	clear: both;
+	margin: 0px auto;
+	padding: .5em;
+	background: #000;
+	font-size: 10px;
+	color: #eee;
+}
+
+#footer .copyright {
+	margin: 0px;
+	text-align: center;
+}
+
+#footer a {
+	text-decoration: none;
+	color: #eee;
+}
+
+div.toolbar {
+	margin: .3em;
+	margin-bottom: .5em;
+}
+
+a[icon] {
+	border: solid 1px #ccc;
+	padding: .1em .1em .1em 18px;
+	margin: .1em;
+	color: #000;
+	background-color: #eaeaff;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.3);
+	-moz-opacity: 0.7;
+	-khtml-opacity:0.7;
+	opacity: 0.7;
+}
+
+a[icon].selected {
+	border: solid 1px #999;
+}
+
+a[icon]:hover, a[icon].selected {
+	background-color: #ffffe0;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+	-moz-opacity: 1;
+	-khtml-opacity:1;
+	opacity: 1;
+}
+
+a[icon=add] {
+	background: transparent url(/images/add.png) no-repeat center left;
+}
+
+a[icon=today] {
+	background: transparent url(/images/tag_green.png) no-repeat center left;
+}
+
+a[icon=tomorrow] {
+	background: transparent url(/images/tag_blue.png) no-repeat center left;
+}
+
+a[icon=few_days] {
+	background: transparent url(/images/tag_yellow.png) no-repeat center left;
+}
+
+a[icon=cancel] {
+	background: transparent url(/images/cancel.png) no-repeat center left;
+}
+
+a[icon=delete] {
+	background: transparent url(/images/cross.png) no-repeat center left;
+}
+
+#todo_new {
+	display: none;
+}
+
+div#todos {
+	width: 400px;
+	padding: .3em;
+	margin: .1em;
+}
+
+div#todos p {
+	padding: .2em;
+	margin: .1em;
+}
