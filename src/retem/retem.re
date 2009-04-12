@@ -11,15 +11,29 @@
 # Retem.render(template, {:abc => 22, :bcd =>33}) => 55 apples
 # Retem.render(template, {:abc => 192, :bcd => 976}) => 1168 apples
 
+class Template
+  def initialize(string)
+    @data = retemplate::parse(string)
+  end
+  
+  def render(vars)
+    Retem.render(@data, vars)
+  end
+end
+
 module Retem
   def scan(template)
     retemplate::scan(template)
   end
 
   def parse(template)
-    retemplate::parse(template)
+    Template(template)
   end
-
+  
+  def render_once(template, vars)
+    Template(template).render(vars)
+  end
+  
 # empty braces
   def render((:''), vars)
     ''

@@ -10,9 +10,9 @@ Behave.context('A User instance') do
   end
 
   Behave.should('return its full name') do 
-    assert('John Doe' == user.full_name)
-    assert('John' == user.name)
-    assert('Doe' == user.surname)
+    Behave.assert('John Doe' == user.full_name)
+    Behave.assert('John' == user.name)
+    Behave.assert('Doe' == user.surname)
   end
 
   Behave.should('return its email address') do 

@@ -4,18 +4,18 @@
 #   user = User.find(:first)
 # 
 #   Behave.should('return its full name') do
-#     assert('John Doe' == user.full_name)
+#     Behave.assert('John Doe' == user.full_name)
 #   end
 # 
 #   Behave.should('return its email address') do
-#     assert('JohnDoe@gmail.com' == user.email)
+#     Behave.assert('JohnDoe@gmail.com' == user.email)
 #   end
 # 
 #   Behave.context('with a profile') do
 #     user.profile = Profile.find(:first)
 # 
 #     Behave.should('return true calling .has_profile?') do
-#       assert(user.has_profile?)
+#       Behave.assert(user.has_profile?)
 #     end
 #   end
 # end
@@ -34,6 +34,22 @@ module Behave
 
   def should(title, &lambda)
     if lambda()
+      '.'.print()
+    else
+      'F'.print()
+    end
+  end
+
+  def should(&lambda)
+    if lambda()
+      '.'.print()
+    else
+      'F'.print()
+    end
+  end
+
+  def assert(flag)
+    if flag
       '.'.print()
     else
       'F'.print()
