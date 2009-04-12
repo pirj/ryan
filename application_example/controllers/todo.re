@@ -37,6 +37,7 @@ class Todo < Controller
     {:id => '#today', :command => :update, :what => :todos, :url => '/app/todo/today'},
     {:id => '#tomorrow', :command => :update, :what => :todos, :url => '/app/todo/tomorrow'},
     {:id => '#few_days', :command => :update, :what => :todos, :url => '/app/todo/few_days'},
+    {:id => 'a[icon=delete]', :command => :update, :url => '/app/todo/delete'},
     {:id => '#day_select a', :command => :toggleclass, :clazz => :selected}]
     render('todo/index', bindings, handlers)
   end
@@ -74,6 +75,15 @@ class Todo < Controller
     todo_text = @parameters[:todo_new_text]
     todos = @session.get(:todo).unshift({}.insert(:what, todo_text).insert(:when, day))
     @session.set(:todo, todos)
-    text('#{todo_text}<br/>')
+    text('#{todo_text}"<br/>')
+  end
+  
+  def delete
+    day = @session.get(:current_day)
+    what = @parameters[:id]
+    todos = @session.get(:todo)
+    todos = [a | a in todos, a != {}.insert(:what, what).insert(:when, day)]
+    @session.set(:todo, todos)
+    text('')
   end
 end

@@ -48,6 +48,8 @@ function add_handler(options){
 		var params = ''
 		if(url && get)
 			params = '?' + $(get).attr('id') + '=' + $(get).val()
+		else if(url)
+			params = '?id=' + $(this).attr('id')
 
 		if(command == 'send' || command == 'update' || command == 'append' || command == 'prepend'){
 			if(effect)
