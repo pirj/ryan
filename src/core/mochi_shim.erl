@@ -27,15 +27,14 @@ out(Req, Public) ->
 serve_dynamic(Req, Abs_Path, Method, PathParts, Token, Params, Session) ->
 	Result = reia_erl:r2e(reia:apply('Ryan', out, [Abs_Path, Method, PathParts, Token, Params])),
 	
-	Response = case Result of
-		{html, Contents} -> {200, [{"Content-Type", "text/html"}] ++ Session, Contents};
-		{status, Status} -> {Status, [Session]};
-		_				-> {}
-	end,
-	Req:respond(Response).
+	case Result of
+		ok               -> Req:ok({"text/plain", "ok"});
+		{html, Contents} -> Req:respond({200, [{"Content-Type", "text/html"}] ++ Session, Contents});
+		{status, Status} -> Req:respond({Status, [Session]});
+		{Mime, Contents} -> Req:respond({200, [{"Content-Type", atom_to_list(Mime)}] ++ Session, Contents})
+	end.
 
 serve_static(Req, Public, Full_Path) ->
-	io:format("pub:~p, file:~p~n",[Public, Full_Path]),
 	[H|T] = Full_Path,
 	case H of
 		47 -> Req:serve_file(T, Public);

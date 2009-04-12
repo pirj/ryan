@@ -81,7 +81,7 @@ class Controller
 # return content of a specific mimetype
 # example: content('application/pdf', pdf)
   def content(mimetype, content)
-    (:content, mimetype.to_list(), content.to_list())
+    (mimetype.to_list(), content.to_list())
   end
 
 # return plain text
