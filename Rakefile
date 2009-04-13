@@ -55,6 +55,7 @@ task :install_only do
   %w[LICENSE README.md ebin].each { |f| cp_r f, ryan_dir }
   rm File.join(ryan_dir, 'ebin/leex.beam')
   
+  cp 'src/behave/behave.re', ryan_dir
   cp 'src/retem/retem.re', ryan_dir
   cp 'src/core/ryan.re', ryan_dir
   cp 'src/core/session.re', ryan_dir
@@ -63,6 +64,8 @@ task :install_only do
   mkdir "/usr/local/bin" unless File.exist?("/usr/local/bin")
   rm '/usr/local/bin/ryan' if File.exist?("/usr/local/bin/ryan")
   cp 'bin/ryan', '/usr/local/bin'
+  cp 'bin/behave', '/usr/local/bin'
 
   File.chmod 0755, "/usr/local/bin/ryan"
+  File.chmod 0755, "/usr/local/bin/behave"
 end

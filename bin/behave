@@ -1,0 +1,9 @@
+#!/usr/bin/env reia
+
+'Starting up Behave...'.print()
+ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
+
+load('#{ryan_dir}/behave.re')
+' done.'.puts()
+'Running tests:'.puts()
+load('all.re')

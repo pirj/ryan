@@ -1,14 +1,16 @@
 PREFIX = /usr/local
+VERSION =
 
 # todo: get erlang dir with code:lib_dir()
 ERLANG_LIB = $(PREFIX)/lib/erlang/lib
-RYAN_LIB = $(ERLANG_LIB)/reia$(VERSION)
+RYAN_LIB = $(ERLANG_LIB)/ryan$(VERSION)
 
 all: leex yecc compile
 
 uninstall:
 	-rm -r $(RYAN_LIB)
 	-rm $(PREFIX)/bin/ryan
+	-rm $(PREFIX)/bin/behave
 
 install: all uninstall
 	mkdir $(RYAN_LIB)
@@ -18,6 +20,7 @@ install: all uninstall
 	cp -r ebin $(RYAN_LIB)
 	-rm $(RYAN_LIB)/ebin/leex.beam
 
+	cp src/behave/behave.re $(RYAN_LIB)
 	cp src/retem/retem.re $(RYAN_LIB)
 	cp src/core/ryan.re $(RYAN_LIB)
 	cp src/core/session.re $(RYAN_LIB)
@@ -26,8 +29,10 @@ install: all uninstall
 	-mkdir /usr/local/bin
 	-rm /usr/local/bin/ryan
 	cp bin/ryan /usr/local/bin
+	cp bin/behave /usr/local/bin
 
 	chmod 0755 /usr/local/bin/ryan
+	chmod 0755 /usr/local/bin/behave
 
 ebin/leex.beam:
 	erlc -o ebin +debug_info src/third_party/leex/*.erl
