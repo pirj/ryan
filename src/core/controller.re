@@ -96,7 +96,7 @@ class Controller
     # (_h, s, ns) = erlang::now()
     template = Controllers.template(filename)
     # Main.puts(["parsing:", (s-is) * 1000000 + ns - ins, "ns"].join(' '))
-    rendered = Retem.render(template, bindings.insert(:session, @session))
+    rendered = template.render(bindings.insert(:session, @session))
     # (_h, s1, ns1) = erlang::now()
     # Main.puts(["rendering:", (s1-s) * 1000000 + ns1 - ns, "ns"].join(' '))
     rendered
