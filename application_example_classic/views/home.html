@@ -21,12 +21,12 @@
 		</div>
 		<div id=left>
 			<div id=menu class=float>
-				<a href='/app/home'>home<span>general info</span></a>
-				<a href='/app/mail/unread'>unread<span>{total.unread} new messages</span></a>
-				<a href='/app/mail/inbox'>inbox<span>{total.inbox} messages</span></a>
-				<a href='/app/mail/sent'>sent<span>{total.sent} messages</span></a>
-				<a href='/app/mail/spam'>spam<span>{total.spam} messages</span></a>
-				<a href='/app/mail/trash'>trash<span>{total.trash} messages</span></a>
+				<a class={selected.home} href='/app/home'>home<span>general info</span></a>
+				<a class={selected.unread} href='/app/mail/unread'>unread<span>{total.unread} new messages</span></a>
+				<a class={selected.inbox} href='/app/mail/inbox'>inbox<span>{total.inbox} messages</span></a>
+				<a class={selected.sent} href='/app/mail/sent'>sent<span>{total.sent} messages</span></a>
+				<a class={selected.spam} href='/app/mail/spam'>spam<span>{total.spam} messages</span></a>
+				<a class={selected.trash} href='/app/mail/trash'>trash<span>{total.trash} messages</span></a>
 			</div>
 		</div>
 	</div>

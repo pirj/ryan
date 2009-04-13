@@ -1,0 +1,12 @@
+<table border=1>
+	<th>from</th>
+	<th>to</th>
+	<th>mail</th>
+{for mail in mails}
+	<tr>
+		<td>{mail.from}</td>
+		<td>{mail.to}</td>
+		<td>{mail.contents}</td>
+	</tr>
+{end}
+</table>

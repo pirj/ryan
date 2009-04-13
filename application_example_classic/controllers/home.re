@@ -1,7 +1,8 @@
 class Home < Controller
   def index
-    total = {:unread => 3, :inbox => Mailbox.get(:inbox).size(), :sent => 2, :spam => 1, :trash => 6}
-    bindings = {}.insert(:contents, 'home').insert(:total, total)
+    total = Mailbox.total()
+    selected = {:home => :selected}
+    bindings = {}.insert(:contents, 'home').insert(:total, total).insert(:selected, selected)
     render('home', bindings, [])
   end
 end
