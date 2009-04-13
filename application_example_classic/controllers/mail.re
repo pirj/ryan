@@ -11,7 +11,8 @@ class Mail < Controller
   end
 
   def inbox
-    bindings = {}.insert(:contents, 'inbox').insert(:total, @total)
+    contents = [format(mail) | mail in Mailbox.get(:inbox)].join('<br>')
+    bindings = {}.insert(:contents, contents).insert(:total, @total)
     render('home', bindings, [])
   end
 
@@ -28,5 +29,9 @@ class Mail < Controller
   def trash
     bindings = {}.insert(:contents, 'trash').insert(:total, @total)
     render('home', bindings, [])
+  end
+  
+  def format(mail)
+    "From: #{mail[:from]}<br/>To: #{mail[:to]}<br/>Contents: #{mail[:contents]}<br/>"
   end
 end
