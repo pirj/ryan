@@ -96,6 +96,7 @@ div.float {
 #menu a span {
 	display: block;
 	color: #aaa;
+	font-size: .9em;
 }
 
 #menu a[rel] span {

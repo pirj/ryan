@@ -1,3 +1,12 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv=content-type content="text/html; charset=utf-8" />
+<meta name=keywords content="" /><meta name=description content="" />
+<title>Ryan/Reia classic example webapp</title>
+<head>
+<link href="/css/app.css" rel=stylesheet type=text/css>
+</head>
+<body>
 <div id=wrapper>
 	<div id=header>
 		<div>
@@ -13,11 +22,11 @@
 		<div id=left>
 			<div id=menu class=float>
 				<a href='/app/home'>home<span>general info</span></a>
-				<a href='/app/mail/unread'>unread<span>9 new messages</span></a>
-				<a href='/app/mail/inbox'>inbox<span></span></a>
-				<a href='/app/mail/sent'>sent<span></span></a>
-				<a href='/app/mail/spam'>spam<span></span></a>
-				<a href='/app/mail/trash'>trash<span>aggregation, live updates</span></a>
+				<a href='/app/mail/unread'>unread<span>{total.unread} new messages</span></a>
+				<a href='/app/mail/inbox'>inbox<span>{total.inbox} messages</span></a>
+				<a href='/app/mail/sent'>sent<span>{total.sent} messages</span></a>
+				<a href='/app/mail/spam'>spam<span>{total.spam} messages</span></a>
+				<a href='/app/mail/trash'>trash<span>{total.trash} messages</span></a>
 			</div>
 		</div>
 	</div>
@@ -25,3 +34,5 @@
 		<p class=copyright>Copyright &copy; 2009 Philipp Pirozhkov&nbsp;&nbsp;Template Designed by <a href="http://www.thewebhub.com/">TheWebHub.com</a>&nbsp;&nbsp;Free Icons by <a href="http://famfamfam.com/">FAMFAMFAM</a></p>
 	</div>
 </div>
+</body>
+</html>
