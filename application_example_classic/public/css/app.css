@@ -103,6 +103,49 @@ div.float {
 	color: #fff;
 }
 
+#menu a[icon] {
+	padding: .1em .1em .1em 36px;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.1);
+	-moz-opacity: 0.9;
+	-khtml-opacity:0.9;
+	opacity: 0.9;
+}
+
+#menu a[icon].selected, #menu a[icon]:hover{
+	padding: .1em .1em .1em 36px;
+	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
+	-moz-opacity: 1;
+	-khtml-opacity:1;
+	opacity: 1;
+}
+
+#menu a[icon=home] {
+	background: transparent url(/images/user-home.png) no-repeat center left;
+}
+
+#menu a[icon=mail_new] {
+	background: transparent url(/images/mail-message-new.png) no-repeat center left;
+}
+
+#menu a[icon=mail_unread] {
+	background: transparent url(/images/mail-reply-sender.png) no-repeat center left;
+}
+
+#menu a[icon=mail_inbox] {
+	background: transparent url(/images/internet-mail.png) no-repeat center left;
+}
+
+#menu a[icon=mail_sent] {
+	background: transparent url(/images/mail-forward.png) no-repeat center left;
+}
+
+#menu a[icon=mail_spam] {
+	background: transparent url(/images/mail-mark-not-junk.png) no-repeat center left;
+}
+
+#menu a[icon=mail_trash] {
+	background: transparent url(/images/user-trash.png) no-repeat center left;
+}
 #footer {
 	clear: both;
 	margin: 0px auto;
@@ -125,54 +168,6 @@ div.float {
 div.toolbar {
 	margin: .3em;
 	margin-bottom: .5em;
-}
-
-a[icon] {
-	border: solid 1px #ccc;
-	padding: .1em .1em .1em 18px;
-	margin: .1em;
-	color: #000;
-	background-color: #eaeaff;
-	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0.3);
-	-moz-opacity: 0.7;
-	-khtml-opacity:0.7;
-	opacity: 0.7;
-}
-
-a[icon].selected {
-	border: solid 1px #999;
-}
-
-a[icon]:hover, a[icon].selected {
-	background-color: #ffffe0;
-	filter: progid:DXImageTransform.Microsoft.Alpha(opacity=0);
-	-moz-opacity: 1;
-	-khtml-opacity:1;
-	opacity: 1;
-}
-
-a[icon=add] {
-	background: transparent url(/images/add.png) no-repeat center left;
-}
-
-a[icon=today] {
-	background: transparent url(/images/tag_green.png) no-repeat center left;
-}
-
-a[icon=tomorrow] {
-	background: transparent url(/images/tag_blue.png) no-repeat center left;
-}
-
-a[icon=few_days] {
-	background: transparent url(/images/tag_yellow.png) no-repeat center left;
-}
-
-a[icon=cancel] {
-	background: transparent url(/images/cancel.png) no-repeat center left;
-}
-
-a[icon=delete] {
-	background: transparent url(/images/cross.png) no-repeat center left;
 }
 
 #todo_new {
