@@ -189,3 +189,26 @@ div#todos p {
 	padding: .2em;
 	margin: .1em;
 }
+
+table.mail {
+	border-collapse: collapse;
+}
+
+table.mail thead {
+	text-align: left;
+	background-color: #d7d7d7;
+}
+
+table.mail td {
+	border-bottom: 1px dashed #ddd;
+	padding: .3em;
+}
+
+p.none {
+	display: none;
+}
+
+p.error {
+	display: block;
+	color: #c00;
+}
