@@ -28,7 +28,12 @@ module Ryan
     if(ps.size() <= i)
       di
     else
-      cp(ps, i+1, di.insert(ps[i][0].to_string().to_atom(), ps[i][1].to_string()))
+      if ps[i][1] == :undefined
+        value = ''
+      else
+        value = ps[i][1].to_string()
+      end
+      cp(ps, i+1, di.insert(ps[i][0].to_string().to_atom(), value))
     end
   end
 # remove this as soon as ssa issue is resolved ^^^
