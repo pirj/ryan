@@ -29,6 +29,7 @@ serve_dynamic(Req, Abs_Path, Method, PathParts, Token, Params, Session) ->
 	
 	case Result of
 		ok               -> Req:ok({"text/plain", "ok"});
+		{redirect, Url}  -> Req:respond({302, [{"Location", Url}], ""});
 		{html, Contents} -> Req:respond({200, [{"Content-Type", "text/html"}] ++ Session, Contents});
 		{status, Status} -> Req:respond({Status, [Session]});
 		{Mime, Contents} -> Req:respond({200, [{"Content-Type", atom_to_list(Mime)}] ++ Session, Contents})
