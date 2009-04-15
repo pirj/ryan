@@ -35,9 +35,11 @@ install: all uninstall
 	chmod 0755 /usr/local/bin/behave
 
 ebin/leex.beam:
+	-mkdir ebin
 	erlc -o ebin +debug_info src/third_party/leex/*.erl
 
 compile:
+	-mkdir ebin
 	erlc -o ebin +debug_info src/**/*.erl
 
 # Retem Leex
