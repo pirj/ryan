@@ -51,8 +51,10 @@ module Behave
   def assert(flag)
     if flag
       '.'.print()
+      true
     else
       'F'.print()
+      false
     end
   end
 end
