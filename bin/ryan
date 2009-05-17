@@ -13,7 +13,7 @@ module GoRyan
         init_ets()
         check_couchdb()
       
-        if [a | a in args, a=='--yaws'] == []
+        if [a | a in args, a=='--yaws'].size() == 0
           mochi_shim::start_mochi(port)
         else
           yaws_shim::init_yaws(port)
