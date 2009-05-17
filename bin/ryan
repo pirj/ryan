@@ -1,30 +1,62 @@
 #!/usr/bin/env reia
 
-puts('Starting up Ryan...')
-ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
+module GoRyan
+  def run(args)
+    port = 8001
+    port = args[1].to_int() if args[0] == '-p' or args[0] == '--port'
+    
+    if args[0] == '-h' or args[0] == '--help'
+      help()
+    else
+      if load_application()
+        dependencies()
+        init_ets()
+        check_couchdb()
+      
+        if [a | a in args, a=='--yaws'] == []
+          mochi_shim::start_mochi(port)
+        else
+          yaws_shim::init_yaws(port)
+        end
+      end
+    end
+  end
 
-required = ['retem.re', 'ryan.re', 'session.re', 'controller.re']
-required.each do |lib|
-  'Loading #{lib}...'.print()
-  load('#{ryan_dir}/#{lib}')
-  ' done.'.puts()
-end
+  def dependencies
+    'Starting up Ryan...'.puts()
+    ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
 
-# Initializing application
-load('startup.re')
-Startup.initialize()
+    required = ['retem.re', 'ryan.re', 'session.re', 'controller.re']
+    required.each do |lib|
+      'Loading #{lib}...'.print()
+      Main.load('#{ryan_dir}/#{lib}')
+      ' done.'.puts()
+    end
+  end
 
-ets::new(:sessions, [:named_table, :public])
-ets::new(:templates, [:named_table, :public])
+  def init_ets
+    ets::new(:sessions, [:named_table, :public])
+    ets::new(:templates, [:named_table, :public])
+  end
 
-port = 8001
-port = System.args()[1].to_int() if System.args()[0] == "-p"
+  def check_couchdb
+    true
+  end
 
-yaws = true
-yaws = false if System.args()[2] == "--mochi"
-
-if yaws
-  yaws_shim::init_yaws(port)
-else
-  mochi_shim::start_mochi(port)
-end
+  def load_application
+    try
+      Main.load('startup.re')
+      Startup.initialize()
+      true
+    catch e
+      'You are either running from incorrect folder, either startup.re is missing'.puts()
+      false
+    end
+  end
+  
+  def help
+    'Usage: ryan [--help|-h] [--port|-p <port_number>] [--yaws|--mochi]'.puts()
+  end
+end  
+  
+GoRyan.run(System.args())
