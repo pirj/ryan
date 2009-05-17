@@ -1,4 +1,4 @@
-class Todo < Controller
+class Todos < Controller
   def json(filename, bindings)
     js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
     contents = view(filename, bindings)
@@ -19,19 +19,17 @@ class Todo < Controller
     @session = session
     @parameters = parameters
     @callbacks = []
-    initial_todos = [{:what => 'buy milk', :when => :today}, {:what => 'call parents', :when => :tomorrow}, {:what => 'visit dentist', :when => :few_days}]
-    @session.set(:todo, initial_todos) if @session.get(:todo) == nil
   end
   
   def index2
-    data = @session.get(:todo)
+    data = Todo.all()
     bindings = {}.insert(:todos, data)
     on('#lala', :click, '/app/todo/json_test')
     render('todo/index', bindings, [])
   end
 
   def index
-    data = @session.get(:todo)
+    data = Todo.all()
     bindings = {}.insert(:todos, data)
     handlers = [{:id => '#add_new', :command => :update, :what => :todo_new, :url => '/app/todo/add_new', :effect => :slide},
     {:id => '#today', :command => :update, :what => :todos, :url => '/app/todo/today'},
@@ -58,7 +56,7 @@ class Todo < Controller
   end
 
   def for_range(range)
-    data = @session.get(:todo)
+    data = Todo.all()
     todos = data.filter{|t| t[:when]==range}
     render('todo/list', {}.insert(:todos, todos), [])
   end
@@ -73,17 +71,14 @@ class Todo < Controller
   def add_todo
     day = @session.get(:current_day)
     todo_text = @parameters[:todo_new_text]
-    todos = @session.get(:todo).unshift({}.insert(:what, todo_text).insert(:when, day))
-    @session.set(:todo, todos)
+    Todo.save({}.insert(:what, todo_text).insert(:when, day))
     text('#{todo_text}"<br/>')
   end
   
   def delete
     day = @session.get(:current_day)
     what = @parameters[:id]
-    todos = @session.get(:todo)
-    todos = [a | a in todos, a != {}.insert(:what, what).insert(:when, day)]
-    @session.set(:todo, todos)
+    Todo.delete({}.insert(:what, what).insert(:when, day))
     text('')
   end
 end
