@@ -1,15 +1,8 @@
-# Future (object/class) syntax:
-# template = """Total {apples|count:~apples}
-# {for apple in apples} {apple.color} {apple.weight}kg {end}"""
-# apples = [{:color => 'red', :weight => 0.2}, {:color => 'yellow', :weight => 0.15}]
-# renderer = Retem()
-# renderer.parse(template).render({:apples => apples})
-
-# Current syntax:
+# Syntax:
 #
 # template = Retem.parse("{abc+bcd} apples")
-# Retem.render(template, {:abc => 22, :bcd =>33}) => 55 apples
-# Retem.render(template, {:abc => 192, :bcd => 976}) => 1168 apples
+# template.render({:abc => 22, :bcd =>33}) => 55 apples
+# template.render({:abc => 192, :bcd => 976}) => 1168 apples
 
 class Template
   def initialize(string)

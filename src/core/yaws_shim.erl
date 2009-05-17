@@ -1,9 +1,7 @@
-% 103409916
-% 83.102.254.240-250
 -module(yaws_shim).
 -export([out/1, init_yaws/1]).
--include("../third_party/yaws/yaws_api.hrl").
--include("../third_party/yaws/yaws.hrl").
+-include("../../deps/yaws/yaws_api.hrl").
+-include("../../deps/yaws/yaws.hrl").
 
 out(Arg) ->
 	Req = Arg#arg.req,

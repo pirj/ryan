@@ -5,20 +5,34 @@ VERSION =
 ERLANG_LIB = $(PREFIX)/lib/erlang/lib
 RYAN_LIB = $(ERLANG_LIB)/ryan$(VERSION)
 
-all: leex yecc compile
+all: deps src/retem/retem_scan.erl src/retem/retem_parse.erl compile
+
+deps: erlang_couchdb leex mochi
+
+erlang_couchdb:
+	(cd deps/erlang_couchdb;$(MAKE))
+
+leex:
+	(cd deps/leex;$(MAKE))
+
+mochi:
+	(cd deps/mochiweb;$(MAKE))
 
 uninstall:
-	-rm -r $(RYAN_LIB)
-	-rm $(PREFIX)/bin/ryan
-	-rm $(PREFIX)/bin/behave
+	rm -rf $(RYAN_LIB)
+	rm -f $(PREFIX)/bin/ryan
+	rm -f $(PREFIX)/bin/behave
 
 install: all uninstall
 	mkdir $(RYAN_LIB)
+	mkdir $(RYAN_LIB)/ebin
+
+	cp deps/mochiweb/ebin/*.beam $(RYAN_LIB)/ebin
+	cp deps/erlang_couchdb/ebin/erlang_couchdb.beam $(RYAN_LIB)/ebin
 
 	cp LICENSE $(RYAN_LIB)
 	cp README.md $(RYAN_LIB)
 	cp -r ebin $(RYAN_LIB)
-	-rm $(RYAN_LIB)/ebin/leex.beam
 
 	cp src/behave/behave.re $(RYAN_LIB)
 	cp src/retem/retem.re $(RYAN_LIB)
@@ -26,8 +40,8 @@ install: all uninstall
 	cp src/core/session.re $(RYAN_LIB)
 	cp src/core/controller.re $(RYAN_LIB)
 
-	-mkdir /usr/local/bin
-	-rm /usr/local/bin/ryan
+	mkdir -p /usr/local/bin
+	rm -rf /usr/local/bin/ryan
 	cp bin/ryan /usr/local/bin
 	cp bin/behave /usr/local/bin
 
@@ -35,28 +49,20 @@ install: all uninstall
 	chmod 0755 /usr/local/bin/behave
 
 ebin/leex.beam:
-	-mkdir ebin
+	mkdir -p ebin
 	erlc -o ebin +debug_info src/third_party/leex/*.erl
 
 compile:
-	-mkdir ebin
+	mkdir -p ebin
 	erlc -o ebin +debug_info src/**/*.erl
 
-# Retem Leex
-leex: ebin/leex.beam ebin/retem_scan.beam
-
 # Compile retem_scan using leex
-ebin/retem_scan.beam:
+src/retem/retem_scan.erl:
 	bin/leex src/retem/retem_scan.xrl
-	erlc +debug_info -o ebin src/retem/retem_scan.erl
-	rm src/retem/retem_scan.erl
+	mv retem_scan.erl src/retem
 
-yecc: ebin/retem_parse.beam
-
-ebin/retem_parse.beam:
+src/retem/retem_parse.erl:
 	bin/yecc src/retem/retem_parse.yrl
-	erlc +debug_info -o ebin src/retem/retem_parse.erl
-	rm src/retem/retem_parse.erl
 
 behave:
 	reia behave/all.re
@@ -64,3 +70,5 @@ behave:
 clean:
 	rm -f ebin/*
 	rm -f src/compiler/reia_scan.erl src/compiler/reia_parse.erl
+	(cd deps/erlang_couchdb;$(MAKE) clean)
+	(cd deps/mochiweb;$(MAKE) clean)
