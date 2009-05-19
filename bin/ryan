@@ -12,6 +12,7 @@ module GoRyan
       if load_application()
         dependencies()
         init_ets()
+        load_models()
       
         if [a | a in args, a=='--yaws'].size() == 0
           mochi_shim::start_mochi(port)
@@ -53,11 +54,18 @@ module GoRyan
   def load_application
     try
       Main.load('startup.re')
-      Startup.initialize()
       true
     catch e
       '! You are either running from incorrect folder, either startup.re is missing'.puts()
       false
+    end
+  end
+  
+  def load_models
+    models = Dir.list('models')
+    models.each do |model|
+      'Loading #{model}'.puts()
+      Main.load('model/#{model}')
     end
   end
   
