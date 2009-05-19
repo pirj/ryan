@@ -18,7 +18,7 @@ class Home < Controller
 
 
     # callbacks = [{:id => '#landing', :command => :update, :what => :contents, :url => '/app/landing', :effect => :slide},
-    # {:id => '#todo', :command => :update, :what => :contents, :url => '/app/todo', :effect => :slide},
+    # {:id => '#todo', :command => :update, :what => :contents, :url => '/app/todos', :effect => :slide},
     # {:id => '#budget', :command => :update, :what => :contents, :url => '/app/budget', :effect => :slide},
     # {:id => '#menu a', :command => :toggleclass, :clazz => :selected}]
     # js = callbacks.map{ |callback| get_callback(callback)}.join(';\n')
