@@ -5,9 +5,9 @@ VERSION =
 ERLANG_LIB = $(PREFIX)/lib/erlang/lib
 RYAN_LIB = $(ERLANG_LIB)/ryan$(VERSION)
 
-all: deps src/retem/retem_scan.erl src/retem/retem_parse.erl compile
+all: deps src/retem/retem_scan.erl src/retem/retem_parse.erl compile erlangine
 
-deps: erlang_couchdb leex mochi erlangine
+deps: erlang_couchdb leex mochi
 
 erlangine:
 	erlc -o ebin +debug_info deps/engejson.erl
