@@ -11,7 +11,7 @@ class Budget < Controller
     on(:today, :click) do day(:today) end
     on(:tomorrow, :click) do day(:tomorrow) end
 
-    render('todo/index', {}, [])
+    render('todos/index', {}, [])
   end
 
   def day(range)
@@ -19,7 +19,7 @@ class Budget < Controller
 
     data = @session.get(:todo)
     todos = data.filter{|t| t[:when]==range}
-    contents = render('todo/list', {}.insert(:todos, todos), [])
+    contents = render('todos/list', {}.insert(:todos, todos), [])
 
     update(:todos, contents)
   end

@@ -14,7 +14,6 @@ class Todos < Controller
     @callbacks = @callbacks.unshift({}.insert(:what, what).insert(:event, event).insert(:where, where))
   end
 
-
   def initialize(session, parameters)
     @session = session
     @parameters = parameters
@@ -24,48 +23,50 @@ class Todos < Controller
   def index2
     data = Todo.all()
     bindings = {}.insert(:todos, data)
-    on('#lala', :click, '/app/todo/json_test')
-    render('todo/index', bindings, [])
+    on('#lala', :click, '/app/todos/json_test')
+    render('todos/index', bindings, [])
   end
 
   def index
     data = Todo.all()
     bindings = {}.insert(:todos, data)
-    handlers = [{:id => '#add_new', :command => :update, :what => :todo_new, :url => '/app/todo/add_new', :effect => :slide},
-    {:id => '#today', :command => :update, :what => :todos, :url => '/app/todo/today'},
-    {:id => '#tomorrow', :command => :update, :what => :todos, :url => '/app/todo/tomorrow'},
-    {:id => '#few_days', :command => :update, :what => :todos, :url => '/app/todo/few_days'},
-    {:id => 'a[icon=delete]', :command => :update, :url => '/app/todo/delete'},
+    handlers = [{:id => '#add_new', :command => :update, :what => :todo_new, :url => '/app/todos/add_new', :effect => :slide},
+    {:id => '#today', :command => :update, :what => :todos, :url => '/app/todos/today'},
+    {:id => '#tomorrow', :command => :update, :what => :todos, :url => '/app/todos/tomorrow'},
+    {:id => '#few_days', :command => :update, :what => :todos, :url => '/app/todos/few_days'},
+    {:id => 'a[icon=delete]', :command => :update, :url => '/app/todos/delete'},
     {:id => '#day_select a', :command => :toggleclass, :clazz => :selected}]
-    render('todo/index', bindings, handlers)
+    render('todos/index', bindings, handlers)
   end
 
   def today
     @session.set(:current_day, :today)
-    for_range(:today)
+    for_range('today')
   end
 
   def tomorrow
     @session.set(:current_day, :tomorrow)
-    for_range(:tomorrow)
+    for_range('tomorrow')
   end
   
   def few_days
     @session.set(:current_day, :few_days)
-    for_range(:few_days)
+    for_range('few_days')
   end
 
   def for_range(range)
     data = Todo.all()
+    data.inspect().puts()
     todos = data.filter{|t| t[:when]==range}
-    render('todo/list', {}.insert(:todos, todos), [])
+    todos.inspect().puts()
+    render('todos/list', {}.insert(:todos, todos), [])
   end
 
   def add_new
-    handlers = [{:id => '#add', :command => :prepend, :what => :todos, :url => '/app/todo/add_todo', :get => '#todo_new_text'},
+    handlers = [{:id => '#add', :command => :prepend, :what => :todos, :url => '/app/todos/add_todo', :get => '#todo_new_text'},
     {:id => '#add', :command => :empty, :what => :todo_new, :effect => :fade},
     {:id => '#cancel', :command => :empty, :what => :todo_new, :effect => :fade}]
-    render('todo/new', {}, handlers)
+    render('todos/new', {}, handlers)
   end
 
   def add_todo
