@@ -7,7 +7,10 @@ RYAN_LIB = $(ERLANG_LIB)/ryan$(VERSION)
 
 all: deps src/retem/retem_scan.erl src/retem/retem_parse.erl compile
 
-deps: erlang_couchdb leex mochi
+deps: erlang_couchdb leex mochi erlangine
+
+erlangine:
+	erlc -o ebin +debug_info deps/engejson.erl
 
 erlang_couchdb:
 	(cd deps/erlang_couchdb;$(MAKE))
@@ -47,10 +50,6 @@ install: all uninstall
 
 	chmod 0755 /usr/local/bin/ryan
 	chmod 0755 /usr/local/bin/behave
-
-ebin/leex.beam:
-	mkdir -p ebin
-	erlc -o ebin +debug_info src/third_party/leex/*.erl
 
 compile:
 	mkdir -p ebin
