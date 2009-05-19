@@ -65,7 +65,7 @@ module GoRyan
     models = Dir.list('models')
     models.each do |model|
       'Loading #{model}'.puts()
-      Main.load('model/#{model}')
+      Main.load('models/#{model}')
     end
   end
   
