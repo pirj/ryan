@@ -111,8 +111,8 @@ cookie(Key, Value, Options) ->
 %% Convert to a string and raise an error if quoting is required.
 quote(V0) ->
     V = any_to_list(V0),
-    lists:all(fun(Ch) -> Ch =:= $/ orelse not ?IS_SEPARATOR(Ch) end, V)
-        orelse erlang:error({cookie_quoting_required, V}),
+    lists:all(fun(Ch) -> Ch =:= $/ orelse not ?IS_SEPARATOR(Ch) end, V),
+%%        orelse erlang:error({cookie_quoting_required, V}),
     V.
 
 add_seconds(Secs, LocalTime) ->
