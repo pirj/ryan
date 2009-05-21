@@ -9,16 +9,19 @@ module GoRyan
       help()
     else
       check_couchdb()
-      if load_application()
+      if File.file?('startup.re')
         dependencies()
         init_ets()
         load_models()
+        Main.load('startup.re')
       
         if [a | a in args, a=='--yaws'].size() == 0
           mochi_shim::start_mochi(port)
         else
           yaws_shim::init_yaws(port)
         end
+      else
+        '! You are either running from incorrect folder, either startup.re is missing'.puts()
       end
     end
   end
@@ -27,7 +30,7 @@ module GoRyan
     'Starting up Ryan...'.puts()
     ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
 
-    required = ['retem.re', 'ryan.re', 'session.re', 'controller.re']
+    required = ['retem.re', 'ryan.re', 'session.re', 'controller.re', 'model.re']
     'Loading '.print()
     required.each do |lib|
       '#{lib} '.print()
@@ -51,16 +54,6 @@ module GoRyan
     end
   end
 
-  def load_application
-    try
-      Main.load('startup.re')
-      true
-    catch e
-      '! You are either running from incorrect folder, either startup.re is missing'.puts()
-      false
-    end
-  end
-  
   def load_models
     models = Dir.list('models')
     models.each do |model|

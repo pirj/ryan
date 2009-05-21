@@ -42,6 +42,7 @@ install: all uninstall
 	cp src/core/ryan.re $(RYAN_LIB)
 	cp src/core/session.re $(RYAN_LIB)
 	cp src/core/controller.re $(RYAN_LIB)
+	cp src/core/model.re $(RYAN_LIB)
 
 	mkdir -p /usr/local/bin
 	rm -rf /usr/local/bin/ryan

@@ -8,3 +8,4 @@ application_example/logs/*
 application_example_classic/logs/*
 deps/mochiweb/src/.svn/*
 deps/mochiweb/.svn/*
+**/*.*~
