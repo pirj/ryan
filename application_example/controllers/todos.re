@@ -70,7 +70,7 @@ class Todos < Controller
   def add_todo
     day = @session.get(:current_day)
     todo_text = @parameters[:todo_new_text]
-    Todo.save({}.insert(:what, todo_text).insert(:when, day))
+    Todo({}.insert(:what, todo_text).insert(:when, day)).save()
     text('#{todo_text}"<br/>')
   end
   
