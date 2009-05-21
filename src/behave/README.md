@@ -30,29 +30,38 @@ end
 
 ## Usage
 Just type 'behave' in command line
+
 Command line options:
+
 -h, --html <file> : put output to a file in html format
+
 -s, --show-passed : show passed tests too
+
 -t, --trace : show trace
 
 ### Examples
 $ behave
+
 FAIL A User instance should return its email address.
 
 $ behave --show-passed
+
 A User instance should return its full name.
+
 FAIL: A User instance should return its email address.
+
 A User instance with a profile should return true calling .has_profile?.
 
 $ behave --html
+
 2008-11-25.html created
 
 $ behave --verbose
+
 FAIL A User instance should return its email address: behave/models/user.re: 14
 
 ### Useful links
 
-[Ryan@lighthouse](http://ryan_reia.lighthouseapp.com)
 [Ryan@github](http://github.com/pirj/ryan)
 [Reia language home](http://reia-lang.org)
 [Reia@github](http://github.com/tarcieri/reia)
