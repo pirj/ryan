@@ -79,4 +79,4 @@ Only CouchDB is currently supported.
 * many more
 
 ### Authors
-* Philpipp Pirozhkov pirj@mail.ru
+* Phil Pirozhkov pirj@mail.ru
