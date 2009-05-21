@@ -1,7 +1,8 @@
 class Todo < Model
-  def initialize(what, date)
-    base(:default)
-    @data = {}.insert(:what, what).insert(:when, date)
+  def inspect
+    when_ = @data[:when]
+    what = @data[:what]
+    "#{when_} #{what}"
   end
 end
 
