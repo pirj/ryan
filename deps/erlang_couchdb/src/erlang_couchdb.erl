@@ -193,7 +193,7 @@ decode_json(Body) ->
 create_database({Server, ServerPort}, Database) when is_list(Server), is_integer(ServerPort) ->
     Url = build_uri(Database),
     case raw_request("PUT", Server, ServerPort, Url, []) of
-        {json, {struct, [{<<"ok">>, true}]}} -> ok;
+        {json, [{<<"ok">>, true}]} -> ok;
         Other -> {error, Other}
     end.
 
@@ -203,7 +203,7 @@ create_database({Server, ServerPort}, Database) when is_list(Server), is_integer
 delete_database({Server, ServerPort}, Database) when is_list(Server), is_integer(ServerPort) ->
     Url = build_uri(Database),
     case raw_request("DELETE", Server, ServerPort, Url, []) of
-        {json, {struct, [{<<"ok">>, true}]}} -> ok;
+        {json, [{<<"ok">>, true}]} -> ok;
         Other -> {error, Other}
     end.
 
@@ -213,7 +213,7 @@ delete_database({Server, ServerPort}, Database) when is_list(Server), is_integer
 database_info({Server, ServerPort}, Database) when is_list(Server), is_integer(ServerPort) ->
     Url = build_uri(Database),
     case raw_request("GET", Server, ServerPort, Url, []) of
-        {json, {struct, Info}} -> {ok, Info};
+        {json, Info} -> {ok, Info};
         Other -> {error, Other}
     end.
 
@@ -223,7 +223,7 @@ database_info({Server, ServerPort}, Database) when is_list(Server), is_integer(S
 server_info({Server, ServerPort}) when is_list(Server), is_integer(ServerPort) ->
     Url = build_uri(),
     case raw_request("GET", Server, ServerPort, Url, []) of
-        {json, {struct, Welcome}} -> {ok, Welcome};
+        {json, Welcome} -> {ok, Welcome};
         Other -> {other, Other}
     end.
 
@@ -250,10 +250,8 @@ create_attachment({Server, ServerPort}, Database, DocumentID, File, ContentType)
 %% list of attributes and leaves it up to the server to create an id for it.
 %% The attributes should be a list of binary key/value tuples.
 create_document({Server, ServerPort}, Database, Attributes) when is_list(Server), is_integer(ServerPort), is_list(Attributes) ->
-    create_document({Server, ServerPort}, Database, {struct, Attributes});
-create_document({Server, ServerPort}, Database, {struct, _} = Obj) when is_list(Server), is_integer(ServerPort) ->
     Url = build_uri(Database),
-    JSON = list_to_binary(mochijson2:encode(Obj)),
+    JSON = list_to_binary(engejson:encode(Attributes)),
     raw_request("POST", Server, ServerPort, Url, JSON).
 
 %% @spec create_document(DBServer::server_address(), Database::string(), DocumentID::string(), Attributes::any()) ->  {json, Response::any()} | {raw, Other::any()}
@@ -269,12 +267,8 @@ create_document({Server, ServerPort}, Database, DocumentID, Attributes) when is_
 %% @todo Create a spec for this.
 create_documents({Server, ServerPort}, Database, Documents) when is_list(Server), is_integer(ServerPort) ->
     Url = build_uri(Database, "_bulk_docs"),
-    BulkCreate = {struct, [
-        {<<"docs">>, [
-            {struct, Doc} || Doc <- Documents
-        ]}
-    ]},
-    JSON = list_to_binary(mochijson2:encode(BulkCreate)),
+    BulkCreate = [{<<"docs">>, Documents}],
+    JSON = list_to_binary(engejson:encode(BulkCreate)),
     raw_request("POST", Server, ServerPort, Url, JSON).
 
 %% @doc Return a tuple containing a document id and the document's latest
@@ -285,7 +279,7 @@ document_revision({Server, ServerPort}, Database, DocID) when is_binary(DocID) -
 document_revision({Server, ServerPort}, Database, DocID) when is_list(Server), is_integer(ServerPort) ->
     Url = build_uri(Database, DocID, []),
     case raw_request("GET", Server, ServerPort, Url, []) of
-        {json, {struct, Props}} ->
+        {json, Props} ->
             {ok, proplists:get_value(<<"_id">>, Props, undefined), proplists:get_value(<<"_rev">>, Props, undefined)};
         Other -> {error, Other}
     end.
@@ -308,13 +302,9 @@ retrieve_document({Server, ServerPort}, Database, DocID, Attributes) when is_lis
 %% update a document the attributes list must contain a '_rev' key/value
 %% pair tuple.
 %% @todo Create a spec for this.
-update_document({Server, ServerPort}, Database, DocID, {struct,_} = Obj) when is_list(Server), is_integer(ServerPort) ->
-    Url = build_uri(Database, DocID),
-    JSON = list_to_binary(mochijson2:encode(Obj)),
-    raw_request("PUT", Server, ServerPort, Url, JSON);
 update_document({Server, ServerPort}, Database, DocID, Attributes) when is_list(Server), is_integer(ServerPort) ->
     Url = build_uri(Database, DocID),
-    JSON = list_to_binary(mochijson2:encode({struct, Attributes})),
+    JSON = list_to_binary(engejson:encode(Attributes)),
     raw_request("PUT", Server, ServerPort, Url, JSON).
 
 %% @doc Deletes a given document by id and revision.
@@ -326,12 +316,12 @@ delete_document({Server, ServerPort}, Database, DocID, Revision) when is_list(Se
 %% @doc Delete a bunch of documents with a _bulk_docs request.
 delete_documents({Server, ServerPort}, Database, Documents) when is_list(Server), is_integer(ServerPort) ->
     Url = build_uri(Database, "_bulk_docs"),
-    BulkDelete = {struct, [
+    BulkDelete = [
         {<<"docs">>, [
-            {struct, [{<<"_id">>, Id}, {<<"_rev">>, Rev}, {<<"_deleted">>, true}]} || {Id, Rev} <- Documents
+            [{<<"_id">>, Id}, {<<"_rev">>, Rev}, {<<"_deleted">>, true}] || {Id, Rev} <- Documents
         ]}
-    ]},
-    JSON = list_to_binary(mochijson2:encode(BulkDelete)),
+    ],
+    JSON = list_to_binary(engejson:encode(BulkDelete)),
     raw_request("POST", Server, ServerPort, Url, JSON).
 
 %% @doc Creates a design document. See create_view/6 for more.
@@ -348,18 +338,18 @@ create_view({Server, ServerPort}, Database, ViewClass, Language, Views, Attribut
     Design = [
         {<<"_id">>, list_to_binary("_design/" ++ ViewClass)},
         {<<"language">>, Language},
-        {<<"views">>, {struct, [
+        {<<"views">>, [
             begin
                 case View of
                     {Name, Map} -> 
-                        {Name, {struct, [{<<"map">>, Map}]}};
+                        {Name, [{<<"map">>, Map}]};
                     {Name, Map, Reduce} ->
-                        {Name, {struct, [{<<"map">>, Map}, {<<"reduce">>, Reduce}]}}
+                        {Name, [{<<"map">>, Map}, {<<"reduce">>, Reduce}]}
                 end
             end || View <- Views
-        ]}}
+        ]}
     | Attributes],
-    JSON = list_to_binary(mochijson2:encode({struct, Design})),
+    JSON = list_to_binary(engejson:encode(Design)),
     Url = build_uri(Database, "_design/" ++ ViewClass),
     raw_request("PUT", Server, ServerPort, Url, JSON).
 
@@ -373,27 +363,25 @@ invoke_view({Server, ServerPort}, Database, ViewClass, ViewId, Attributes) when 
 %% @todo Create a spec for this.
 invoke_multikey_view({Server, ServerPort}, Database, ViewClass, ViewId, Keys, Attributes) when is_list(Server), is_integer(ServerPort) ->
     Url = view_uri(Database, ViewClass, ViewId, Attributes),
-    JSON = list_to_binary(mochijson2:encode({struct, [{keys, Keys}]})),
+    JSON = list_to_binary(engejson:encode([{keys, Keys}])),
     raw_request("POST", Server, ServerPort, Url, JSON).
 
 %% @doc Return a list of document ids for a given view.
 %% @todo Create a spec for this.
-parse_view({json, {struct, [{<<"error">>, _Code}, {_, _Reason}]}}) ->
+parse_view({json, [{<<"error">>, _Code}, {_, _Reason}]}) ->
     {0, 0, []};
-parse_view({json, Structure}) ->
-    {struct, Properties} = Structure,
+parse_view({json, Properties}) ->
     TotalRows = proplists:get_value(<<"total_rows">>, Properties, 0),
     Offset = proplists:get_value(<<"offset">>, Properties, 0),
     Data = proplists:get_value(<<"rows">>, Properties, []),
     Ids = [begin
-        {struct, Bits} = Rec,
         Id = proplists:get_value(<<"id">>, Bits),
         case proplists:get_value(<<"value">>, Bits, []) of
             [] -> Id;
-            {struct, RowValues} -> {Id, RowValues};
+            RowValues -> {Id, RowValues};
             _ -> Id
         end
-    end || Rec <- Data],
+    end || Bits <- Data],
     {TotalRows, Offset, Ids};
 parse_view(_Other) -> {0, 0, []}.
 
@@ -420,8 +408,7 @@ load_view({Server, ServerPort}, Database, ViewName, File) ->
 get_value(Path, Struct) when is_list(Path) ->
     get_val(Path, Struct);
 get_value(Key, Struct) when is_binary(Key) ->
-    {struct, L} = Struct,
-    proplists:get_value(Key, L).
+    proplists:get_value(Key, Struct).
 
 %% @private
 get_val([Key], Struct) ->
@@ -436,15 +423,15 @@ get_val([Key | T], Struct) ->
 %% @doc Set the specified (set of) attribute(s)
 set_value(Path, Value, Struct) when is_list(Path) ->
     [H | T] = lists:reverse(Path),
-    set_val(T, Struct, {struct, [{H, Value}]});
+    set_val(T, Struct, [{H, Value}]);
 set_value(Key, Value, Struct) when is_binary(Key) ->
-    extend(Struct, {struct, [{Key, Value}]}).
+    extend(Struct, [{Key, Value}]).
 
 %% @private
 set_val([], Struct, Result) ->
     extend(Struct, Result);
 set_val([Key | T], Struct, Result) ->
-    set_val(T, Struct, {struct, [{Key, Result}]}).
+    set_val(T, Struct, [{Key, Result}]).
 
 %% @private
 %% @doc To be used with the fold function
@@ -464,7 +451,7 @@ fold([], Struct) -> Struct.
 
 %% @private
 %% @doc Return an empty object
-empty() -> {struct, []}.
+empty() -> [].
 
 %% @private
 %% @doc Extend a json obj with one or more json obj (add new leaves and modify the existing ones).
@@ -473,21 +460,19 @@ extend(S1, [S|T]) ->
     NewS = extend(S1, S),
     extend(NewS, T);
 extend(S1, S2) ->
-    {struct, L1} = S1,
-    {struct, L2} = S2,
-    ext(L1, L2, []).
+    ext(S1, S2, []).
 
 %% @private
 ext(L1, [], Result) ->
-    {struct, lists:append(Result,L1)};
-ext(L1, [{K, {struct, ChildL2}} | T], Result) ->
+    lists:append(Result,L1);
+ext(L1, [{K, ChildL2} | T], Result) ->
     case proplists:get_value(K, L1) of
-        {struct, ChildL1} ->
+        ChildL1 ->
             NewL1 = proplists:delete(K, L1),
-            ext(NewL1, T, [{K, extend({struct, ChildL1}, {struct, ChildL2})} | Result]);
+            ext(NewL1, T, [{K, extend(ChildL1, ChildL2)} | Result]);
         _ ->
         NewL1 = proplists:delete(K, L1),
-        ext(NewL1, T, [{K, {struct, ChildL2}} | Result])
+        ext(NewL1, T, [{K, ChildL2} | Result])
     end;
 ext(L1, [{K, V} | T], Result) ->
     NewL1 = proplists:delete(K, L1),
