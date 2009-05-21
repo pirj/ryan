@@ -21,14 +21,14 @@ class Todos < Controller
   end
   
   def index2
-    data = Todo.all()
+    data = Models.all(Todo)
     bindings = {}.insert(:todos, data)
     on('#lala', :click, '/app/todos/json_test')
     render('todos/index', bindings, [])
   end
 
   def index
-    data = Todo.all()
+    data = Models.all(Todo)
     bindings = {}.insert(:todos, data)
     handlers = [{:id => '#add_new', :command => :update, :what => :todo_new, :url => '/app/todos/add_new', :effect => :slide},
     {:id => '#today', :command => :update, :what => :todos, :url => '/app/todos/today'},
@@ -55,10 +55,8 @@ class Todos < Controller
   end
 
   def for_range(range)
-    data = Todo.all()
-    data.inspect().puts()
+    data = Models.all(Todo)
     todos = data.filter{|t| t[:when]==range}
-    todos.inspect().puts()
     render('todos/list', {}.insert(:todos, todos), [])
   end
 
