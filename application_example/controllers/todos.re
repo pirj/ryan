@@ -71,7 +71,7 @@ class Todos < Controller
     day = @session.get(:current_day)
     todo_text = @parameters[:todo_new_text]
     Todo({}.insert(:what, todo_text).insert(:when, day)).save()
-    text('#{todo_text}"<br/>')
+    text('#{todo_text}<br/>')
   end
   
   def delete
