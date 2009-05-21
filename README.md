@@ -14,13 +14,10 @@ Ryan consists of:
 
 [Erlang/OTP R12B-3 or higher](http://www.erlang.org/download.html),
 [Reia language](http://github.com/tarcieri/reia),
-[YAWS 1.77 or higher](http://yaws.hyber.org) or
-[Mochiweb]()
 
 ## Building
 
 Run the following from Ryan source folder to build it:
-mkdir ebin &&
 sudo make install
 
 That will install ryan libraries into Erlang lib folder and
@@ -37,7 +34,7 @@ Surf to: http://localhost:8001/app
 You can specify a port number to run on in command line:
 ryan -p 8080
 
-Modify Fruits controller, implement or change actions
+Modify Todo controller, implement or change actions
 Create your own controllers and see the results without the need
 to even reload web page.
 Enjoy!
@@ -65,16 +62,21 @@ Views can be Retem templates (retems) and are placed in application_name/views/ 
 
 Models are object definitions that can be stored, retrieved and queried from storage
 systems.
-SQLite3, PostgreSQL, MySQL, Mnesia and Mongo are to be supported.
+Only CouchDB is currently supported.
 
 ### Useful links
 
-[Behave@lighthouse](http://ryan_reia.lighthouseapp.com/projects/20723-behave)
 [Behave@github](http://github.com/pirj/behave)
-[Ryan@lighthouse](http://ryan_reia.lighthouseapp.com/projects/19645-ryan)
 [Ryan@github](http://github.com/pirj/ryan)
 [Reia language home](http://reia-lang.org)
 [Dev blog](http://dev_addict.jot.ly)
+
+### This work wouldn't be possble without these guys
+* Tony Arcieri : Reia creator
+* Robert Virding : Excellent lexer library
+* Nick Gerakines : CouchDB adapter
+* Dmitry Chernyak : Smart JSON library refinement
+* many more
 
 ### Authors
 * Philpipp Pirozhkov pirj@mail.ru
