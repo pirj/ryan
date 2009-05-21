@@ -66,7 +66,6 @@ Only CouchDB is currently supported.
 
 ### Useful links
 
-[Behave@github](http://github.com/pirj/behave)
 [Ryan@github](http://github.com/pirj/ryan)
 [Reia language home](http://reia-lang.org)
 [Dev blog](http://dev_addict.jot.ly)
