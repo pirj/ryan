@@ -1,10 +1,14 @@
 module Models
   def all(model)
-    view(model, :all)
+    view(model, :all, [])
+  end
+  
+  def find(model, field, value)
+    view(model, field, [('key'.to_list(), value.to_s().to_list())])
   end
     
-  def view(model, name)
-    (:json, [_, _, (_, data)]) = erlang_couchdb::invoke_view(('localhost'.to_list(), 5984), 'default'.to_list(), name.to_list(), name.to_list(), [])
+  def view(model, name, keys)
+    (:json, [_, _, (_, data)]) = erlang_couchdb::invoke_view(('localhost'.to_list(), 5984), 'default'.to_list(), name.to_list(), name.to_list(), keys)
     
     data2 = data.map {|d| dict::from_list(dict::from_list(d)["value".to_binary()])}
     data3 = data2.map do |d|
@@ -55,6 +59,10 @@ class Model
       erlang_couchdb::create_database((@db_host, @db_port), @db_name)
       type = class()
       add_view(:all, "function(doc) { if (doc._type == '#{type}') emit(null, doc) }")
+      
+      @data.keys().each do |key|
+        add_view(key, "function(doc) { if (doc._type == '#{type}') emit(doc.#{key}, doc) }")
+      end
     end
   end
 end
