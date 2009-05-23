@@ -9,24 +9,41 @@ module Models
     
   def view(model, name, keys)
     (:json, data) = erlang_couchdb::invoke_view(('localhost'.to_list(), 5984), 'default'.to_list(), name.to_list(), name.to_list(), keys)
-    parse(data)
+    parse_view(data)
   end
 
-  def parse([(<<"error">>,<<"not_found">>),(<<"reason">>,<<"Missing">>)])
+  def parse_view([(<<"error">>,<<"not_found">>),(<<"reason">>,<<"Missing">>)])
     []
   end
 
-  def parse([_total, _data])
+  def parse_view([_total, _data])
     []
   end
   
-  def parse([_total, _offset, (<<"rows">>, rows)])
-    rows2 = [dict::from_list(dict::from_list(d)["value".to_binary()]) | d in rows]
-    rows2.map do |row|
-      dict::from_list(row.to_list().map { |(k,v)| (k.to_string().to_atom(), v.to_string())} )
+  def parse_view([_total, _offset, (<<"rows">>, rows)])
+    docs = [dict::from_list(dict::from_list(d)["value".to_binary()]) | d in rows]
+    docs.map do |doc|
+      reia_ise(doc)
     end
   end
+  
+  def reia_ise(doc)
+    dict::from_list(doc.to_list().map { |(k,v)| (k.to_string().to_atom(), v.to_string())} )
+  end
 
+  def get(doc_id)
+    (:json, data) = erlang_couchdb::retrieve_document(('localhost'.to_list(), 5984), 'default'.to_list(), doc_id.to_list())
+    parse_get(data)
+  end
+
+  def parse_get([(<<"error">>,<<"not_found">>),(<<"reason">>,<<"missing">>)])
+    nil
+  end
+
+  def parse_get(doc)
+    document = reia_ise(doc)
+    reia::spawn(document[:_type].to_atom(), [document])
+  end
 end
 
 class Model
@@ -44,14 +61,12 @@ class Model
     #erlang_couchdb::update_document((@db_host, @db_port), @db_name, "0980...", [{<<"_rev">>, <<"3419...">>}, {<<"name">>, <<"Korale">>}, {<<"level">>, <<"70">>}, {<<"type">>}, <<"character">>}]).
   end
   
-  def get(doc_id)
-    erlang_couchdb::retrieve_document((@db_host, @db_port), @db_name, doc_id.to_list())
+  def delete
+    id = @data[:_id].to_list()
+    rev = @data[:_rev].to_list()
+    erlang_couchdb::delete_document((@db_host, @db_port), @db_name, id, rev)
   end
   
-  def delete(doc_id, revision)
-    erlang_couchdb::delete_document((@db_host, @db_port), @db_name, doc_id.to_list(), revision.to_list())
-  end
-
   def add_view(name, map)
     erlang_couchdb::create_view((@db_host, @db_port), @db_name, name.to_list(), 'javascript'.to_binary(), [(name.to_s().to_binary(), map.to_s().to_binary())])
   end
