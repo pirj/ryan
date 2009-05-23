@@ -40,23 +40,20 @@ class Todos < Controller
   end
 
   def today
-    @session.set(:current_day, :today)
-    for_range('today')
+    for_range(:today)
   end
 
   def tomorrow
-    @session.set(:current_day, :tomorrow)
-    for_range('tomorrow')
+    for_range(:tomorrow)
   end
   
   def few_days
-    @session.set(:current_day, :few_days)
-    for_range('few_days')
+    for_range(:few_days)
   end
 
   def for_range(range)
-    data = Models.all(Todo)
-    todos = data.filter{|t| t[:when]==range}
+    @session.set(:current_day, range)
+    todos = Models.find(Todo, :when, range)
     render('todos/list', {}.insert(:todos, todos), [])
   end
 

@@ -4,17 +4,29 @@ module Models
   end
   
   def find(model, field, value)
-    view(model, field, [('key'.to_list(), value.to_s().to_list())])
+    view(model, field, [('key'.to_list(), '"#{value}"'.to_list())])
   end
     
   def view(model, name, keys)
-    (:json, [_, _, (_, data)]) = erlang_couchdb::invoke_view(('localhost'.to_list(), 5984), 'default'.to_list(), name.to_list(), name.to_list(), keys)
-    
-    data2 = data.map {|d| dict::from_list(dict::from_list(d)["value".to_binary()])}
-    data3 = data2.map do |d|
-      dict::from_list(d.to_list().map { |(k,v)| (k.to_string().to_atom(), v.to_string())} )
+    (:json, data) = erlang_couchdb::invoke_view(('localhost'.to_list(), 5984), 'default'.to_list(), name.to_list(), name.to_list(), keys)
+    parse(data)
+  end
+
+  def parse([(<<"error">>,<<"not_found">>),(<<"reason">>,<<"Missing">>)])
+    []
+  end
+
+  def parse([_total, _data])
+    []
+  end
+  
+  def parse([_total, _offset, (<<"rows">>, rows)])
+    rows2 = [dict::from_list(dict::from_list(d)["value".to_binary()]) | d in rows]
+    rows2.map do |row|
+      dict::from_list(row.to_list().map { |(k,v)| (k.to_string().to_atom(), v.to_string())} )
     end
   end
+
 end
 
 class Model
@@ -66,4 +78,3 @@ class Model
     end
   end
 end
-
