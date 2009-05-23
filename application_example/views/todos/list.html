@@ -1,1 +1,3 @@
-{for todo in todos}{todo.what}<br/>{end}
+{for todo in todos}
+  <p>{todo.what}<a _id={todo._id} icon=delete>delete</a></p>
+{end}

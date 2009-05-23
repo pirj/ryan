@@ -34,7 +34,6 @@ class Todos < Controller
     {:id => '#today', :command => :update, :what => :todos, :url => '/app/todos/today'},
     {:id => '#tomorrow', :command => :update, :what => :todos, :url => '/app/todos/tomorrow'},
     {:id => '#few_days', :command => :update, :what => :todos, :url => '/app/todos/few_days'},
-    {:id => 'a[icon=delete]', :command => :update, :url => '/app/todos/delete'},
     {:id => '#day_select a', :command => :toggleclass, :clazz => :selected}]
     render('todos/index', bindings, handlers)
   end
@@ -54,7 +53,8 @@ class Todos < Controller
   def for_range(range)
     @session.set(:current_day, range)
     todos = Models.find(Todo, :when, range)
-    render('todos/list', {}.insert(:todos, todos), [])
+    handlers = [{:id => 'a[icon=delete]', :command => :update, :url => '/app/todos/delete'}]
+    render('todos/list', {}.insert(:todos, todos), handlers)
   end
 
   def add_new
@@ -72,9 +72,8 @@ class Todos < Controller
   end
   
   def delete
-    day = @session.get(:current_day)
-    what = @parameters[:id]
-    Todo.delete({}.insert(:what, what).insert(:when, day))
+    # insecure!
+    Models.get(@parameters[:_id]).delete()
     text('')
   end
 end

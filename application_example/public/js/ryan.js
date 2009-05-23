@@ -18,7 +18,7 @@ function add_handler(options){
 	var effect = options['effect']
 	var clazz = options['clazz']
 	var get = options['get']
-	
+
 	if(command == 'send' || command == 'update' || command == 'append' || command == 'prepend' || command == 'empty' || command == 'message')
 		if(url)
 			$(id).attr('rel', 'url')
@@ -49,7 +49,7 @@ function add_handler(options){
 		if(url && get)
 			params = '?' + $(get).attr('id') + '=' + $(get).val()
 		else if(url)
-			params = '?id=' + $(this).attr('id')
+			params = '?_id=' + $(this).attr('_id')
 
 		if(command == 'send' || command == 'update' || command == 'append' || command == 'prepend'){
 			if(effect)
