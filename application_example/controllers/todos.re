@@ -1,10 +1,4 @@
 class Todos < Controller
-  def json(filename, bindings)
-    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
-    contents = view(filename, bindings)
-    content(:json, "{script: #{js}, contents: #{contents}}")
-  end
-
   def get_callback(callback)
     arguments = callback.to_list().map{ |(k,v)| "#{k}: '#{v}'"}.join(', ')
     'callback({#{arguments}})'
@@ -13,29 +7,43 @@ class Todos < Controller
   def on(what, event, where)
     @callbacks = @callbacks.unshift({}.insert(:what, what).insert(:event, event).insert(:where, where))
   end
-
+  
   def initialize(session, parameters)
     @session = session
     @parameters = parameters
     @callbacks = []
+#    @commands = []
   end
   
-  def index2
-    data = Models.all(Todo)
-    bindings = {}.insert(:todos, data)
-    on('#lala', :click, '/app/todos/json_test')
-    render('todos/index', bindings, [])
+#  def update()
+#    {where: "#todo_new", url: "/app/todos/add_new", effect: "slide"}
+#  end
+  
+#  def perform
+#    (:json, '[{update: {where: "#todo_new", url: "/app/todos/add_new", effect: "slide"}}]'.to_list())
+#  end
+  
+  def json_test
+    (:json, '[{update: {where: "#todo_new", url: "/app/todos/add_new", effect: "slide"}}]'.to_list())
+#    update({:where => "#todo_new", :url => "/app/todos/add_new", :effect => "slide"})
+#    perform()
+  end
+  
+  def index
+    on('#add_new', :click, '/app/todos/json_test')
+
+    page = view('todos/index', {})
+    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
+    (:html, '<script>#{js}</script>#{page}'.to_list())
   end
 
-  def index
-    data = Models.all(Todo)
-    bindings = {}.insert(:todos, data)
+  def index2
     handlers = [{:id => '#add_new', :command => :update, :what => :todo_new, :url => '/app/todos/add_new', :effect => :slide},
     {:id => '#today', :command => :update, :what => :todos, :url => '/app/todos/today'},
     {:id => '#tomorrow', :command => :update, :what => :todos, :url => '/app/todos/tomorrow'},
     {:id => '#few_days', :command => :update, :what => :todos, :url => '/app/todos/few_days'},
     {:id => '#day_select a', :command => :toggleclass, :clazz => :selected}]
-    render('todos/index', bindings, handlers)
+    render('todos/index', {}, handlers)
   end
 
   def today

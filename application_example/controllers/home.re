@@ -5,7 +5,7 @@ class Home < Controller
   end
 
   def index
-    jss = ['jquery-1.3.2.min', 'jquery.jgrowl_minimized', 'ryan']
+    jss = ['jquery-1.3.2.min', 'jquery.jgrowl_minimized', 'ryan', 'dyn_ryan']
     headjs = ['<script type="text/javascript" src="/js/#{js}.js"></script>' | js in jss].join()
     csss = ['app', 'jquery.jgrowl']
     headcss = ['<link href="/css/#{css}.css" rel=stylesheet type=text/css>' | css in csss].join()
