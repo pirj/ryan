@@ -69,6 +69,6 @@ behave:
 
 clean:
 	rm -f ebin/*
-	rm -f src/compiler/reia_scan.erl src/compiler/reia_parse.erl
+	rm -f src/retem/retem_scan.erl src/retem/retem_parse.erl
 	(cd deps/erlang_couchdb;$(MAKE) clean)
 	(cd deps/mochiweb;$(MAKE) clean)
