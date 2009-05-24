@@ -14,6 +14,7 @@ Ryan consists of:
 
 [Erlang/OTP R12B-3 or higher](http://www.erlang.org/download.html),
 [Reia language](http://github.com/tarcieri/reia),
+[CouchDB 0.9](http://couchdb.apache.org/downloads.html)
 
 ## Building
 
