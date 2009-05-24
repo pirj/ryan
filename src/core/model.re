@@ -23,7 +23,8 @@ module Models
   def parse_view([_total, _offset, (<<"rows">>, rows)])
     docs = [dict::from_list(dict::from_list(d)["value".to_binary()]) | d in rows]
     docs.map do |doc|
-      reia_ise(doc)
+      document = reia_ise(doc)
+      reia::spawn(document[:_type].to_atom(), [document])
     end
   end
   
@@ -48,7 +49,7 @@ end
 
 class Model
   def initialize(data)
-    @data = data
+    @data = data.insert(:_type, class().to_s())
     base(:default)
   end
   
@@ -57,7 +58,8 @@ class Model
       (k.to_s().to_binary(), v.to_s().to_binary())
     end
     
-    erlang_couchdb::create_document((@db_host, @db_port), @db_name, data2.unshift(("_type".to_binary(), class().to_s().to_binary())))
+    (:json,[(<<"ok">>,true),(<<"id">>,id),(<<"rev">>,rev)]) = erlang_couchdb::create_document((@db_host, @db_port), @db_name, data2)
+    @data = @data.insert(:_id, id.to_string()).insert(:_rev, rev.to_string())
     #erlang_couchdb::update_document((@db_host, @db_port), @db_name, "0980...", [{<<"_rev">>, <<"3419...">>}, {<<"name">>, <<"Korale">>}, {<<"level">>, <<"70">>}, {<<"type">>}, <<"character">>}]).
   end
   
@@ -91,5 +93,9 @@ class Model
         add_view(key, "function(doc) { if (doc._type == '#{type}') emit(doc.#{key}, doc) }")
       end
     end
+  end
+  
+  def data
+    @data
   end
 end
