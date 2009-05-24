@@ -53,6 +53,7 @@ class Todos < Controller
   def for_range(range)
     @session.set(:current_day, range)
     todos = Models.find(Todo, :when, range)
+    todos = [todo.data() | todo in todos]
     handlers = [{:id => 'a[icon=delete]', :command => :update, :url => '/app/todos/delete'}]
     render('todos/list', {}.insert(:todos, todos), handlers)
   end
@@ -67,8 +68,9 @@ class Todos < Controller
   def add_todo
     day = @session.get(:current_day)
     todo_text = @parameters[:todo_new_text]
-    Todo({}.insert(:what, todo_text).insert(:when, day)).save()
-    text('#{todo_text}<br/>')
+    todo = Todo({}.insert(:what, todo_text).insert(:when, day))
+    todo.save()
+    render('todos/list', {}.insert(:todos, [todo.data()]), [])
   end
   
   def delete
