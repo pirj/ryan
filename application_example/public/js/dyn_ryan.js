@@ -13,11 +13,10 @@ function callback(options){
 }
 
 function parse_reply(reply){
-	for(i in reply)
-		for(j in reply[i]){
-			reaction = reactions[j]
-			reaction(reply[i][j])
-		}
+	for(i in reply){
+		reaction = reactions[reply[i]['command']]
+		reaction(reply[i])
+	}
 }
 
 var reactions = {
@@ -26,7 +25,7 @@ var reactions = {
 }
 
 function growl(data){
-	$.jGrowl(data)
+	$.jGrowl(data['text'])
 }
 
 function update(data){

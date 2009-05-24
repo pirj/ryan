@@ -12,25 +12,42 @@ class Todos < Controller
     @session = session
     @parameters = parameters
     @callbacks = []
-#    @commands = []
+    @commands = []
   end
   
-#  def update()
-#    {where: "#todo_new", url: "/app/todos/add_new", effect: "slide"}
-#  end
+  def update(command)
+    @commands = @commands.unshift(command.insert(:command, :update))
+  end
   
-#  def perform
-#    (:json, '[{update: {where: "#todo_new", url: "/app/todos/add_new", effect: "slide"}}]'.to_list())
-#  end
+  def growl(command)
+    @commands = @commands.unshift(command.insert(:command, :growl))
+  end
   
-  def json_test
-    (:json, '[{update: {where: "#todo_new", url: "/app/todos/add_new", effect: "slide"}}]'.to_list())
-#    update({:where => "#todo_new", :url => "/app/todos/add_new", :effect => "slide"})
-#    perform()
+  def perform
+    json = @commands.map {|command| parse_command(command)}
+    json.to_s().puts()
+    (:json, json.to_s().to_list())
+  end
+  
+  def parse_command(command)
+    ['{', ['#{key}: "#{command[key]}"' | key in command.keys()].join(', '), '}'].join()
+  end
+
+  def add_new
+    handlers = [{:id => '#add', :command => :prepend, :what => :todos, :url => '/app/todos/add_todo', :get => '#todo_new_text'},
+    {:id => '#add', :command => :empty, :what => :todo_new, :effect => :fade},
+    {:id => '#cancel', :command => :empty, :what => :todo_new, :effect => :fade}]
+
+    render('todos/new', {}, handlers)
+  end
+  
+  def show_new
+    update({:where => "#todo_new", :effect => "slide", :url => '/app/todos/add_new'})
+    perform()
   end
   
   def index
-    on('#add_new', :click, '/app/todos/json_test')
+    on('#add_new', :click, '/app/todos/show_new')
 
     page = view('todos/index', {})
     js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
@@ -38,7 +55,8 @@ class Todos < Controller
   end
 
   def index2
-    handlers = [{:id => '#add_new', :command => :update, :what => :todo_new, :url => '/app/todos/add_new', :effect => :slide},
+    handlers = [
+    #{:id => '#add_new', :command => :update, :what => :todo_new, :url => '/app/todos/add_new', :effect => :slide},
     {:id => '#today', :command => :update, :what => :todos, :url => '/app/todos/today'},
     {:id => '#tomorrow', :command => :update, :what => :todos, :url => '/app/todos/tomorrow'},
     {:id => '#few_days', :command => :update, :what => :todos, :url => '/app/todos/few_days'},
@@ -64,13 +82,6 @@ class Todos < Controller
     todos = [todo.data() | todo in todos]
     handlers = [{:id => 'a[icon=delete]', :command => :update, :url => '/app/todos/delete'}]
     render('todos/list', {}.insert(:todos, todos), handlers)
-  end
-
-  def add_new
-    handlers = [{:id => '#add', :command => :prepend, :what => :todos, :url => '/app/todos/add_todo', :get => '#todo_new_text'},
-    {:id => '#add', :command => :empty, :what => :todo_new, :effect => :fade},
-    {:id => '#cancel', :command => :empty, :what => :todo_new, :effect => :fade}]
-    render('todos/new', {}, handlers)
   end
 
   def add_todo
