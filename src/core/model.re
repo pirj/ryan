@@ -8,7 +8,7 @@ module Models
   end
     
   def view(model, name, keys)
-    (:json, data) = erlang_couchdb::invoke_view(('localhost'.to_list(), 5984), 'default'.to_list(), name.to_list(), name.to_list(), keys)
+    (:json, data) = erlang_couchdb::invoke_view(('localhost'.to_list(), 5984), 'default'.to_list(), model.to_s().to_list(), name.to_list(), keys)
     parse_view(data)
   end
 
@@ -69,12 +69,10 @@ class Model
     erlang_couchdb::delete_document((@db_host, @db_port), @db_name, id, rev)
   end
   
-  def add_view(name, map)
-    erlang_couchdb::create_view((@db_host, @db_port), @db_name, name.to_list(), 'javascript'.to_binary(), [(name.to_s().to_binary(), map.to_s().to_binary())])
-  end
-    
-  def add_view2(name, map, reduce)
-    erlang_couchdb::create_view((@db_host, @db_port), @db_name, name.to_list(), 'javascript'.to_binary(), [(name.to_s().to_binary(), map.to_s().to_binary(), reduce.to_s().to_binary())])
+  def create_views(views)
+    viewsb = reia_erl::r2e([(name.to_s().to_binary(), map.to_s().to_binary()) | (name, map) in views])
+    #hack to get rid of {tuple, ...}
+    erlang_couchdb::create_view((@db_host, @db_port), @db_name, class().to_s().to_list(), 'javascript'.to_binary(), viewsb)
   end
 
   def base(name)
@@ -87,11 +85,14 @@ class Model
       'Creating database #{name}'.puts()
       erlang_couchdb::create_database((@db_host, @db_port), @db_name)
       type = class()
-      add_view(:all, "function(doc) { if (doc._type == '#{type}') emit(null, doc) }")
       
-      @data.keys().each do |key|
-        add_view(key, "function(doc) { if (doc._type == '#{type}') emit(doc.#{key}, doc) }")
+      keys = [k | k in @data.keys(), k != :_id && k != :_type]
+      views = keys.map do |key|
+        (key, "function(doc) { if (doc._type == '#{type}') emit(doc.#{key}, doc) }")
       end
+      views = views.unshift((:all, "function(doc) { if (doc._type == '#{type}') emit(null, doc) }"))
+
+      create_views(views)
     end
   end
   
