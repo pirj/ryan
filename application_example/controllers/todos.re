@@ -25,7 +25,6 @@ class Todos < Controller
   
   def perform
     json = @commands.map {|command| parse_command(command)}
-    json.to_s().puts()
     (:json, json.to_s().to_list())
   end
   
@@ -46,8 +45,26 @@ class Todos < Controller
     perform()
   end
   
+  def todayjs
+    update({:where => "#todos", :url => '/app/todos/today'})
+    perform()
+  end
+  
+  def tomorrowjs
+    update({:where => "#todos", :url => '/app/todos/tomorrow'})
+    perform()
+  end
+  
+  def few_daysjs
+    update({:where => "#todos", :url => '/app/todos/few_days'})
+    perform()
+  end
+  
   def index
     on('#add_new', :click, '/app/todos/show_new')
+    on('#today', :mouseover, '/app/todos/todayjs')
+    on('#tomorrow', :mouseover, '/app/todos/tomorrowjs')
+    on('#few_days', :mouseover, '/app/todos/few_daysjs')
 
     page = view('todos/index', {})
     js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
