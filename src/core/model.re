@@ -23,12 +23,12 @@ module Models
   def parse_view([_total, _offset, (<<"rows">>, rows)])
     docs = [dict::from_list(dict::from_list(d)["value".to_binary()]) | d in rows]
     docs.map do |doc|
-      document = reia_ise(doc)
+      document = map_to_object(doc)
       reia::spawn(document[:_type].to_atom(), [document])
     end
   end
   
-  def reia_ise(doc)
+  def map_to_object(doc)
     dict::from_list(doc.to_list().map { |(k,v)| (k.to_string().to_atom(), v.to_string())} )
   end
 
@@ -42,7 +42,7 @@ module Models
   end
 
   def parse_get(doc)
-    document = reia_ise(doc)
+    document = map_to_object(doc)
     reia::spawn(document[:_type].to_atom(), [document])
   end
 end
@@ -50,7 +50,6 @@ end
 class Model
   def initialize(data)
     @data = data.insert(:_type, class().to_s())
-    base(:default)
   end
   
   def save
@@ -58,42 +57,27 @@ class Model
       (k.to_s().to_binary(), v.to_s().to_binary())
     end
     
-    (:json,[(<<"ok">>,true),(<<"id">>,id),(<<"rev">>,rev)]) = erlang_couchdb::create_document((@db_host, @db_port), @db_name, data2)
+    (:json,[(<<"ok">>,true),(<<"id">>,id),(<<"rev">>,rev)]) = erlang_couchdb::create_document(('localhost'.to_list(), 5984), 'default'.to_list(), data2)
     @data = @data.insert(:_id, id.to_string()).insert(:_rev, rev.to_string())
-    #erlang_couchdb::update_document((@db_host, @db_port), @db_name, "0980...", [{<<"_rev">>, <<"3419...">>}, {<<"name">>, <<"Korale">>}, {<<"level">>, <<"70">>}, {<<"type">>}, <<"character">>}]).
+    #erlang_couchdb::update_document(('localhost'.to_list(), 5984), 'default'.to_list(), "0980...", [{<<"_rev">>, <<"3419...">>}, {<<"name">>, <<"Korale">>}, {<<"level">>, <<"70">>}, {<<"type">>}, <<"character">>}]).
   end
   
   def delete
     id = @data[:_id].to_list()
     rev = @data[:_rev].to_list()
-    erlang_couchdb::delete_document((@db_host, @db_port), @db_name, id, rev)
+    erlang_couchdb::delete_document(('localhost'.to_list(), 5984), 'default'.to_list(), id, rev)
   end
   
-  def create_views(views)
+  def create_views
+    type = class()
+    views = fields().map do |key|
+      (key, "function(doc) { if (doc._type == '#{type}') emit(doc.#{key}, doc) }")
+    end
+    views = views.unshift((:all, "function(doc) { if (doc._type == '#{type}') emit(null, doc) }"))
+
     viewsb = reia_erl::r2e([(name.to_s().to_binary(), map.to_s().to_binary()) | (name, map) in views])
     #hack to get rid of {tuple, ...}
-    erlang_couchdb::create_view((@db_host, @db_port), @db_name, class().to_s().to_list(), 'javascript'.to_binary(), viewsb)
-  end
-
-  def base(name)
-    host = :localhost
-    port = 5984
-    @db_host = host.to_list()
-    @db_port = port
-    @db_name = name.to_list()
-    if erlang_couchdb::database_info((@db_host, @db_port), @db_name) == (:ok,[(<<"error">>,<<"not_found">>),(<<"reason">>,<<"Missing">>)])
-      'Creating database #{name}'.puts()
-      erlang_couchdb::create_database((@db_host, @db_port), @db_name)
-      type = class()
-      
-      keys = [k | k in @data.keys(), k != :_id && k != :_type]
-      views = keys.map do |key|
-        (key, "function(doc) { if (doc._type == '#{type}') emit(doc.#{key}, doc) }")
-      end
-      views = views.unshift((:all, "function(doc) { if (doc._type == '#{type}') emit(null, doc) }"))
-
-      create_views(views)
-    end
+    erlang_couchdb::create_view(('localhost'.to_list(), 5984), 'default'.to_list(), class().to_s().to_list(), 'javascript'.to_binary(), viewsb)
   end
   
   def data

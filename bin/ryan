@@ -53,12 +53,21 @@ module GoRyan
       false
     end
   end
+  
+  def init_db
+    if erlang_couchdb::database_info(('localhost'.to_list(), 5984), 'default'.to_list()) == (:ok,[(<<"error">>,<<"not_found">>),(<<"reason">>,<<"Missing">>)])
+      'Creating database'.puts()
+      erlang_couchdb::create_database(('localhost'.to_list(), 5984), 'default'.to_list())
+    end
+  end
 
   def load_models
     models = Dir.list('models')
     models.each do |model|
       'Loading #{model}'.puts()
       Main.load('models/#{model}')
+      object = reia::spawn(model.split(/\\.re/)[0].capitalize().to_atom(), [{}])
+      object.create_views()
     end
   end
   
