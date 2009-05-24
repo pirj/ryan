@@ -9,3 +9,5 @@ application_example_classic/logs/*
 deps/mochiweb/src/.svn/*
 deps/mochiweb/.svn/*
 **/*.*~
+src/retem/retem_parse.erl
+src/retem/retem_scan.erl
