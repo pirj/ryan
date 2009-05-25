@@ -121,21 +121,15 @@ class Todos < Controller
   end
   
   def today
-    data = for_range(:today)
-    update('#todos', data)
-    perform()
+    for_range(:today)
   end
   
   def tomorrow
-    data = for_range(:tomorrow)
-    update('#todos', data)
-    perform()
+    for_range(:tomorrow)
   end
   
   def few_days
-    data = for_range(:few_days)
-    update('#todos', data)
-    perform()
+    for_range(:few_days)
   end
 
   def for_range(range)
@@ -148,7 +142,9 @@ class Todos < Controller
 
     page = view('todos/list', {}.insert(:todos, todos))
     js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
-    (:html, '<script>#{js}</script>#{page}'.to_list())
+    data = (:html, '<script>#{js}</script>#{page}'.to_list())
+    update('#todos', data)
+    perform()
   end
 
   def delete
