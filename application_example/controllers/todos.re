@@ -62,6 +62,11 @@ class Todos < Controller
     @commands = @commands.unshift(command)
   end
   
+  def toggleclass(where, clazz)
+    command = {}.insert(:command, :toggleclass).insert(:where, where).insert(:clazz, clazz)
+    @commands = @commands.unshift(command)
+  end
+  
   def perform
     json = @commands.map {|command| parse_command(command)}
     (:json, json.to_list().to_s().split(/\n/).join().to_list())
@@ -74,6 +79,17 @@ class Todos < Controller
 # move this to Controller ^^^^^^^^^^^^
 
 
+  
+  def index
+    on('#add_new', :click, '/app/todos/add_new')
+    on('#today', :mouseover, '/app/todos/today')
+    on('#tomorrow', :mouseover, '/app/todos/tomorrow')
+    on('#few_days', :mouseover, '/app/todos/few_days')
+
+    page = view('todos/index', {})
+    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
+    (:html, '<script>#{js}</script>#{page}'.to_list())
+  end
 
   def add_new
     on('#add', :click, '/app/todos/add_todo', '#todo_new_text')
@@ -120,18 +136,6 @@ class Todos < Controller
     update('#todos', data)
     perform()
   end
-  
-  def index
-    on('#add_new', :click, '/app/todos/add_new')
-    on('#today', :mouseover, '/app/todos/today')
-    on('#tomorrow', :mouseover, '/app/todos/tomorrow')
-    on('#few_days', :mouseover, '/app/todos/few_days')
-    #{:id => '#day_select a', :command => :toggleclass, :clazz => :selected}]
-
-    page = view('todos/index', {})
-    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
-    (:html, '<script>#{js}</script>#{page}'.to_list())
-  end
 
   def for_range(range)
     @session.set(:current_day, range)
@@ -139,6 +143,7 @@ class Todos < Controller
     todos = [todo.data() | todo in todos]
 
     on('a[icon=delete]', :click, '/app/todos/delete')
+    toggleclass('#day_select ##{range}', :selected)
 
     page = view('todos/list', {}.insert(:todos, todos))
     js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')

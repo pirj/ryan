@@ -31,7 +31,8 @@ var reactions = {
 	hide: hide,
 	empty: empty,
 	prepend: prepend,
-	update: update
+	update: update,
+	toggleclass: toggleclass
 }
 
 function growl(data){
@@ -56,4 +57,11 @@ function prepend(data){
 	$(data['where']).prepend(data['html'])
 	if(data['effect'])
 		$(data['where']).show(data['effect'])
+}
+
+function toggleclass(data){
+	$.jGrowl(data['where'])
+	$.jGrowl(data['clazz'])
+	$(data['where']).parent().children().removeClass(data['clazz'])
+	$(data['where']).addClass(data['clazz'])
 }
