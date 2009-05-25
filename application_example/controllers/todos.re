@@ -5,7 +5,13 @@ class Todos < Controller
   end
   
   def on(what, event, where)
-    @callbacks = @callbacks.unshift({}.insert(:what, what).insert(:event, event).insert(:where, where))
+    callback = {}.insert(:what, what).insert(:event, event).insert(:where, where)
+    @callbacks = @callbacks.unshift(callback)
+  end
+  
+  def on(what, event, where, get)
+    callback = {}.insert(:what, what).insert(:event, event).insert(:where, where).insert(:get, get)
+    @callbacks = @callbacks.unshift(callback)
   end
   
   def initialize(session, parameters)
@@ -26,6 +32,17 @@ class Todos < Controller
     command = {}.insert(:command, :update).insert(:where, where).insert(:html, what.to_string()).insert(:effect, effect)
     @commands = @commands.unshift(command)
   end
+
+  def prepend(where, data)
+    (:html, what) = data
+    command = {}.insert(:command, :prepend).insert(:where, where).insert(:html, what.to_string())
+    @commands = @commands.unshift(command)
+  end
+  
+  def hide(where, effect)
+    command = {}.insert(:command, :hide).insert(:where, where).insert(:effect, effect)
+    @commands = @commands.unshift(command)
+  end
   
   def growl(text)
     command = {}.insert(:command, :growl).insert(:text, text)
@@ -42,16 +59,30 @@ class Todos < Controller
   end
 
   def add_new
-    handlers = [{:id => '#add', :command => :prepend, :what => :todos, :url => '/app/todos/add_todo', :get => '#todo_new_text'},
-    {:id => '#add', :command => :empty, :what => :todo_new, :effect => :fade},
-    {:id => '#cancel', :command => :empty, :what => :todo_new, :effect => :fade}]
+    on('#add', :click, '/app/todos/add_todo', '#todo_new_text')
+    on('#cancel', :click, '/app/todos/add_cancel')
+    
+#    {:id => '#cancel', :command => :empty, :what => :todo_new, :effect => :fade}]
 
-    render('todos/new', {}, handlers)
+    page = view('todos/new', {})
+    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
+    
+    update('#todo_new', (:html, '<script>#{js}</script>#{page}'.to_list()), "slide")
+    perform()
   end
   
-  def show_new
-    update('#todo_new', '/app/todos/add_new', "slide")
+  def add_cancel
+    hide('#todo_new', "slide")
     perform()
+  end
+  
+  def add_todo
+#    handlers = [{:id => '#add', :command => :prepend, :what => :todos, :url => '/app/todos/add_todo', :get => '#todo_new_text'},
+    day = @session.get(:current_day)
+    todo_text = @parameters[:todo_new_text]
+    todo = Todo({}.insert(:what, todo_text).insert(:when, day))
+    todo.save()
+    render('todos/list', {}.insert(:todos, [todo.data()]), [])
   end
   
   def today
@@ -73,7 +104,7 @@ class Todos < Controller
   end
   
   def index
-    on('#add_new', :click, '/app/todos/show_new')
+    on('#add_new', :click, '/app/todos/add_new')
     on('#today', :mouseover, '/app/todos/today')
     on('#tomorrow', :mouseover, '/app/todos/tomorrow')
     on('#few_days', :mouseover, '/app/todos/few_days')
@@ -92,14 +123,6 @@ class Todos < Controller
     render('todos/list', {}.insert(:todos, todos), handlers)
   end
 
-  def add_todo
-    day = @session.get(:current_day)
-    todo_text = @parameters[:todo_new_text]
-    todo = Todo({}.insert(:what, todo_text).insert(:when, day))
-    todo.save()
-    render('todos/list', {}.insert(:todos, [todo.data()]), [])
-  end
-  
   def delete
     # insecure!
     Models.get(@parameters[:_id]).delete()
