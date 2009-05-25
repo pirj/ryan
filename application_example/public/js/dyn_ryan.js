@@ -60,8 +60,6 @@ function prepend(data){
 }
 
 function toggleclass(data){
-	$.jGrowl(data['where'])
-	$.jGrowl(data['clazz'])
 	$(data['where']).parent().children().removeClass(data['clazz'])
 	$(data['where']).addClass(data['clazz'])
 }
