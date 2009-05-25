@@ -98,7 +98,6 @@ class Todos < Controller
     todo.save()
     data = render('todos/list', {}.insert(:todos, [todo.data()]), [])
 
-    data.inspect().puts()
     prepend('#todos', data, 'fade')
     hide('#todo_new', 'slide')
     perform()

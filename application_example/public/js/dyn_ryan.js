@@ -3,7 +3,6 @@ function callback(options){
 	var id = options['what']
 	var url = options['where']
 	var get = options['get']
-	$.jGrowl(get)
 
 	var on_complete = function(reply){
 		parse_reply(reply)
