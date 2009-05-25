@@ -13,6 +13,8 @@ function callback(options){
 		var data = {}
 		if(get)
 			data[$(get).attr('id')] = $(get).val()
+		else
+			data['_id'] = $(id).attr('_id')
 		$.getJSON(url, data, on_complete)
 	})
 }

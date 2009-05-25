@@ -137,13 +137,20 @@ class Todos < Controller
     @session.set(:current_day, range)
     todos = Models.find(Todo, :when, range)
     todos = [todo.data() | todo in todos]
-    handlers = [{:id => 'a[icon=delete]', :command => :update, :url => '/app/todos/delete'}]
-    render('todos/list', {}.insert(:todos, todos), handlers)
+
+    on('a[icon=delete]', :click, '/app/todos/delete')
+
+    page = view('todos/list', {}.insert(:todos, todos))
+    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
+    (:html, '<script>#{js}</script>#{page}'.to_list())
   end
 
   def delete
     # insecure!
-    Models.get(@parameters[:_id]).delete()
-    text('')
+    id = @parameters[:_id]
+    Models.get(id).delete()
+
+    empty('p[_id=#{id}]', 'slide')
+    perform()
   end
 end
