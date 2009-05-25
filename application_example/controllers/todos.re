@@ -15,17 +15,26 @@ class Todos < Controller
     @commands = []
   end
   
-  def update(command)
-    @commands = @commands.unshift(command.insert(:command, :update))
+  def update(where, data)
+    (:html, what) = data
+    command = {}.insert(:command, :update).insert(:where, where).insert(:html, what.to_string())
+    @commands = @commands.unshift(command)
+  end
+
+  def update(where, data, effect)
+    (:html, what) = data
+    command = {}.insert(:command, :update).insert(:where, where).insert(:html, what.to_string()).insert(:effect, effect)
+    @commands = @commands.unshift(command)
   end
   
-  def growl(command)
-    @commands = @commands.unshift(command.insert(:command, :growl))
+  def growl(text)
+    command = {}.insert(:command, :growl).insert(:text, text)
+    @commands = @commands.unshift(command)
   end
   
   def perform
     json = @commands.map {|command| parse_command(command)}
-    (:json, json.to_s().to_list())
+    (:json, json.to_list().to_s().split(/\n/).join().to_list())
   end
   
   def parse_command(command)
@@ -41,56 +50,38 @@ class Todos < Controller
   end
   
   def show_new
-    update({:where => "#todo_new", :effect => "slide", :url => '/app/todos/add_new'})
+    update('#todo_new', '/app/todos/add_new', "slide")
     perform()
   end
   
-  def todayjs
-    update({:where => "#todos", :url => '/app/todos/today'})
+  def today
+    data = for_range(:today)
+    update('#todos', data)
     perform()
   end
   
-  def tomorrowjs
-    update({:where => "#todos", :url => '/app/todos/tomorrow'})
+  def tomorrow
+    data = for_range(:tomorrow)
+    update('#todos', data)
     perform()
   end
   
-  def few_daysjs
-    update({:where => "#todos", :url => '/app/todos/few_days'})
+  def few_days
+    data = for_range(:few_days)
+    update('#todos', data)
     perform()
   end
   
   def index
     on('#add_new', :click, '/app/todos/show_new')
-    on('#today', :mouseover, '/app/todos/todayjs')
-    on('#tomorrow', :mouseover, '/app/todos/tomorrowjs')
-    on('#few_days', :mouseover, '/app/todos/few_daysjs')
+    on('#today', :mouseover, '/app/todos/today')
+    on('#tomorrow', :mouseover, '/app/todos/tomorrow')
+    on('#few_days', :mouseover, '/app/todos/few_days')
+    #{:id => '#day_select a', :command => :toggleclass, :clazz => :selected}]
 
     page = view('todos/index', {})
     js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
     (:html, '<script>#{js}</script>#{page}'.to_list())
-  end
-
-  def index2
-    handlers = [
-    #{:id => '#add_new', :command => :update, :what => :todo_new, :url => '/app/todos/add_new', :effect => :slide},
-    {:id => '#today', :command => :update, :what => :todos, :url => '/app/todos/today'},
-    {:id => '#tomorrow', :command => :update, :what => :todos, :url => '/app/todos/tomorrow'},
-    {:id => '#few_days', :command => :update, :what => :todos, :url => '/app/todos/few_days'},
-    {:id => '#day_select a', :command => :toggleclass, :clazz => :selected}]
-    render('todos/index', {}, handlers)
-  end
-
-  def today
-    for_range(:today)
-  end
-
-  def tomorrow
-    for_range(:tomorrow)
-  end
-  
-  def few_days
-    for_range(:few_days)
   end
 
   def for_range(range)

@@ -29,15 +29,7 @@ function growl(data){
 }
 
 function update(data){
-	if(data['text']){
-		$(data['where']).html(data['text'])
-		if(data['effect'])
-			$(data['where']).show(data['effect'])
-	}
-	if(data['url'])
-		$.get(data['url'], function(reply){
-			$(data['where']).html(reply)
-			if(data['effect'])
-				$(data['where']).show(data['effect'])
-		})
+	$(data['where']).html(data['html'])
+	if(data['effect'])
+		$(data['where']).show(data['effect'])
 }
