@@ -28,6 +28,7 @@ function parse_reply(reply){
 var reactions = {
 	growl: growl,
 	hide: hide,
+	empty: empty,
 	prepend: prepend,
 	update: update
 }
@@ -38,6 +39,10 @@ function growl(data){
 
 function hide(data){
 	$(data['where']).hide(data['effect'])
+}
+
+function empty(data){
+	$(data['where']).empty(data['effect'])
 }
 
 function update(data){

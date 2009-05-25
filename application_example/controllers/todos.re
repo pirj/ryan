@@ -1,4 +1,6 @@
 class Todos < Controller
+# move this to Controller vvvvvvvvvvvvvvvvvv
+
   def get_callback(callback)
     arguments = callback.to_list().map{ |(k,v)| "#{k}: '#{v}'"}.join(', ')
     'callback({#{arguments}})'
@@ -50,6 +52,11 @@ class Todos < Controller
     @commands = @commands.unshift(command)
   end
   
+  def empty(where, effect)
+    command = {}.insert(:command, :empty).insert(:where, where).insert(:effect, effect)
+    @commands = @commands.unshift(command)
+  end
+  
   def growl(text)
     command = {}.insert(:command, :growl).insert(:text, text)
     @commands = @commands.unshift(command)
@@ -64,12 +71,14 @@ class Todos < Controller
     ['{', ['#{key}: "#{command[key]}"' | key in command.keys()].join(', '), '}'].join()
   end
 
+# move this to Controller ^^^^^^^^^^^^
+
+
+
   def add_new
     on('#add', :click, '/app/todos/add_todo', '#todo_new_text')
     on('#cancel', :click, '/app/todos/add_cancel')
     
-#    {:id => '#cancel', :command => :empty, :what => :todo_new, :effect => :fade}]
-
     page = view('todos/new', {})
     js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
     
@@ -78,12 +87,11 @@ class Todos < Controller
   end
   
   def add_cancel
-    hide('#todo_new', 'slide')
+    empty('#todo_new', 'slide')
     perform()
   end
   
   def add_todo
-#    handlers = [{:id => '#add', :command => :prepend, :what => :todos, :url => '/app/todos/add_todo', :get => '#todo_new_text'},
     day = @session.get(:current_day)
     todo_text = @parameters[:todo_new_text]
     todo = Todo({}.insert(:what, todo_text).insert(:when, day))
