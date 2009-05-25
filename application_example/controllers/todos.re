@@ -112,9 +112,10 @@ class Todos < Controller
     todo_text = @parameters[:todo_new_text]
     todo = Todo({}.insert(:what, todo_text).insert(:when, day))
     todo.save()
-    data = render('todos/list', {}.insert(:todos, [todo.data()]), [])
 
-    prepend('#todos', data, 'fade')
+    page = view('todos/list', {}.insert(:todos, [todo.data()]))
+
+    prepend('#todos', (:html, page.to_list()), 'fade')
     hide('#todo_new', 'slide')
     perform()
   end
