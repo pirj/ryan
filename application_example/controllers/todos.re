@@ -39,6 +39,12 @@ class Todos < Controller
     @commands = @commands.unshift(command)
   end
   
+  def prepend(where, data, effect)
+    (:html, what) = data
+    command = {}.insert(:command, :prepend).insert(:where, where).insert(:html, what.to_string()).insert(:effect, effect)
+    @commands = @commands.unshift(command)
+  end
+  
   def hide(where, effect)
     command = {}.insert(:command, :hide).insert(:where, where).insert(:effect, effect)
     @commands = @commands.unshift(command)
@@ -67,12 +73,12 @@ class Todos < Controller
     page = view('todos/new', {})
     js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
     
-    update('#todo_new', (:html, '<script>#{js}</script>#{page}'.to_list()), "slide")
+    update('#todo_new', (:html, '<script>#{js}</script>#{page}'.to_list()), 'slide')
     perform()
   end
   
   def add_cancel
-    hide('#todo_new', "slide")
+    hide('#todo_new', 'slide')
     perform()
   end
   
@@ -82,7 +88,12 @@ class Todos < Controller
     todo_text = @parameters[:todo_new_text]
     todo = Todo({}.insert(:what, todo_text).insert(:when, day))
     todo.save()
-    render('todos/list', {}.insert(:todos, [todo.data()]), [])
+    data = render('todos/list', {}.insert(:todos, [todo.data()]), [])
+
+    data.inspect().puts()
+    prepend('#todos', data, 'fade')
+    hide('#todo_new', 'slide')
+    perform()
   end
   
   def today
