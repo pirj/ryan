@@ -1,4 +1,9 @@
 module Controllers
+  def page(controller, action, session, parameters)
+    controller_object = Controllers.get(controller, session, parameters)
+    reia::invoke(controller_object, action, [])
+  end
+  
   def get(controller, session, parameters)
     controller = controller.to_s()
     controller_file = 'controllers/#{controller}.re'
@@ -59,6 +64,8 @@ class Controller
   def initialize(session, parameters)
     @session = session
     @parameters = parameters
+    @callbacks = []
+    @commands = []
   end
 
 # redirect to url
@@ -108,5 +115,20 @@ class Controller
     page = view(filename, bindings)
     js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
     (:html, '<script>#{js}</script>#{page}'.to_list())
+  end
+
+  def get_callback(callback)
+    arguments = callback.to_list().map{ |(k,v)| "#{k}: '#{v}'"}.join(', ')
+    'callback({#{arguments}})'
+  end
+  
+  def on(what, event, where)
+    callback = {}.insert(:what, what).insert(:event, event).insert(:where, where)
+    @callbacks = @callbacks.unshift(callback)
+  end
+  
+  def on_get(what, event, where, get)
+    callback = {}.insert(:what, what).insert(:event, event).insert(:where, where).insert(:get, get)
+    @callbacks = @callbacks.unshift(callback)
   end
 end

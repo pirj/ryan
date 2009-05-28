@@ -29,28 +29,6 @@ class Home < Controller
   
 # move this to Controller vvvvvvvvvvvvvvvvvv
 
-  def get_callback(callback)
-    arguments = callback.to_list().map{ |(k,v)| "#{k}: '#{v}'"}.join(', ')
-    'callback({#{arguments}})'
-  end
-
-  def on(what, event, where)
-    callback = {}.insert(:what, what).insert(:event, event).insert(:where, where)
-    @callbacks = @callbacks.unshift(callback)
-  end
-
-  def on(what, event, where, get)
-    callback = {}.insert(:what, what).insert(:event, event).insert(:where, where).insert(:get, get)
-    @callbacks = @callbacks.unshift(callback)
-  end
-
-  def initialize(session, parameters)
-    @session = session
-    @parameters = parameters
-    @callbacks = []
-    @commands = []
-  end
-
   def update(where, data)
     (:html, what) = data
     command = {}.insert(:command, :update).insert(:where, where).insert(:html, what.to_string())

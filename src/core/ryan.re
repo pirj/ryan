@@ -9,13 +9,12 @@ module Ryan
     (_h, s, ns) = erlang::now()
     abspath = abspath.to_string()
     took = (s-is) * 1000000 + ns - ins
-    'session #{session_token}: #{abspath}, took #{took} ns'.puts()
+    'session #{session_token}: #{abspath}, took #{took} ms'.puts()
     result
   end
 
   def page(controller, action, session, parameters)
-    controller_object = Controllers.get(controller, session, parameters)
-    reia::invoke(controller_object, action, [])
+    Controllers.page(controller, action, session, parameters)
   end
 
 # remove this as soon as ssa issue is resolved vvv
