@@ -3,6 +3,6 @@ class Home < Controller
     total = Mailbox.total()
     selected = {:home => :selected}
     bindings = {}.insert(:contents, view('/home/index', {})).insert(:total, total).insert(:selected, selected)
-    render('home', bindings, [])
+    render('home', bindings)
   end
 end

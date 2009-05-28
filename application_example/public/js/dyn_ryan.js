@@ -29,7 +29,9 @@ function parse_reply(reply){
 var reactions = {
 	growl: growl,
 	hide: hide,
+	show: show,
 	empty: empty,
+	append: append,
 	prepend: prepend,
 	update: update,
 	toggleclass: toggleclass
@@ -37,6 +39,10 @@ var reactions = {
 
 function growl(data){
 	$.jGrowl(data['text'])
+}
+
+function show(data){
+	$(data['where']).show(data['effect'])
 }
 
 function hide(data){
@@ -49,6 +55,12 @@ function empty(data){
 
 function update(data){
 	$(data['where']).html(data['html'])
+	if(data['effect'])
+		$(data['where']).show(data['effect'])
+}
+
+function append(data){
+	$(data['where']).append(data['html'])
 	if(data['effect'])
 		$(data['where']).show(data['effect'])
 }

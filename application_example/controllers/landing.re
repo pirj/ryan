@@ -1,5 +1,5 @@
 class Landing < Controller
   def index
-    render('landing/index', {}, [])
+    render('landing/index', {})
   end
 end

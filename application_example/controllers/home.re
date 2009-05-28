@@ -14,7 +14,7 @@ class Home < Controller
     head = [headcss, headjs, '<script>$(document).ready(function() {#{js}})</script>'].join()
     
     bindings = {}.insert(:title, 'Ryan and Reia homemade webapp').insert(:head, head)
-    render('home', bindings, [])
+    render('home', bindings)
   end
   
   def landing

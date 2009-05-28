@@ -103,20 +103,10 @@ class Controller
   end
 
 # return rendered content from a view template file with handlers attached
-# example: render('fruits_index', {:apple => {:weight => 30, :color => 'red'}}, [(:landing, :contents, 'landing')])
-  def render(filename, bindings, handlers)
+# example: render('fruits_index', {:apple => {:weight => 30, :color => 'red'}})
+  def render(filename, bindings)
     page = view(filename, bindings)
-    js = add_handlers(handlers)
+    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
     (:html, '<script>#{js}</script>#{page}'.to_list())
-  end
-  
-  def add_handlers(handlers)
-    handlers.map{ |handler| add_handler(handler)}.join(';\n')
-  end
-
-  def add_handler(handler)
-    h = handler.insert(:event, :click)
-    arguments = h.to_list().map{ |(k,v)| "#{k}: '#{v}'"}.join(', ')
-    'add_handler({#{arguments}})'
   end
 end

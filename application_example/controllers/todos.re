@@ -47,8 +47,19 @@ class Todos < Controller
     @commands = @commands.unshift(command)
   end
   
+  def append(where, data, effect)
+    (:html, what) = data
+    command = {}.insert(:command, :append).insert(:where, where).insert(:html, what.to_string()).insert(:effect, effect)
+    @commands = @commands.unshift(command)
+  end
+  
   def hide(where, effect)
     command = {}.insert(:command, :hide).insert(:where, where).insert(:effect, effect)
+    @commands = @commands.unshift(command)
+  end
+  
+  def show(where, effect)
+    command = {}.insert(:command, :show).insert(:where, where).insert(:effect, effect)
     @commands = @commands.unshift(command)
   end
   
@@ -75,7 +86,7 @@ class Todos < Controller
   def parse_command(command)
     ['{', ['#{key}: "#{command[key]}"' | key in command.keys()].join(', '), '}'].join()
   end
-
+  
 # move this to Controller ^^^^^^^^^^^^
 
 
@@ -86,19 +97,15 @@ class Todos < Controller
     on('#tomorrow', :mouseover, '/app/todos/tomorrow')
     on('#few_days', :mouseover, '/app/todos/few_days')
 
-    page = view('todos/index', {})
-    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
-    (:html, '<script>#{js}</script>#{page}'.to_list())
+    render('todos/index', {})
   end
 
   def add_new
     on('#add', :click, '/app/todos/add_todo', '#todo_new_text')
     on('#cancel', :click, '/app/todos/add_cancel')
     
-    page = view('todos/new', {})
-    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
-    
-    update('#todo_new', (:html, '<script>#{js}</script>#{page}'.to_list()), 'slide')
+    page = render('todos/new', {})
+    update('#todo_new', page, 'slide')
     perform()
   end
   
@@ -113,9 +120,8 @@ class Todos < Controller
     todo = Todo({}.insert(:what, todo_text).insert(:when, day))
     todo.save()
 
-    page = view('todos/list', {}.insert(:todos, [todo.data()]))
-
-    prepend('#todos', (:html, page.to_list()), 'fade')
+    page = render('todos/list', {}.insert(:todos, [todo.data()]))
+    prepend('#todos', page, 'fade')
     hide('#todo_new', 'slide')
     perform()
   end
@@ -140,19 +146,37 @@ class Todos < Controller
     on('a[icon=delete]', :click, '/app/todos/delete')
     toggleclass('#day_select ##{range}', :selected)
 
-    page = view('todos/list', {}.insert(:todos, todos))
-    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
-    data = (:html, '<script>#{js}</script>#{page}'.to_list())
-    update('#todos', data)
+    page = render('todos/list', {}.insert(:todos, todos))
+    update('#todos', page)
     perform()
   end
 
   def delete
+    id = @parameters[:_id]
+    hide('p[_id=#{id}] > a[_id=#{id}]', 'slide')
+
+    on('p[_id=#{id}] a[icon=delete]', :click, '/app/todos/confirmed_delete')
+    on('p[_id=#{id}] a[icon=no]', :click, '/app/todos/cancel_delete')
+
+    page = render('todos/yesno', {}.insert(:_id, id))
+    append('p[_id=#{id}]', page, 'slide')
+    perform()
+  end
+  
+  def confirmed_delete
     # insecure!
     id = @parameters[:_id]
     Models.get(id).delete()
 
     empty('p[_id=#{id}]', 'slide')
+    perform()
+  end  
+  
+  def cancel_delete
+    id = @parameters[:_id]
+    
+    empty('p[_id=#{id}] span', 'slide')
+    show('a[_id=#{id}]', 'slide')
     perform()
   end
 end

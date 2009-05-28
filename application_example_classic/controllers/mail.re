@@ -11,7 +11,7 @@ class Mail < Controller
     end
     contents = view('mail/new', values)
     bindings = {}.insert(:contents, contents).insert(:total, total).insert(:selected, selected)
-    render('home', bindings, [])
+    render('home', bindings)
   end
   
   def create
@@ -59,6 +59,6 @@ class Mail < Controller
     total = Mailbox.total()
     contents = view('mail/index', {}.insert(:mails, Mailbox.get(mbox)))
     bindings = {}.insert(:contents, contents).insert(:total, total).insert(:selected, selected)
-    render('home', bindings, [])
+    render('home', bindings)
   end
 end
