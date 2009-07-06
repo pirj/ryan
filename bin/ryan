@@ -12,6 +12,7 @@ module GoRyan
       if File.file?('startup.re')
         dependencies()
         init_ets()
+        init_db()
         load_models()
         Main.load('startup.re')
       
@@ -28,9 +29,8 @@ module GoRyan
 
   def dependencies
     'Starting up Ryan...'.puts()
-    ryan_dir = [code::lib_dir().to_string(), 'ryan'].join('/')
-
-    required = ['retem.re', 'ryan.re', 'session.re', 'controller.re', 'model.re']
+    ryan_dir = [code::lib_dir().to_string(), 'ryan', 'lib'].join('/')
+    required = Dir.list(ryan_dir)
     'Loading '.print()
     required.each do |lib|
       '#{lib} '.print()
