@@ -5,11 +5,10 @@ class Home < Page
     csss = ['app', 'jquery.jgrowl']
     headcss = ['<link href="/css/#{css}.css" rel=stylesheet type=text/css>' | css in csss].join()
 
-#    {:id => '#menu a', :command => :toggleclass, :clazz => :selected}]
     on('#landing', :click, '/app/home/landing')
     on('#todo', :click, '/app/home/todos')
     
-    js = '' #@callbacks.map{ |callback| get_callback(callback)}.join(';\n')
+    js = @callbacks.map{ |callback| get_callback(callback)}.join(';\n')
     head = [headcss, headjs, '<script>$(document).ready(function() {#{js}})</script>'].join()
     
     bindings = {}.insert(:title, 'Ryan and Reia homemade webapp').insert(:head, head)
@@ -18,11 +17,13 @@ class Home < Page
   
  def landing
    update('#contents', Ryan.page(:Landing, :index, @session, @parameters), 'fade')
+   toggleclass('#landing', :selected)
    perform()
  end
   
  def todos
    update('#contents', Ryan.page(:Todos, :index, @session, @parameters), 'fade')
+   toggleclass('#todo', :selected)
    perform()
  end
 end

@@ -55,7 +55,7 @@ class Todos < Page
     toggleclass('#day_select ##{range}', :selected)
 
     page = view('todos/list', {}.insert(:todos, todos))
-    update('#todos', page)
+    update('#todos', page, 'fade')
     perform()
   end
 
