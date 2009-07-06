@@ -1,86 +1,18 @@
-class Todos < Controller
-# move this to Controller vvvvvvvvvvvvvvvvvv
-
-  def update(where, data)
-    (:html, what) = data
-    command = {}.insert(:command, :update).insert(:where, where).insert(:html, what.to_string())
-    @commands = @commands.unshift(command)
-  end
-
-  def update(where, data, effect)
-    (:html, what) = data
-    command = {}.insert(:command, :update).insert(:where, where).insert(:html, what.to_string()).insert(:effect, effect)
-    @commands = @commands.unshift(command)
-  end
-
-  def prepend(where, data)
-    (:html, what) = data
-    command = {}.insert(:command, :prepend).insert(:where, where).insert(:html, what.to_string())
-    @commands = @commands.unshift(command)
-  end
-  
-  def prepend(where, data, effect)
-    (:html, what) = data
-    command = {}.insert(:command, :prepend).insert(:where, where).insert(:html, what.to_string()).insert(:effect, effect)
-    @commands = @commands.unshift(command)
-  end
-  
-  def append(where, data, effect)
-    (:html, what) = data
-    command = {}.insert(:command, :append).insert(:where, where).insert(:html, what.to_string()).insert(:effect, effect)
-    @commands = @commands.unshift(command)
-  end
-  
-  def hide(where, effect)
-    command = {}.insert(:command, :hide).insert(:where, where).insert(:effect, effect)
-    @commands = @commands.unshift(command)
-  end
-  
-  def show(where, effect)
-    command = {}.insert(:command, :show).insert(:where, where).insert(:effect, effect)
-    @commands = @commands.unshift(command)
-  end
-  
-  def empty(where, effect)
-    command = {}.insert(:command, :empty).insert(:where, where).insert(:effect, effect)
-    @commands = @commands.unshift(command)
-  end
-  
-  def growl(text)
-    command = {}.insert(:command, :growl).insert(:text, text)
-    @commands = @commands.unshift(command)
-  end
-  
-  def toggleclass(where, clazz)
-    command = {}.insert(:command, :toggleclass).insert(:where, where).insert(:clazz, clazz)
-    @commands = @commands.unshift(command)
-  end
-  
-  def perform
-    json = @commands.map {|command| parse_command(command)}
-    (:json, json.to_list().to_s().split(/\n/).join().to_list())
-  end
-  
-  def parse_command(command)
-    ['{', ['#{key}: "#{command[key]}"' | key in command.keys()].join(', '), '}'].join()
-  end
-  
-# move this to Controller ^^^^^^^^^^^^
-
+class Todos < Page
   def index
     on('#add_new', :click, '/app/todos/add_new')
     on('#today', :mouseover, '/app/todos/today')
     on('#tomorrow', :mouseover, '/app/todos/tomorrow')
     on('#few_days', :mouseover, '/app/todos/few_days')
 
-    render('todos/index', {})
+    view('todos/index', {})
   end
 
   def add_new
     on_get('#add', :click, '/app/todos/add_todo', '#todo_new_text')
     on('#cancel', :click, '/app/todos/add_cancel')
     
-    page = render('todos/new', {})
+    page = view('todos/new', {})
     update('#todo_new', page, 'slide')
     perform()
   end
@@ -96,7 +28,7 @@ class Todos < Controller
     todo = Todo({}.insert(:what, todo_text).insert(:when, day))
     todo.save()
 
-    page = render('todos/list', {}.insert(:todos, [todo.data()]))
+    page = view('todos/list', {}.insert(:todos, [todo.data()]))
     prepend('#todos', page, 'fade')
     hide('#todo_new', 'slide')
     perform()
@@ -122,7 +54,7 @@ class Todos < Controller
     on('a[icon=delete]', :click, '/app/todos/delete')
     toggleclass('#day_select ##{range}', :selected)
 
-    page = render('todos/list', {}.insert(:todos, todos))
+    page = view('todos/list', {}.insert(:todos, todos))
     update('#todos', page)
     perform()
   end
@@ -134,7 +66,7 @@ class Todos < Controller
     on('p[_id=#{id}] a[icon=delete]', :click, '/app/todos/confirmed_delete')
     on('p[_id=#{id}] a[icon=no]', :click, '/app/todos/cancel_delete')
 
-    page = render('todos/yesno', {}.insert(:_id, id))
+    page = view('todos/yesno', {}.insert(:_id, id))
     append('p[_id=#{id}]', page, 'slide')
     perform()
   end
