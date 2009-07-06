@@ -30,7 +30,8 @@ module GoRyan
   def dependencies
     'Starting up Ryan...'.puts()
     ryan_dir = [code::lib_dir().to_string(), 'ryan', 'lib'].join('/')
-    required = Dir.list(ryan_dir)
+    # required = Dir.list(ryan_dir)
+    required = ["behave.re", "controller.re", "controllers.re", "model.re", "page.re", "retem.re", "ryan.re", "session.re"]
     'Loading '.print()
     required.each do |lib|
       '#{lib} '.print()

@@ -1,4 +1,4 @@
-class Page
+class Page < Controller
   def initialize(session, parameters)
     @session = session
     @parameters = parameters
