@@ -4,6 +4,7 @@ VERSION =
 # todo: get erlang dir with code:lib_dir()
 ERLANG_LIB = $(PREFIX)/lib/erlang/lib
 RYAN_LIB = $(ERLANG_LIB)/ryan$(VERSION)
+RYAN_LIB_RE = $(RYAN_LIB)/lib
 
 all: deps src/retem/retem_scan.erl src/retem/retem_parse.erl compile erlangine
 
@@ -28,6 +29,7 @@ uninstall:
 
 install: all uninstall
 	mkdir $(RYAN_LIB)
+	mkdir $(RYAN_LIB_RE)
 	mkdir $(RYAN_LIB)/ebin
 
 	cp deps/mochiweb/ebin/*.beam $(RYAN_LIB)/ebin
@@ -37,12 +39,9 @@ install: all uninstall
 	cp README.md $(RYAN_LIB)
 	cp -r ebin $(RYAN_LIB)
 
-	cp src/behave/behave.re $(RYAN_LIB)
-	cp src/retem/retem.re $(RYAN_LIB)
-	cp src/core/ryan.re $(RYAN_LIB)
-	cp src/core/session.re $(RYAN_LIB)
-	cp src/core/controller.re $(RYAN_LIB)
-	cp src/core/model.re $(RYAN_LIB)
+	cp src/behave/behave.re $(RYAN_LIB_RE)
+	cp src/retem/retem.re $(RYAN_LIB_RE)
+	cp src/core/*.re $(RYAN_LIB_RE)
 
 	mkdir -p /usr/local/bin
 	rm -rf /usr/local/bin/ryan
