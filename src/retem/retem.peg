@@ -1,3 +1,4 @@
+% peg_gen:file("retem.peg"). c(retem). l(retem).
 syntax <- block*;
 block <- if_block / for_block / expression_block / text;
 
@@ -8,9 +9,12 @@ else <- 'else' / 'elseif' / 'elsif';
 for_block <- '{' ws? 'for' ws? id ws? 'in' ws? id ws? '}' block '{' ws? 'end' ws? '}' : (for, 3, 5, 7);
 expression_block <- '{' ws? expression ws? '}' : 3;
 
-expression <- dot_expression / id / number / atom / nested; %two_operator / single_operator / 
+simple <- dot_expression / single_operator / atom / id / number / nested;
+expression <- two_operator / simple;
 
 dot_expression <- id '.' id : (dot, 1, 3);
+single_operator <- 'not' ws expression : (nt, 3);
+two_operator <- simple ws? operator ws? id : (3, 1, 5);
 
 operator <- comparator / math / logical;
 comparator <- 'eq' / 'neq' / 'gt' / 'lt' / 'gteq' / 'lteq';
@@ -29,8 +33,8 @@ upcase <- [A-Z];
 lowcase <- [a-z];
 letter <- upcase / lowcase / '_';
 
-ws <- [ \t\n\s\r]+;
-id <- letter (letter / digit)*;
 atom <- 'true' / 'false' / 'null';
+id <- (letter (letter / digit)*) : (id, 1);
 
+ws <- [ \t\n\s\r]+;
 text <- (!'{' .)*;
