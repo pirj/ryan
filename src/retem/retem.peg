@@ -1,12 +1,14 @@
 % peg_gen:file("retem.peg"). c(retem). l(retem).
-syntax <- block*;
+% retem:parse("{for a in aa}{if true}{xxx}{end}{end}").
+
+syntax <- block+;
 block <- if_block / for_block / expression_block / text;
 
-if_block <- '{' ws? conditional ws? expression ws? '}' block '{' ws? 'end' ws? '}' : (2, 3, 5);
+if_block <- '{' ws? conditional ws? expression ws? '}' block '{' ws? 'end' ws? '}' : (3, 5, 8);
 conditional <- 'if' / 'unless';
-else <- 'else' / 'elseif' / 'elsif';
+%else <- 'else' / 'elseif' / 'elsif';
 
-for_block <- '{' ws? 'for' ws? id ws? 'in' ws? id ws? '}' block '{' ws? 'end' ws? '}' : (for, 3, 5, 7);
+for_block <- '{' ws? 'for' ws? id ws? 'in' ws? id ws? '}' block '{' ws? 'end' ws? '}' : (for, 5, 9, 12);
 expression_block <- '{' ws? expression ws? '}' : 3;
 
 simple <- dot_expression / single_operator / atom / id / number / nested;
@@ -34,7 +36,7 @@ lowcase <- [a-z];
 letter <- upcase / lowcase / '_';
 
 atom <- 'true' / 'false' / 'null';
-id <- (letter (letter / digit)*) : (id, 1);
+id <- id:(letter (letter / digit)*) ws? : 1;
 
 ws <- [ \t\n\s\r]+;
 text <- (!'{' .)*;
