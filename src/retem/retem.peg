@@ -1,15 +1,17 @@
 % peg_gen:file("retem.peg"). c(retem). l(retem).
-% retem:parse("{for a in aa}{if true}{xxx}{end}{end}").
+% retem:parse("{for a in aa}{if true}{xxx}{endif}{endfor}").
 
 syntax <- block+;
-block <- if_block / for_block / expression_block / text;
+block <- if_block / for_block / expression_block;
 
-if_block <- '{' ws? conditional ws? expression ws? '}' block '{' ws? 'end' ws? '}' : (3, 5, 8);
+keywords <- conditional / 'endif' / 'for' / 'endfor';
+
+if_block <- '{' ws? conditional ws? expression ws? '}' syntax '{' ws? 'endif' ws? '}' : (3, 5, 8);
 conditional <- 'if' / 'unless';
 %else <- 'else' / 'elseif' / 'elsif';
 
-for_block <- '{' ws? 'for' ws? id ws? 'in' ws? id ws? '}' block '{' ws? 'end' ws? '}' : (for, 5, 9, 12);
-expression_block <- '{' ws? expression ws? '}' : 3;
+for_block <- '{' ws? 'for' ws? id ws? 'in' ws? id ws? '}' syntax '{' ws? 'endfor' ws? '}' : (for, 5, 9, 12);
+expression_block <- '{' ws? !keywords expression ws? '}' : 4;
 
 simple <- dot_expression / single_operator / atom / id / number / nested;
 expression <- two_operator / simple;
@@ -31,12 +33,10 @@ float <- '-'? digit* '.' digit+;
 integer <- '-'? non_zero_digit+ digit*;
 number <- float / integer;
 
-upcase <- [A-Z];
-lowcase <- [a-z];
-letter <- upcase / lowcase / '_';
+letter <- [a-zA-Z_];
 
 atom <- 'true' / 'false' / 'null';
 id <- id:(letter (letter / digit)*) ws? : 1;
 
 ws <- [ \t\n\s\r]+;
-text <- (!'{' .)*;
+text <- text:((!'{' .)*) ws? : 1;
