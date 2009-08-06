@@ -7,7 +7,7 @@ module Controllers
   end
   
   def ensure_uptodate(controller)
-    controller_file = 'controllers/#{controller}.re'
+    controller_file = 'pages/#{controller}.re'
     up_to_date = up_to_date(controller, controller_file)
     'Reloading #{controller_file}'.puts() unless up_to_date
     Main.load(controller_file) unless up_to_date
