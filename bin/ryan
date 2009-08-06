@@ -14,6 +14,7 @@ module GoRyan
         init_ets()
         init_db()
         load_models()
+        load_pages()
         Main.load('startup.re')
       
         if [a | a in args, a=='--yaws'].size() == 0
@@ -28,11 +29,10 @@ module GoRyan
   end
 
   def dependencies
-    'Starting up Ryan...'.puts()
+    'Loading Ryan libs: '.print()
     ryan_dir = [code::lib_dir().to_string(), 'ryan', 'lib'].join('/')
     # required = Dir.list(ryan_dir)
     required = ["behave.re", "controller.re", "controllers.re", "model.re", "page.re", "retem.re", "ryan.re", "session.re"]
-    'Loading '.print()
     required.each do |lib|
       '#{lib} '.print()
       Main.load('#{ryan_dir}/#{lib}')
@@ -62,14 +62,26 @@ module GoRyan
     end
   end
 
+  def load_pages
+    'Loading pages: '.print()
+    pages = Dir.list('pages')
+    pages.each do |page|
+      '#{page} '.print()
+      Main.load('pages/#{page}')
+    end
+    ' done.'.puts()
+  end
+  
   def load_models
+    'Loading models: '.print()
     models = Dir.list('models')
     models.each do |model|
-      'Loading #{model}'.puts()
+      '#{model} '.print()
       Main.load('models/#{model}')
       object = reia::spawn(model.split(/\\.re/)[0].capitalize().to_atom(), [{}])
       object.create_views()
     end
+    ' done.'.puts()
   end
   
   def help
