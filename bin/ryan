@@ -56,7 +56,7 @@ module GoRyan
   end
   
   def init_db
-    if erlang_couchdb::database_info(('localhost'.to_list(), 5984), 'default'.to_list()) == (:ok,[(<<"error">>,<<"not_found">>),(<<"reason">>,<<"Missing">>)])
+    if Dir.list('models').size() > 0 and erlang_couchdb::database_info(('localhost'.to_list(), 5984), 'default'.to_list()) == (:ok,[(<<"error">>,<<"not_found">>),(<<"reason">>,<<"Missing">>)])
       'Creating database'.puts()
       erlang_couchdb::create_database(('localhost'.to_list(), 5984), 'default'.to_list())
     end
