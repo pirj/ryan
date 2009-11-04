@@ -2,7 +2,7 @@
 % retem:parse("{for a in aa}{if true}{xxx}{endif}{endfor}").
 
 syntax <- block+;
-block <- if_block / for_block / expression_block;
+block <- if_block / for_block / expression_block / text;
 
 keywords <- conditional / 'endif' / 'for' / 'endfor';
 
@@ -36,7 +36,7 @@ number <- float / integer;
 letter <- [a-zA-Z_];
 
 atom <- 'true' / 'false' / 'null';
-id <- id:(letter (letter / digit)*) ws? : 1;
+id <- (letter (letter / digit)*) ws? : (id, 1);
 
 ws <- [ \t\n\s\r]+;
-text <- text:((!'{' .)*) ws? : 1;
+text <- ((!'{' .)*) ws? : (text, 1);
