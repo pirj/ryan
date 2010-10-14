@@ -2,7 +2,7 @@ module Controllers
   def page(controller, action, session, parameters)
     controller = controller.to_s().capitalize().to_atom()
     ensure_uptodate(controller)
-    controller_object = reia::spawn(controller, [session, parameters])
+    controller_object = erl.reia.spawn(controller, [session, parameters])
     reia::invoke(controller_object, action, [])
   end
   
@@ -16,7 +16,7 @@ module Controllers
   def up_to_date(controller, controller_file)
     if code::is_loaded(controller)
       last_modified = file_last_modified(controller_file)
-      class_info = erlang::apply(controller, :module_info, [])
+      class_info = erl.erlang.apply(controller, :module_info, [])
       compile_info = [ci | (:compile, ci) in class_info][0]
       last_loaded = [ll | (:time, ll) in compile_info][0]
       last_loaded > last_modified

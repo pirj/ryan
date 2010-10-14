@@ -24,7 +24,7 @@ mochi:
 
 uninstall:
 	rm -rf $(RYAN_LIB)
-	rm -f $(PREFIX)/bin/ryan
+	rm -f $(PREFIX)/bin/ryan.re
 	rm -f $(PREFIX)/bin/behave
 
 install: all uninstall
@@ -44,11 +44,11 @@ install: all uninstall
 	cp src/core/*.re $(RYAN_LIB_RE)
 
 	mkdir -p /usr/local/bin
-	rm -rf /usr/local/bin/ryan
-	cp bin/ryan /usr/local/bin
+	rm -rf /usr/local/bin/ryan.re
+	cp bin/ryan.re /usr/local/bin
 	cp bin/behave /usr/local/bin
 
-	chmod 0755 /usr/local/bin/ryan
+	chmod 0755 /usr/local/bin/ryan.re
 	chmod 0755 /usr/local/bin/behave
 
 compile:
