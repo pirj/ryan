@@ -156,11 +156,11 @@ module Retem
 # for loop
   def render((:for, var, object, block), vars)
     array = render(object, vars)
-    [render(block, vars.insert(var, el)) | el in array].join()
+    [render(block, vars.insert(var, el)) for el in array].join()
   end
 
 # list of blocks
   def render(list, vars)
-    [render(block, vars).to_s() | block in list].join()
+    [render(block, vars).to_s() for block in list].join()
   end
 end
