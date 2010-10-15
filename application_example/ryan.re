@@ -36,8 +36,8 @@ module GoRyan
     'Loading Ryan libs: '.print()
     ryan_dir = [erl.code.lib_dir().to_string(), 'ryan', 'lib'].join('/')
     # required = Dir.list(ryan_dir)
-    required = ["controller.re", "controllers.re", "model.re", "page.re", "retem.re", "ryan.re", "session.re"]
-# "behave.re", 
+    required = ["controller.re", "controllers.re", "page.re", "retem.re", "ryan.re", "session.re"]
+# "behave.re", "model.re", 
     required.each do |lib|
       '#{ryan_dir}/#{lib} '.print()
       erl.reia.load('#{ryan_dir}/#{lib}'.to_list())

@@ -19,76 +19,100 @@ class Page < Controller
   end
   
   def on(what, event, where)
-    callback = {}.insert(:what, what).insert(:event, event).insert(:where, where)
-    @callbacks = @callbacks.unshift(callback)
+    callback = {:what => what, :event => event, :where => where}
+    size = @callbacks[:size]
+    @callbacks[:size] = size + 1
+    @callbacks[size] = callback
   end
   
   def on_get(what, event, where, get)
-    callback = {}.insert(:what, what).insert(:event, event).insert(:where, where).insert(:get, get)
-    @callbacks = @callbacks.unshift(callback)
+    callback = {:what => what, :event => event, :where => where, :get => get}
+    size = @callbacks[:size]
+    @callbacks[:size] = size + 1
+    @callbacks[size] = callback
   end
 
   def update(where, data)
     (:html, what) = data
-    command = {}.insert(:command, :update).insert(:where, where).insert(:html, what.to_string())
-    @commands = @commands.unshift(command)
+    command = {:command => :update, :where => where, :html => what.to_string()}
+    size = @commands[:size]
+    @commands[:size] = size + 1
+    @commands[size] = command
   end
 
   def update(where, data, effect)
     (:html, what) = data
-    command = {}.insert(:command, :update).insert(:where, where).insert(:html, what.to_string()).insert(:effect, effect)
-    @commands = @commands.unshift(command)
+    command = {:command => :update, :where => where, :html => what.to_string(), :effect => effect}
+    size = @commands[:size]
+    @commands[:size] = size + 1
+    @commands[size] = command
   end
 
   def prepend(where, data)
     (:html, what) = data
-    command = {}.insert(:command, :prepend).insert(:where, where).insert(:html, what.to_string())
-    @commands = @commands.unshift(command)
+    command = {:command => :prepend, :where => where, :html => what.to_string()}
+    size = @commands[:size]
+    @commands[:size] = size + 1
+    @commands[size] = command
   end
   
   def prepend(where, data, effect)
     (:html, what) = data
-    command = {}.insert(:command, :prepend).insert(:where, where).insert(:html, what.to_string()).insert(:effect, effect)
-    @commands = @commands.unshift(command)
+    command = {:command => :prepend, :where => where, :html => what.to_string(), :effect => effect}
+    size = @commands[:size]
+    @commands[:size] = size + 1
+    @commands[size] = command
   end
   
   def append(where, data, effect)
     (:html, what) = data
-    command = {}.insert(:command, :append).insert(:where, where).insert(:html, what.to_string()).insert(:effect, effect)
-    @commands = @commands.unshift(command)
+    command = {:command => :append, :where => where, :html => what.to_string(), :effect => effect}
+    size = @commands[:size]
+    @commands[:size] = size + 1
+    @commands[size] = command
   end
   
   def hide(where, effect)
-    command = {}.insert(:command, :hide).insert(:where, where).insert(:effect, effect)
-    @commands = @commands.unshift(command)
+    command = {:command => :hide,:where => where, :effect => effect}
+    size = @commands[:size]
+    @commands[:size] = size + 1
+    @commands[size] = command
   end
   
   def show(where, effect)
-    command = {}.insert(:command, :show).insert(:where, where).insert(:effect, effect)
-    @commands = @commands.unshift(command)
+    command = {:command => :show, :where => where, :effect => effect}
+    size = @commands[:size]
+    @commands[:size] = size + 1
+    @commands[size] = command
   end
   
   def empty(where, effect)
-    command = {}.insert(:command, :empty).insert(:where, where).insert(:effect, effect)
-    @commands = @commands.unshift(command)
+    command = {:command => :empty, :where => where, :effect => effect}
+    size = @commands[:size]
+    @commands[:size] = size + 1
+    @commands[size] = command
   end
   
   def growl(text)
-    command = {}.insert(:command, :growl).insert(:text, text)
-    @commands = @commands.unshift(command)
+    command = {:command => :growl, :text => text}
+    size = @commands[:size]
+    @commands[:size] = size + 1
+    @commands[size] = command
   end
-  
+ 
   def toggleclass(where, clazz)
-    command = {}.insert(:command, :toggleclass).insert(:where, where).insert(:clazz, clazz)
-    @commands = @commands.unshift(command)
+    command = {:command => :toggleclass, :where => where, :clazz => clazz}
+    size = @commands[:size]
+    @commands[:size] = size + 1
+    @commands[size] = command
   end
   
   def perform
     json = @commands.map {|command| parse_command(command)}
-    (:json, json.to_list().to_s().split(/\n/).join().to_list())
+    (:json, json.to_list().to_s().split(%r/\n/).join().to_list())
   end
   
   def parse_command(command)
-    ['{', ['#{key}: "#{command[key]}"' | key in command.keys()].join(', '), '}'].join()
+    ['{', ['#{key}: "#{command[key]}"' for key in command.keys()].join(', '), '}'].join()
   end
 end

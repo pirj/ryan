@@ -1,12 +1,12 @@
 module Ryan
   def out(abspath, method, path_parts, session_token, parameters)
-    (_h, is, ins) = erlang::now()
+    (_h, is, ins) = erl.erlang.now()
     path_parts = path_parts.map { |part| part.to_string() }.to_tuple()
     (controller, action) = route(path_parts)
     session_token = session_token.to_string()
     session = Sessions.get(session_token)
     result = page(controller, action, session, cp(parameters))
-    (_h, s, ns) = erlang::now()
+    (_h, s, ns) = erl.erlang.now()
     abspath = abspath.to_string()
     took = (s-is) * 1000000 + ns - ins
     'session #{session_token}: #{abspath}, took #{took} ms'.puts()
