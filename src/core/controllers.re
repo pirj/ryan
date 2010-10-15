@@ -2,15 +2,15 @@ module Controllers
   def page(controller, action, session, parameters)
     controller = controller.to_s().capitalize().to_atom()
     ensure_uptodate(controller)
-    controller_object = erl.reia.spawn(controller, [session, parameters])
-    reia.invoke(controller_object, action, [])
+    controller_object = System.spawn(controller, [session, parameters])
+    System.invoke(controller_object, action, [])
   end
   
   def ensure_uptodate(controller)
     controller_file = 'pages/#{controller.to_s().downcase()}.re'
     up_to_date = up_to_date(controller, controller_file)
     'Reloading #{controller_file}'.puts() unless up_to_date
-    erl.reia.load(controller_file) unless up_to_date
+    System.load(controller_file) unless up_to_date
   end
 
   def up_to_date(controller, controller_file)
