@@ -6,7 +6,7 @@
 
 class Template
   def initialize(string)
-    @data = retemplate::parse(string)
+    @data = erl.retemplate.parse(string)
   end
   
   def render(vars)
@@ -16,7 +16,7 @@ end
 
 module Retem
   def scan(template)
-    retemplate::scan(template)
+    erl.retemplate.scan(template)
   end
 
   def parse(template)
