@@ -67,8 +67,8 @@ module GoRyan
     'Loading pages: '.print()
     (:ok, pages) = erl.file.list_dir('pages'.to_list())
     pages.each do |page|
-      '#{page} '.print()
       p = page.to_binary()
+      '#{p} '.print()
       erl.reia.load('pages/#{p}'.to_list())
     end
     ' done.'.puts()

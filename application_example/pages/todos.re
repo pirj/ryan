@@ -49,7 +49,7 @@ class Todos < Page
   def for_range(range)
     @session.set(:current_day, range)
     todos = Models.find(Todo, :when, range)
-    todos = [todo.data() | todo in todos]
+    todos = [todo.data() for todo in todos]
 
     on('a[icon=delete]', :click, '/app/todos/delete')
     toggleclass('#day_select ##{range}', :selected)
