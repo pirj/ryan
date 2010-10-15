@@ -1,7 +1,7 @@
 #!/usr/bin/env reia
 
 module GoRyan
-  def run()
+  def run
     port = 8001
 #    port = args[1].to_int() if args[0] == '-p' or args[0] == '--port'
     
@@ -11,15 +11,11 @@ module GoRyan
 #      check_couchdb()
 #      if File.file?('startup.re')
         dependencies()
-  '3'.puts()
         init_ets()
-  '4'.puts()
 #        init_db()
 #        load_models()
         load_pages()
-  '5'.puts()
-        Main.load('startup.re')
-  '6'.puts()
+        erl.reia.load('startup.re')
       
  #       if [a for a in args, a=='--yaws'].size() == 0
           erl.mochi_shim.start_mochi(port)
@@ -72,7 +68,7 @@ module GoRyan
     pages = Dir.list('pages')
     pages.each do |page|
       '#{page} '.print()
-      Main.load('pages/#{page}')
+      erl.reia.load('pages/#{page}')
     end
     ' done.'.puts()
   end
