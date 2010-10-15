@@ -1,11 +1,11 @@
 module Sessions
   def get(token)
-    get(token, ets::lookup(:sessions, token))
+    get(token, erl.ets.lookup(:sessions, token))
   end
 
   def get(token, [])
     session = Session()
-    ets::insert(:sessions, (token, session))
+    erl.ets.insert(:sessions, (token, session))
     session
   end
 
@@ -28,7 +28,8 @@ class Session
   end
 
   def set(key, value)
-    @data = @data.insert(key, value)
+    d = @data
+    d[key] = value
   end
 
   def inspect()
@@ -36,6 +37,7 @@ class Session
   end
 
   def remove(key)
-    @data = @data.remove(key)
+    d = @data
+    d[key] = nil
   end
 end

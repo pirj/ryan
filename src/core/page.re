@@ -2,8 +2,12 @@ class Page < Controller
   def initialize(session, parameters)
     @session = session
     @parameters = parameters
-    @callbacks = []
-    @commands = []
+    @callbacks = {}
+    a = @callbacks
+    a[:size] = 0
+    @commands = {}
+    a = @commands
+    a[:size] = 0
   end
 
   def view(filename, bindings)
