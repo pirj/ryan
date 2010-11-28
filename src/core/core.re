@@ -1,4 +1,8 @@
 module Ryan
+  def get(path, &block)
+    "path #{path} defined"
+  end
+
   def out(abspath, method, path_parts, session_token, parameters)
     (_h, is, ins) = erl.erlang.now()
     path_parts = path_parts.map { |part| part.to_string() }.to_tuple()

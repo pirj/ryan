@@ -1,7 +1,5 @@
-class Controller
-  def initialize(session, parameters)
-    @session = session
-    @parameters = parameters
+class Controlller
+  def initialize(@session, @parameters)
   end
 
 # redirect to url

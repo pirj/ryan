@@ -13,3 +13,4 @@ src/retem/retem_parse.erl
 src/retem/retem_scan.erl
 src/retem/retem.erl*.reb
 application_example/ryan.reb
+*.reb

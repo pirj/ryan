@@ -24,8 +24,8 @@ mochi:
 
 uninstall:
 	rm -rf $(RYAN_LIB)
-	rm -f $(PREFIX)/bin/ryan.re
-	rm -f $(PREFIX)/bin/behave
+	rm -f $(PREFIX)/bin/ryan.reb
+  # rm -f $(PREFIX)/bin/behave
 
 install: all uninstall
 	mkdir $(RYAN_LIB)
@@ -39,21 +39,27 @@ install: all uninstall
 	cp README.md $(RYAN_LIB)
 	cp -r ebin $(RYAN_LIB)
 
-	cp src/behave/behave.re $(RYAN_LIB_RE)
-	cp src/retem/retem.re $(RYAN_LIB_RE)
-	cp src/core/*.re $(RYAN_LIB_RE)
+  # cp src/behave/behave.reb $(RYAN_LIB_RE)
+	cp ebin/*.reb $(RYAN_LIB_RE)
 
-	mkdir -p /usr/local/bin
-	rm -rf /usr/local/bin/ryan.re
-	cp bin/ryan.re /usr/local/bin
-	cp bin/behave /usr/local/bin
+	mkdir -p $(PREFIX)/bin
+	cp ebin/ryan.reb $(PREFIX)/bin
+  # cp bin/behave $(PREFIX)/bin
 
-	chmod 0755 /usr/local/bin/ryan.re
-	chmod 0755 /usr/local/bin/behave
+	chmod 0755 $(PREFIX)/bin/ryan.reb
+  # chmod 0755 $(PREFIX)/bin/behave
 
 compile:
 	mkdir -p ebin
 	erlc -o ebin +debug_info src/**/*.erl
+
+	reiac -o ebin/ryan.reb bin/ryan.re
+	reiac -o ebin/controller.reb src/core/controller.re
+	reiac -o ebin/controllers.reb src/core/controllers.re
+	reiac -o ebin/page.reb src/core/page.re
+	reiac -o ebin/retem.reb src/retem/retem.re
+	reiac -o ebin/core.reb src/core/core.re
+	reiac -o ebin/session.reb src/core/session.re
 
 # Compile retem_scan using leex
 src/retem/retem_scan.erl:
@@ -63,8 +69,8 @@ src/retem/retem_scan.erl:
 src/retem/retem_parse.erl:
 	bin/yecc src/retem/retem_parse.yrl
 
-behave:
-	reia behave/all.re
+# behave:
+  # reia behave/all.re
 
 clean:
 	rm -f ebin/*

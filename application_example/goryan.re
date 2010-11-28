@@ -15,7 +15,7 @@ module GoRyan
 #        init_db()
 #        load_models()
         load_pages()
-        erl.reia.load('startup.re')
+        erl.reia.load('startup.re'.to_list())
       
  #       if [a for a in args, a=='--yaws'].size() == 0
           erl.mochi_shim.start_mochi(port)
@@ -30,9 +30,10 @@ module GoRyan
 
   def dependencies
     'Loading Ryan libs: '.print()
-    ryan_dir = [erl.code.lib_dir().to_string(), 'ryan', 'lib'].join('/')
+    # ryan_dir = [erl.code.lib_dir().to_string(), 'ryan', 'lib'].join('/')
+    ryan_dir = ['ebin'].join('/')
     # required = Dir.list(ryan_dir)
-    required = ["controller.re", "controllers.re", "page.re", "retem.re", "ryan.re", "session.re"]
+    required = ["controller.reb", "controllers.reb", "page.reb", "retem.reb", "core.reb", "session.reb"]
 # "behave.re", "model.re", 
     required.each do |lib|
       '#{ryan_dir}/#{lib} '.print()
@@ -64,11 +65,11 @@ module GoRyan
 #  end
 
   def load_pages
-    'Loading pages: '.print()
+    'Loading pages: '.puts()
     (:ok, pages) = erl.file.list_dir('pages'.to_list())
     pages.each do |page|
       p = page.to_binary()
-      '#{p} '.print()
+      'loading #{p} '.puts()
       erl.reia.load('pages/#{p}'.to_list())
     end
     ' done.'.puts()
